@@ -133,6 +133,9 @@ class SubstitutionAssessment(BaseModel):
     # Alternative product suggestions (populated when verdict is not PASS)
     alternatives: list[AlternativeSuggestion] = Field(default_factory=list)
 
+    # DB record ID — used to save decisions
+    assessment_id: Optional[int] = None
+
 
 class ProductInfo(BaseModel):
     """Product details for the lookup endpoint."""

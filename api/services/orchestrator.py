@@ -496,6 +496,7 @@ async def run_assessment(
     )
     db.add(log_entry)
     db.commit()
+    db.refresh(log_entry)
 
     code_docs = list({d.code_reference.split(" art.")[0] for d in dimensions})
 
@@ -514,4 +515,5 @@ async def run_assessment(
         data_completeness=data_completeness,
         missing_data=missing_data,
         alternatives=alternatives,
+        assessment_id=log_entry.id,
     )

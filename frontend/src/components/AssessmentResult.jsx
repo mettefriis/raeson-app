@@ -267,10 +267,37 @@ function ScoreBar({ dimensions }) {
 // Main component
 // ---------------------------------------------------------------------------
 
+const API_BASE = import.meta.env.VITE_API_URL || ''
+
+const DECISIONS = [
+  { value: 'approved',       label: 'Approve',           color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
+  { value: 'info_requested', label: 'Request more info', color: '#a16207', bg: '#fefce8', border: '#fef08a' },
+  { value: 'rejected',       label: 'Reject',            color: '#b91c1c', bg: '#fef2f2', border: '#fecaca' },
+]
+
 export default function AssessmentResult({ data, queryText }) {
   const [activeProvision, setActiveProvision] = useState(null)
   const [exportingPdf, setExportingPdf] = useState(false)
   const [showRecs, setShowRecs] = useState(true)
+  const [decision, setDecision] = useState(null)
+  const [decisionNote, setDecisionNote] = useState('')
+  const [savingDecision, setSavingDecision] = useState(false)
+  const [showNoteInput, setShowNoteInput] = useState(false)
+
+  async function handleDecision(value) {
+    if (!data.assessment_id) return
+    setSavingDecision(true)
+    try {
+      await fetch(`${API_BASE}/api/assess/${data.assessment_id}/decision`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision: value, decision_note: decisionNote || null }),
+      })
+      setDecision(value)
+    } finally {
+      setSavingDecision(false)
+    }
+  }
 
   async function handleExportPdf() {
     setExportingPdf(true)
@@ -380,6 +407,58 @@ export default function AssessmentResult({ data, queryText }) {
           </button>
         </div>
       </div>
+
+      {/* ── Decision record ── */}
+      {data.assessment_id && (
+        <div style={{ marginBottom: 24, padding: '16px 20px', border: '1px solid #e5e5e3', background: '#ffffff' }}>
+          <p style={{ fontSize: 11, color: '#9b9b99', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+            Decision
+          </p>
+
+          {decision ? (
+            <div style={{
+              padding: '10px 14px',
+              background: DECISIONS.find(d => d.value === decision)?.bg,
+              border: `1px solid ${DECISIONS.find(d => d.value === decision)?.border}`,
+              color: DECISIONS.find(d => d.value === decision)?.color,
+              fontSize: 13,
+            }}>
+              {DECISIONS.find(d => d.value === decision)?.label} — saved
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {DECISIONS.map(d => (
+                  <button
+                    key={d.value}
+                    onClick={() => { setShowNoteInput(true); handleDecision(d.value) }}
+                    disabled={savingDecision}
+                    style={{
+                      padding: '7px 14px', fontSize: 12, fontFamily: 'inherit',
+                      background: d.bg, border: `1px solid ${d.border}`,
+                      color: d.color, cursor: 'pointer',
+                    }}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  placeholder="Optional note..."
+                  value={decisionNote}
+                  onChange={e => setDecisionNote(e.target.value)}
+                  style={{
+                    flex: 1, padding: '7px 10px', border: '1px solid #e5e5e3',
+                    fontSize: 12, fontFamily: 'inherit', color: '#111110',
+                    background: '#f7f7f5', outline: 'none',
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Dimension matrix ── */}
       <DimensionMatrix dimensions={data.dimensions} onCodeClick={setActiveProvision} />

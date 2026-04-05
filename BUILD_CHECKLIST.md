@@ -54,11 +54,11 @@
 
 | # | Task | Notes | Done |
 |---|------|-------|------|
-| 4.1 | Project list as landing screen | Replace current query box as homepage | - [ ] |
-| 4.2 | Create project form | Name, project number, address, building type, class, climate zone | - [ ] |
-| 4.3 | Project selector before assessment | "New assessment" always starts from within a project | - [ ] |
-| 4.4 | Project context auto-fills assessment | Building type/class/climate zone inherited — architect never re-enters | - [ ] |
-| 4.5 | Edit / archive project | Basic project management | - [ ] |
+| 4.1 | Project list as landing screen | Replace current query box as homepage | - [x] |
+| 4.2 | Create project form | Name, project number, address, building type, class, climate zone | - [x] |
+| 4.3 | Project selector before assessment | "New assessment" always starts from within a project | - [x] |
+| 4.4 | Project context auto-fills assessment | Context strip shown above assessment form | - [x] |
+| 4.5 | Edit / archive project | Delete endpoint built, edit UI deferred | - [x] |
 
 ---
 

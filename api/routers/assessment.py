@@ -5,7 +5,10 @@ API routes for substitution assessment.
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
-from api.models.database import get_db, Product, CodeRequirement
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime, timezone
+from api.models.database import get_db, Product, CodeRequirement, AssessmentLog
 from api.models.schemas import (
     SubstitutionRequest,
     SubstitutionAssessment,
@@ -15,6 +18,7 @@ from api.models.schemas import (
 from api.services.orchestrator import run_assessment
 from api.services.pdf_report import generate_pdf
 from api.data.code_provisions import get_provision, get_all_provisions
+from api.services.auth import get_optional_user
 
 router = APIRouter(prefix="/api", tags=["assessment"])
 
@@ -206,3 +210,33 @@ async def list_code_provisions():
         }
         for ref, p in provisions.items()
     }
+
+
+class DecisionPayload(BaseModel):
+    decision: str          # "approved" | "rejected" | "info_requested"
+    decision_by: Optional[str] = None
+    decision_note: Optional[str] = None
+
+
+@router.post("/assess/{assessment_id}/decision")
+async def save_decision(
+    assessment_id: int,
+    payload: DecisionPayload,
+    db: Session = Depends(get_db),
+    user: Optional[dict] = Depends(get_optional_user),
+):
+    """Save architect's decision on an assessment."""
+    if payload.decision not in ("approved", "rejected", "info_requested"):
+        raise HTTPException(status_code=400, detail="Invalid decision value")
+
+    log = db.query(AssessmentLog).filter(AssessmentLog.id == assessment_id).first()
+    if not log:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+
+    log.decision = payload.decision
+    log.decision_timestamp = datetime.now(timezone.utc)
+    log.decision_by = payload.decision_by or (user.get("name") if user else None)
+    log.decision_note = payload.decision_note
+    db.commit()
+
+    return {"ok": True, "decision": payload.decision}
