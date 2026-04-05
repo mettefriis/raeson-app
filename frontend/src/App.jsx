@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import QueryForm from './components/QueryForm.jsx'
 import AssessmentResult from './components/AssessmentResult.jsx'
 
+const API_BASE = import.meta.env.VITE_API_URL || ''
+
 const EXAMPLE_QUERIES = [
   // Existing scenarios
   {
@@ -87,12 +89,12 @@ export default function App() {
         const formData = new FormData()
         formData.append('query', query)
         formData.append('file', file)
-        res = await fetch('/api/assess/with-plan', {
+        res = await fetch(`${API_BASE}/api/assess/with-plan`, {
           method: 'POST',
           body: formData,
         })
       } else {
-        res = await fetch('/api/assess', {
+        res = await fetch(`${API_BASE}/api/assess`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query }),
