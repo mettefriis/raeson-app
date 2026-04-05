@@ -11,9 +11,10 @@ the requirements that apply to element Z in building type W?
 
 from sqlalchemy import (
     Column, String, Float, Integer, Boolean, Text,
-    ForeignKey, create_engine, Enum as SQLEnum
+    ForeignKey, create_engine, Enum as SQLEnum, DateTime
 )
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from datetime import datetime, timezone
 import enum
 
 Base = declarative_base()
@@ -114,6 +115,9 @@ class CodeRequirement(Base):
     code_reference = Column(String, nullable=False)  # e.g. "Bbl art. 3.72 lid 1"
     code_document = Column(String, default="Bbl")    # "Bbl", "NEN 1068", etc.
     description = Column(Text, nullable=True)        # human-readable context
+
+    # Jurisdiction — "DK", "NL", "SE", "NO", "DE"
+    jurisdiction = Column(String, nullable=True, index=True, default="NL")
 
     def __repr__(self):
         return f"<CodeReq {self.element}/{self.dimension}: {self.required_class or self.min_value}>"
@@ -273,6 +277,76 @@ class MaterialIncompatibility(Base):
 
 
 # ---------------------------------------------------------------------------
+# FIRM
+# ---------------------------------------------------------------------------
+
+class Firm(Base):
+    """
+    An architecture firm using ræson.
+    All users and projects belong to a firm.
+    """
+    __tablename__ = "firms"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    logo_url = Column(String, nullable=True)       # uploaded firm logo for PDF
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    users = relationship("User", back_populates="firm")
+    projects = relationship("Project", back_populates="firm")
+
+
+# ---------------------------------------------------------------------------
+# USER
+# ---------------------------------------------------------------------------
+
+class User(Base):
+    """
+    A user account. Belongs to one firm.
+    Auth is handled by Clerk — this table stores profile data only.
+    """
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    clerk_user_id = Column(String, nullable=False, unique=True, index=True)
+    email = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    role = Column(String, default="member")        # "admin" or "member"
+    firm_id = Column(Integer, ForeignKey("firms.id"), nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    firm = relationship("Firm", back_populates="users")
+
+
+# ---------------------------------------------------------------------------
+# PROJECT
+# ---------------------------------------------------------------------------
+
+class Project(Base):
+    """
+    A construction project. All assessments belong to a project.
+    Context set once here — building type, class, climate — never re-entered.
+    """
+    __tablename__ = "projects"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)              # e.g. "Ørestad Housing Block 4B"
+    project_number = Column(String, nullable=True)     # e.g. "2024-087"
+    address = Column(String, nullable=True)
+    city = Column(String, nullable=True)
+    building_type = Column(String, nullable=True)      # e.g. "etageboliger"
+    building_class = Column(String, nullable=True)     # "klasse_1/2/3"
+    climate_zone = Column(String, nullable=True)       # "coastal/urban/continental"
+    jurisdiction = Column(String, nullable=True)       # "DK", "NL", "SE", "NO", "DE"
+    architect_name = Column(String, nullable=True)
+    firm_id = Column(Integer, ForeignKey("firms.id"), nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    firm = relationship("Firm", back_populates="projects")
+    assessments = relationship("AssessmentLog", back_populates="project")
+
+
+# ---------------------------------------------------------------------------
 # ASSESSMENT LOG
 # ---------------------------------------------------------------------------
 
@@ -284,6 +358,10 @@ class AssessmentLog(Base):
     timestamp = Column(String, nullable=False)
     query_text = Column(Text, nullable=False)
 
+    # Project context
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
+    firm_id = Column(Integer, ForeignKey("firms.id"), nullable=True)
+
     # Parsed fields
     specified_product = Column(String, nullable=True)
     proposed_product = Column(String, nullable=True)
@@ -294,6 +372,14 @@ class AssessmentLog(Base):
     # Result
     overall_risk = Column(String, nullable=True)  # pass / conditional / fail
     assessment_json = Column(Text, nullable=True)  # full structured result
+
+    # Decision record — set after architect reviews the assessment
+    decision = Column(String, nullable=True)           # "approved", "rejected", "info_requested"
+    decision_timestamp = Column(DateTime, nullable=True)
+    decision_by = Column(String, nullable=True)        # architect name
+    decision_note = Column(Text, nullable=True)        # optional free text
+
+    project = relationship("Project", back_populates="assessments")
 
 
 # ---------------------------------------------------------------------------
