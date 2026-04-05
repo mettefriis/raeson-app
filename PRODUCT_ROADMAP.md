@@ -1,0 +1,193 @@
+# ræson — Product Roadmap
+
+*Written April 2026. Strategy locked, implementation deferred until after thesis.*
+
+---
+
+## What we are building
+
+A workflow tool for architects handling contractor substitution requests during construction. Not a chatbot, not a plugin — a documentation tool that sits between the contractor's email and the project file.
+
+**The moment:** A contractor submits a substitution request (e.g. "Kingspan K15 instead of Rockwool Frontrock for facade insulation"). The architect has 48-72 hours to assess and respond. This happens 30-80 times per project. Currently it takes 2-4 hours per request and produces no structured record.
+
+**What ræson does:** Reduces that to 15 seconds and produces a dated, signed assessment document that goes into the project file.
+
+---
+
+## Current state (April 2026)
+
+The engine is built and working:
+
+- Fire reaction, thermal, carbon, durability, material compatibility checks against BR18/BR25 (Danish) and Bbl (Dutch)
+- Biophilic quality, acoustic absorption, thermal comfort, daylight (with floor plan image upload)
+- LLM query parsing + narrative generation (Claude)
+- PDF export with scorecard, dimension detail, recommendations
+- 679 products (50 named manual, 594 ÖKOBAUDAT generic, 35 legacy)
+- 65 code requirements (52 Danish BR18, 13 Dutch Bbl)
+
+What is missing is the **shell**: project context, structured input, decision record, assessment history.
+
+---
+
+## What needs to be built
+
+### Phase 1 — Project context
+
+**New screen:** Create / select a project before running an assessment.
+
+A project stores:
+- Name (e.g. "Ørestad Housing Block 4B")
+- Project number (e.g. "2024-087")
+- Address / city
+- Building type (etageboliger, institutioner, woonfunctie, etc.)
+- Building class (klasse 1 / 2 / 3)
+- Climate zone (coastal / urban / continental)
+- Architect name / firm name
+
+Every assessment inherits this context. The architect never types "etageboliger klasse 2 Copenhagen" again — it is set once at project level.
+
+**DB change:** add a `projects` table. Add `project_id` foreign key to `AssessmentLog`.
+
+**UI change:** project list as the landing screen. "New assessment" always starts from within a project.
+
+---
+
+### Phase 2 — Structured input
+
+Replace the free-text-only query box with two parallel input modes:
+
+**Structured (default):**
+- Specified product — text field with autocomplete against product DB
+- Proposed product — text field with autocomplete
+- Building element — dropdown (facade insulation / facade cladding / window glazing / etc.)
+- Optional note — free text for context
+
+**Free text (fallback):** the current query box, for complex or ambiguous cases.
+
+The LLM parser stays as the engine for free text. Structured input bypasses it — fields map directly to the orchestrator.
+
+---
+
+### Phase 3 — Contractor PDF upload
+
+The substitution request arrives as a document. The architect drops it into ræson.
+
+Claude Vision reads the PDF and extracts:
+- Specified product name
+- Proposed product name
+- Building element (inferred from context)
+- Any other relevant context (project reference, contractor name)
+
+Pre-fills the structured input fields. Architect confirms and runs the assessment.
+
+**This is the interaction that fits the real workflow.** The contractor sends a document; the architect processes it in ræson without re-typing anything.
+
+Implementation: extend the existing `/api/assess/with-plan` multipart endpoint. Add PDF→image conversion (PyMuPDF / pdf2image) before sending to Vision.
+
+---
+
+### Phase 4 — Decision record + audit trail
+
+After the assessment, three action buttons:
+
+- **Approve** — substitution is accepted
+- **Request more info** — send back to contractor (future: with a generated response)
+- **Reject** — substitution is not accepted, with reason
+
+Clicking one saves:
+- Decision (approved / info_requested / rejected)
+- Timestamp (UTC)
+- Architect name (from project / account)
+- Optional note
+
+**DB change:** add `decision`, `decision_timestamp`, `decision_by`, `decision_note` columns to `AssessmentLog`.
+
+**PDF change:** the exported PDF shows decision status, architect name, and project reference on the cover. It becomes a formal document, not just a generated report.
+
+---
+
+### Phase 5 — Assessment history dashboard
+
+The primary screen (within a project) is a list of all assessments:
+
+| Date | Specified | Proposed | Element | Verdict | Decision |
+|------|-----------|----------|---------|---------|----------|
+| 03 Apr | Rockwool Frontrock | Kingspan K15 | Facade insulation | FAIL | Rejected |
+| 01 Apr | Prodema ProdEX | Cembrit Patina | Facade cladding | CONDITIONAL | Under review |
+
+Filterable by verdict and decision status. Each row opens the full assessment.
+
+This transforms ræson from a lookup tool into a project management tool for substitution decisions.
+
+---
+
+### Phase 6 — Firm identity on outputs
+
+The PDF currently says "generated by ræson." It should say "generated by ræson for [Firm Name]" with the firm's logo.
+
+Implementation: firm name + logo upload in account settings. Logo embedded in PDF header alongside the ræson mark.
+
+---
+
+### Phase 7 — Deployment
+
+The tool needs a URL. Currently runs on localhost only.
+
+**Recommended stack:**
+- Backend: Railway (FastAPI, free tier → paid at scale). Postgres replaces SQLite.
+- Frontend: Vercel (React/Vite, free tier).
+- Secrets: Railway environment variables (ANTHROPIC_API_KEY, etc.).
+- Domain: raeson.app or similar.
+
+**Effort:** approximately one afternoon once the codebase is in a GitHub repo.
+
+---
+
+### Phase 8 — Revit integration (longer term, 3-6 months)
+
+When a substitution is proposed inside a Revit model, the architect should be able to trigger a ræson assessment without leaving the tool.
+
+Requires a Revit plugin (C# / .NET). Reads the material assignment from the model element, sends it to the ræson API, displays the result in a panel.
+
+This is the moat — it embeds ræson into the architect's primary tool and makes switching costly.
+
+---
+
+## Data gaps to close before production
+
+| Gap | Action needed |
+|---|---|
+| Named product coverage thin (~50 manual) | Manual curation: identify 200 most-specified Danish/Dutch products, add from datasheets |
+| EC3 API blocked (business account required) | Email support@buildingtransparency.org — explain use case, request research access |
+| ÖKOBAUDAT products lack fire euroclass | Cannot be fixed from ÖKOBAUDAT data — needs cross-referencing with manufacturer data |
+| Dutch named products barely seeded | Add Isover NL, Fermacell, Weber, Knauf NL top 20 products manually |
+| No structural code checks | Significant work — requires Eurocode lookup tables |
+
+**The practical path:** show to 5-10 architects, learn which 20 products they actually specify most, add those manually. Faster and more targeted than solving the whole database problem upfront.
+
+---
+
+## Go-to-market
+
+**Target:** mid-size architecture firms (10-50 architects) in Denmark and the Netherlands doing residential and institutional work. These firms have enough substitution volume to feel the pain but not enough to have in-house technical staff dedicated to it.
+
+**Entry motion:** demo to one technically-minded architect (not a partner — they don't do this work). Get one firm using it in a real project. Use their feedback to close the gaps. Charge per project or per seat.
+
+**Pricing hypothesis:** €200-400/month per firm. The time saving (30-80 substitutions × 2-4 hours) justifies it easily. The audit trail (liability protection) is the second value argument.
+
+---
+
+## What is explicitly out of scope
+
+- Structural engineering calculations
+- HVAC / MEP substitutions
+- Cost impact
+- Building control submission (ræson is advisory, not a formal submission)
+- Local planning requirements
+- Non-DK/NL jurisdictions (for now)
+
+Full limitations documented in `LIMITATIONS.md`.
+
+---
+
+*Next session: start with Phase 1 (project context) and Phase 2 (structured input). The engine does not need to change — only the shell around it.*
