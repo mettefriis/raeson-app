@@ -216,7 +216,7 @@ async def llm_direct_assessment(
         )
         message = c.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=1000,
+            max_tokens=2000,
             system=DIRECT_ASSESSMENT_PROMPT,
             messages=[{"role": "user", "content": query}],
         )
