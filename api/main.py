@@ -5,7 +5,6 @@ Ræson API — Material Substitution Risk Intelligence
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from api.models.database import init_db
 from api.routers.assessment import router as assessment_router
 
 load_dotenv()
@@ -45,4 +44,7 @@ app.include_router(assessment_router)
 
 @app.on_event("startup")
 def startup():
-    init_db()
+    from alembic.config import Config
+    from alembic import command
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
