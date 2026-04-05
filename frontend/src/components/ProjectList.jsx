@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@clerk/clerk-react'
+import { motion } from 'motion/react'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
-const MONO = "'JetBrains Mono', monospace"
 
 export default function ProjectList({ onSelectProject, onNewProject }) {
   const { getToken } = useAuth()
@@ -22,30 +22,27 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   }, [])
 
   if (loading) return (
-    <div style={{ padding: 40, textAlign: 'center', color: '#9b9b99', fontSize: 13 }}>
+    <div className="py-10 text-center text-muted text-13 font-light">
       Loading projects...
     </div>
   )
 
   return (
     <div>
-      {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+      {/* Header */}
+      <div className="flex items-start justify-between mb-8">
         <div>
-          <p style={{ fontSize: 11, color: '#9b9b99', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>
+          <p className="text-11 text-muted mb-1" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Projects
           </p>
-          <p style={{ fontSize: 13, color: '#6b6b69', fontWeight: 300 }}>
-            Select a project to run an assessment
+          <p className="text-13 text-subtle font-light">
+            Select a project to run an assessment.
           </p>
         </div>
         <button
           onClick={onNewProject}
-          style={{
-            padding: '8px 16px', background: '#111110', color: '#f7f7f5',
-            border: 'none', cursor: 'pointer', fontSize: 12,
-            fontFamily: 'inherit', letterSpacing: '0.02em',
-          }}
+          className="px-4 py-2 bg-ink text-surface text-12 hover:bg-subtle transition-colors duration-100"
+          style={{ letterSpacing: '0.01em' }}
         >
           + New project
         </button>
@@ -53,19 +50,11 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
 
       {/* Empty state */}
       {projects.length === 0 && (
-        <div style={{
-          padding: '48px 24px', textAlign: 'center',
-          border: '1px solid #e5e5e3', background: '#ffffff',
-        }}>
-          <p style={{ fontSize: 13, color: '#9b9b99', fontWeight: 300, marginBottom: 16 }}>
-            No projects yet
-          </p>
+        <div className="py-16 text-center border border-rule bg-card">
+          <p className="text-13 text-muted font-light mb-5">No projects yet.</p>
           <button
             onClick={onNewProject}
-            style={{
-              padding: '8px 16px', background: '#111110', color: '#f7f7f5',
-              border: 'none', cursor: 'pointer', fontSize: 12, fontFamily: 'inherit',
-            }}
+            className="px-4 py-2 bg-ink text-surface text-12 hover:bg-subtle transition-colors duration-100"
           >
             Create your first project
           </button>
@@ -74,44 +63,37 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
 
       {/* Project list */}
       {projects.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {projects.map(p => (
-            <div
+        <div className="flex flex-col" style={{ gap: 1 }}>
+          {projects.map((p, i) => (
+            <motion.div
               key={p.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.15, ease: 'easeOut' }}
               onClick={() => onSelectProject(p)}
-              style={{
-                padding: '16px 20px', background: '#ffffff',
-                border: '1px solid #e5e5e3', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                transition: 'border-color 0.1s',
-              }}
-              onMouseOver={e => e.currentTarget.style.borderColor = '#111110'}
-              onMouseOut={e => e.currentTarget.style.borderColor = '#e5e5e3'}
+              className="px-5 py-4 bg-card border border-rule cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-100"
             >
-              <div>
-                <div style={{ fontSize: 13, color: '#111110', marginBottom: 4 }}>
+              <div className="min-w-0">
+                <div className="text-13 text-ink mb-1 group-hover:text-ink transition-colors">
                   {p.name}
                 </div>
-                <div style={{ fontSize: 11, color: '#9b9b99', display: 'flex', gap: 16 }}>
+                <div className="text-11 text-muted flex gap-4 flex-wrap font-light">
                   {p.project_number && <span>{p.project_number}</span>}
                   {p.city && <span>{p.city}</span>}
                   {p.building_type && <span>{p.building_type}</span>}
                   {p.jurisdiction && (
-                    <span style={{
-                      fontFamily: MONO, border: '1px solid #e5e5e3',
-                      padding: '0px 4px', fontSize: 10,
-                    }}>
+                    <span className="font-mono border border-rule px-1 text-10" style={{ letterSpacing: '0.02em' }}>
                       {p.jurisdiction}
                     </span>
                   )}
                 </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 11, color: '#9b9b99' }}>
+              <div className="text-right ml-8 shrink-0">
+                <div className="text-11 text-muted font-light">
                   {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

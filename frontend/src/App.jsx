@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { SignIn, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/clerk-react'
+import { AnimatePresence, motion } from 'motion/react'
 import QueryForm from './components/QueryForm.jsx'
 import AssessmentResult from './components/AssessmentResult.jsx'
 import ProjectList from './components/ProjectList.jsx'
@@ -8,7 +9,6 @@ import ProjectForm from './components/ProjectForm.jsx'
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const EXAMPLE_QUERIES = [
-  // Existing scenarios
   {
     label: "Facade insulation swap (mineral wool → phenolic foam)",
     query: "Contractor proposes Kingspan Kooltherm K15 instead of specified Rockwool Duorock 040 for facade insulation on a residential apartment building (5 floors, klasse 2) in Amsterdam."
@@ -29,7 +29,6 @@ const EXAMPLE_QUERIES = [
     label: "Window glazing downgrade",
     query: "Contractor proposes Pilkington Suncool HR++ double glazing instead of specified AGC iplus Top 1.1 triple glazing for windows in a new residential building, klasse 2, Amsterdam."
   },
-  // New scenarios showing 3-layer value
   {
     label: "Carbon impact: low-carbon swap (EPS → mineral wool)",
     query: "Contractor proposes Rockwool Duorock 040 mineral wool instead of Knauf Therm TR 032 EPS for floor insulation on a residential building klasse 1 in Amsterdam."
@@ -44,10 +43,7 @@ const EXAMPLE_QUERIES = [
   },
 ]
 
-const MONO = "'JetBrains Mono', monospace"
-
 function RaesonMark({ size = 14, color = 'currentColor' }) {
-  // s=3 stroke unit, 6×6 counter, 12×12 bowl, stem extends 8 below bowl
   return (
     <svg
       viewBox="0 0 23 23"
@@ -57,15 +53,10 @@ function RaesonMark({ size = 14, color = 'currentColor' }) {
       style={{ display: 'block', flexShrink: 0 }}
       aria-hidden="true"
     >
-      {/* Left stem — full height */}
       <rect x="0" y="0" width="3" height="20" fill={color} />
-      {/* Top bar */}
       <rect x="0" y="0" width="12" height="3" fill={color} />
-      {/* Right side of bowl */}
       <rect x="9" y="0" width="3" height="12" fill={color} />
-      {/* Bottom bar of bowl */}
       <rect x="0" y="9" width="12" height="3" fill={color} />
-      {/* Diagonal leg */}
       <line x1="12" y1="12" x2="21" y2="21"
         stroke={color} strokeWidth="3" strokeLinecap="square" />
     </svg>
@@ -75,10 +66,8 @@ function RaesonMark({ size = 14, color = 'currentColor' }) {
 export default function App() {
   const { getToken } = useAuth()
 
-  // View router: 'projects' | 'new-project' | 'assessment'
   const [view, setView] = useState('projects')
   const [activeProject, setActiveProject] = useState(null)
-
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loadingMsg, setLoadingMsg] = useState('Running compliance checks...')
@@ -127,165 +116,167 @@ export default function App() {
     }
   }
 
+  function goProjects() {
+    setView('projects')
+    setActiveProject(null)
+    setResult(null)
+  }
+
   return (
-    <div style={{ minHeight: '100vh', background: '#f7f7f5', color: '#111110' }}>
+    <div className="min-h-screen bg-surface text-ink">
       {/* Header */}
-      <header style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: 'rgba(247,247,245,0.85)', backdropFilter: 'blur(8px)',
-        borderBottom: '1px solid #e5e5e3',
-      }}>
-        <nav style={{
-          maxWidth: 800, margin: '0 auto', padding: '0 24px',
-          height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-rule"
+        style={{ background: 'rgba(247,247,245,0.88)', backdropFilter: 'blur(10px)' }}>
+        <nav className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
             <RaesonMark size={14} color="#111110" />
-            <span style={{
-              fontFamily: MONO, fontWeight: 400,
-              fontSize: 13, color: '#111110', letterSpacing: '-0.01em',
-            }}>
-              ræson
-            </span>
-            <span style={{
-              fontFamily: MONO, fontSize: 10, color: '#9b9b99',
-              border: '1px solid #e5e5e3', padding: '1px 6px',
-              letterSpacing: '0.04em',
-            }}>
+            <span className="font-mono text-13 text-ink" style={{ letterSpacing: '-0.01em' }}>ræson</span>
+            <span className="font-mono text-10 text-muted border border-rule px-1.5 py-px" style={{ letterSpacing: '0.04em' }}>
               demo
             </span>
           </div>
+
           {/* Breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9b9b99' }}>
-            <span
-              onClick={() => { setView('projects'); setActiveProject(null); setResult(null) }}
-              style={{ cursor: 'pointer' }}
-              onMouseOver={e => e.currentTarget.style.color = '#111110'}
-              onMouseOut={e => e.currentTarget.style.color = '#9b9b99'}
+          <div className="flex items-center gap-2 text-12 text-muted">
+            <button
+              onClick={goProjects}
+              className="hover:text-ink transition-colors duration-100"
             >
               Projects
-            </span>
+            </button>
             {activeProject && (
               <>
                 <span>›</span>
-                <span style={{ color: '#111110' }}>{activeProject.name}</span>
+                <span className="text-ink">{activeProject.name}</span>
               </>
             )}
           </div>
+
           <UserButton afterSignOutUrl="/" />
         </nav>
       </header>
 
       {/* Sign-in gate */}
       <SignedOut>
-        <div style={{
-          minHeight: '100vh', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', background: '#f7f7f5',
-        }}>
+        <div className="min-h-screen flex items-center justify-center bg-surface">
           <SignIn routing="hash" />
         </div>
       </SignedOut>
 
       <SignedIn>
-      <main style={{ maxWidth: 800, margin: '0 auto', padding: '88px 24px 80px' }}>
+        <main className="max-w-3xl mx-auto px-6 pb-20" style={{ paddingTop: 88 }}>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={view + (activeProject?.id || '')}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+            >
+              {/* VIEW: Project list */}
+              {view === 'projects' && (
+                <ProjectList
+                  onSelectProject={p => { setActiveProject(p); setView('assessment'); setResult(null) }}
+                  onNewProject={() => setView('new-project')}
+                />
+              )}
 
-        {/* VIEW: Project list */}
-        {view === 'projects' && (
-          <ProjectList
-            onSelectProject={p => { setActiveProject(p); setView('assessment'); setResult(null) }}
-            onNewProject={() => setView('new-project')}
-          />
-        )}
+              {/* VIEW: New project form */}
+              {view === 'new-project' && (
+                <ProjectForm
+                  onCreated={p => { setActiveProject(p); setView('assessment'); setResult(null) }}
+                  onCancel={goProjects}
+                />
+              )}
 
-        {/* VIEW: New project form */}
-        {view === 'new-project' && (
-          <ProjectForm
-            onCreated={p => { setActiveProject(p); setView('assessment'); setResult(null) }}
-            onCancel={() => setView('projects')}
-          />
-        )}
+              {/* VIEW: Assessment */}
+              {view === 'assessment' && activeProject && (
+                <div>
+                  {/* Project context strip */}
+                  <div className="px-3.5 py-2.5 bg-card border border-rule mb-6 flex gap-5 flex-wrap text-11 text-subtle font-light">
+                    {activeProject.building_type && (
+                      <span><span className="text-muted">Type </span>{activeProject.building_type}</span>
+                    )}
+                    {activeProject.building_class && (
+                      <span><span className="text-muted">Class </span>{activeProject.building_class}</span>
+                    )}
+                    {activeProject.climate_zone && (
+                      <span><span className="text-muted">Climate </span>{activeProject.climate_zone}</span>
+                    )}
+                    {activeProject.jurisdiction && (
+                      <span><span className="text-muted">Code </span>{activeProject.jurisdiction}</span>
+                    )}
+                    {activeProject.architect_name && (
+                      <span><span className="text-muted">Architect </span>{activeProject.architect_name}</span>
+                    )}
+                  </div>
 
-        {/* VIEW: Assessment (within a project) */}
-        {view === 'assessment' && activeProject && (
-          <div>
-            {/* Project context strip */}
-            <div style={{
-              padding: '10px 14px', background: '#ffffff', border: '1px solid #e5e5e3',
-              marginBottom: 24, display: 'flex', gap: 20, flexWrap: 'wrap',
-              fontSize: 11, color: '#6b6b69',
-            }}>
-              {activeProject.building_type && <span><span style={{ color: '#9b9b99' }}>Type </span>{activeProject.building_type}</span>}
-              {activeProject.building_class && <span><span style={{ color: '#9b9b99' }}>Class </span>{activeProject.building_class}</span>}
-              {activeProject.climate_zone && <span><span style={{ color: '#9b9b99' }}>Climate </span>{activeProject.climate_zone}</span>}
-              {activeProject.jurisdiction && <span><span style={{ color: '#9b9b99' }}>Code </span>{activeProject.jurisdiction}</span>}
-              {activeProject.architect_name && <span><span style={{ color: '#9b9b99' }}>Architect </span>{activeProject.architect_name}</span>}
-            </div>
+                  <QueryForm
+                    value={queryText}
+                    onChange={setQueryText}
+                    onSubmit={handleSubmit}
+                    loading={loading}
+                  />
 
-            {/* Query input */}
-            <QueryForm
-              value={queryText}
-              onChange={setQueryText}
-              onSubmit={handleSubmit}
-              loading={loading}
-            />
+                  {/* Example scenarios */}
+                  <div className="mt-3.5 mb-10">
+                    <p className="text-11 text-muted mb-2" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      Try a scenario
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {EXAMPLE_QUERIES.map((ex, i) => (
+                        <button
+                          key={i}
+                          onClick={() => { setQueryText(ex.query); handleSubmit(ex.query, null) }}
+                          disabled={loading}
+                          className="text-11 px-2.5 py-1 bg-surface border border-rule text-subtle hover:border-ink hover:text-ink transition-colors duration-100 disabled:opacity-40"
+                        >
+                          {ex.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-            {/* Example scenarios */}
-            <div style={{ marginTop: 14, marginBottom: 40 }}>
-              <p style={{ fontSize: 11, color: '#9b9b99', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                Try a scenario
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {EXAMPLE_QUERIES.map((ex, i) => (
-                  <button
-                    key={i}
-                    onClick={() => { setQueryText(ex.query); handleSubmit(ex.query, null) }}
-                    disabled={loading}
-                    style={{
-                      fontSize: 11, padding: '4px 10px',
-                      background: '#f7f7f5', border: '1px solid #e5e5e3',
-                      cursor: 'pointer', color: '#6b6b69', fontFamily: 'inherit',
-                    }}
-                    onMouseOver={e => { e.currentTarget.style.borderColor = '#111110'; e.currentTarget.style.color = '#111110' }}
-                    onMouseOut={e => { e.currentTarget.style.borderColor = '#e5e5e3'; e.currentTarget.style.color = '#6b6b69' }}
-                  >
-                    {ex.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+                  {/* Error */}
+                  {error && (
+                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 mb-6 font-light">
+                      {error}
+                    </div>
+                  )}
 
-            {/* Error */}
-            {error && (
-              <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', fontSize: 13, marginBottom: 24, fontWeight: 300 }}>
-                {error}
-              </div>
-            )}
+                  {/* Loading */}
+                  {loading && (
+                    <div className="py-10 text-center text-muted">
+                      <div
+                        className="w-5 h-5 border border-rule border-t-ink animate-spin mx-auto mb-3"
+                        style={{ borderRadius: '50%' }}
+                      />
+                      <p className="text-13 font-light" style={{ letterSpacing: '0.02em' }}>{loadingMsg}</p>
+                    </div>
+                  )}
 
-            {/* Loading */}
-            {loading && (
-              <div style={{ padding: 40, textAlign: 'center', color: '#9b9b99' }}>
-                <div style={{
-                  width: 20, height: 20, border: '1.5px solid #e5e5e3',
-                  borderTopColor: '#111110', borderRadius: '50%',
-                  animation: 'spin 0.8s linear infinite', margin: '0 auto 12px',
-                }} />
-                <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-                <p style={{ fontSize: 13, fontWeight: 300, letterSpacing: '0.02em' }}>{loadingMsg}</p>
-              </div>
-            )}
+                  {/* Results */}
+                  <AnimatePresence>
+                    {result && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeOut' }}
+                      >
+                        <AssessmentResult data={result} queryText={queryText} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-            {/* Results */}
-            {result && <AssessmentResult data={result} queryText={queryText} />}
-          </div>
-        )}
-
-        <footer style={{
-          marginTop: 60, paddingTop: 20, borderTop: '1px solid #e5e5e3',
-          fontSize: 11, color: '#c5c5c3', fontWeight: 300, letterSpacing: '0.02em',
-        }}>
-          ræson — compliance intelligence for architects.
-        </footer>
-      </main>
+          <footer className="mt-16 pt-5 border-t border-rule text-11 text-dim font-light" style={{ letterSpacing: '0.02em' }}>
+            ræson — compliance intelligence for architects.
+          </footer>
+        </main>
       </SignedIn>
     </div>
   )

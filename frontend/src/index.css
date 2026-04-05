@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core palette */
+  --color-ink: #111110;
+  --color-subtle: #6b6b69;
+  --color-muted: #9b9b99;
+  --color-dim: #c5c5c3;
+  --color-surface: #f7f7f5;
+  --color-rule: #e5e5e3;
+  --color-row: #f0f0ee;
+  --color-card: #ffffff;
+
+  /* Verdict: pass */
+  --color-pass: #15803d;
+  --color-pass-light: #f0fdf4;
+  --color-pass-edge: #bbf7d0;
+  --color-pass-dot: #16a34a;
+
+  /* Verdict: conditional */
+  --color-warn: #a16207;
+  --color-warn-light: #fefce8;
+  --color-warn-edge: #fef08a;
+  --color-warn-dot: #ca8a04;
+
+  /* Verdict: fail */
+  --color-fail: #b91c1c;
+  --color-fail-light: #fef2f2;
+  --color-fail-edge: #fecaca;
+  --color-fail-dot: #dc2626;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Named font sizes */
+  --text-10: 10px;
+  --text-11: 11px;
+  --text-12: 12px;
+  --text-13: 13px;
+  --text-14: 14px;
+  --text-15: 15px;
+
+  /* Zero all radii — sharp edges everywhere */
+  --radius: 0px;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button, input, textarea, select {
+    font-family: inherit;
+    border-radius: 0;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+}

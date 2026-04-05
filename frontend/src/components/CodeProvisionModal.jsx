@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { motion } from 'motion/react'
 
 export default function CodeProvisionModal({ codeReference, onClose }) {
   const [provision, setProvision] = useState(null)
@@ -22,66 +23,48 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
   }, [codeReference])
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
       onClick={onClose}
-      style={{
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-        background: 'rgba(0,0,0,0.35)', display: 'flex',
-        alignItems: 'center', justifyContent: 'center',
-        zIndex: 1000, padding: 20,
-      }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-5"
+      style={{ background: 'rgba(0,0,0,0.35)' }}
     >
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.97, y: 8 }}
+        transition={{ duration: 0.15, ease: 'easeOut' }}
         onClick={e => e.stopPropagation()}
-        style={{
-          background: '#ffffff', maxWidth: 600,
-          width: '100%', maxHeight: '80vh', overflowY: 'auto',
-          padding: '24px 28px',
-          border: '1px solid #e5e5e3',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
-        }}
+        className="bg-card w-full max-h-[80vh] overflow-y-auto px-7 py-6 border border-rule"
+        style={{ maxWidth: 600, boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}
       >
         {/* Header */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between',
-          alignItems: 'flex-start', marginBottom: 20,
-          paddingBottom: 16, borderBottom: '1px solid #e5e5e3',
-        }}>
+        <div className="flex justify-between items-start mb-5 pb-4 border-b border-rule">
           <div>
-            <div style={{
-              fontSize: 10, color: '#9b9b99', letterSpacing: '0.08em',
-              textTransform: 'uppercase', marginBottom: 4,
-            }}>
+            <div className="text-10 text-muted font-normal mb-1" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Code provision
             </div>
-            <div style={{ fontSize: 15, fontWeight: 400, color: '#111110' }}>
-              {codeReference}
-            </div>
+            <div className="text-15 font-normal text-ink">{codeReference}</div>
           </div>
           <button
             onClick={onClose}
-            style={{
-              background: 'none', border: 'none', fontSize: 18,
-              cursor: 'pointer', color: '#9b9b99', padding: '0 4px',
-              lineHeight: 1, fontFamily: 'inherit',
-            }}
+            className="text-muted hover:text-ink transition-colors duration-100 text-lg leading-none px-1 bg-transparent border-none"
           >
             ×
           </button>
         </div>
 
         {loading && (
-          <div style={{ padding: 20, textAlign: 'center', color: '#9b9b99', fontWeight: 300 }}>
+          <div className="py-5 text-center text-muted font-light text-13">
             Loading provision...
           </div>
         )}
 
         {error && (
-          <div style={{
-            padding: '12px 16px', background: '#fef2f2',
-            border: '1px solid #fecaca',
-            color: '#991b1b', fontSize: 13, fontWeight: 300,
-          }}>
+          <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 font-light">
             {error}
           </div>
         )}
@@ -89,99 +72,62 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
         {provision && (
           <div>
             {/* Document context */}
-            <div style={{
-              background: '#f7f7f5',
-              padding: '12px 16px', marginBottom: 16,
-              fontSize: 12, color: '#6b6b69', fontWeight: 300,
-              border: '1px solid #e5e5e3',
-            }}>
-              <div style={{ fontWeight: 400, color: '#111110', marginBottom: 2 }}>
-                {provision.document}
-              </div>
+            <div className="bg-surface px-4 py-3 mb-4 text-12 text-subtle font-light border border-rule">
+              <div className="font-normal text-ink mb-0.5">{provision.document}</div>
               {provision.chapter && <div>{provision.chapter}</div>}
               {provision.section && <div>{provision.section}</div>}
             </div>
 
             {/* Dutch text */}
-            <div style={{ marginBottom: 16 }}>
-              <div style={{
-                fontSize: 10, fontWeight: 400, color: '#9b9b99',
-                marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase',
-              }}>
+            <div className="mb-4">
+              <div className="text-10 text-muted font-normal mb-1.5" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Origineel (NL)
               </div>
-              <div style={{
-                fontSize: 13, lineHeight: 1.75, color: '#333', fontWeight: 300,
-                padding: '12px 16px', background: '#f7f7f5',
-                borderLeft: '3px solid #111110',
-                fontStyle: 'italic',
-              }}>
+              <div
+                className="text-13 leading-7 text-subtle font-light px-4 py-3 bg-surface italic"
+                style={{ borderLeft: '3px solid #111110' }}
+              >
                 {provision.text_nl}
               </div>
             </div>
 
             {/* English translation */}
-            <div style={{ marginBottom: 16 }}>
-              <div style={{
-                fontSize: 10, fontWeight: 400, color: '#9b9b99',
-                marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase',
-              }}>
+            <div className="mb-4">
+              <div className="text-10 text-muted font-normal mb-1.5" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Translation (EN)
               </div>
-              <div style={{
-                fontSize: 13, lineHeight: 1.75, color: '#333', fontWeight: 300,
-                padding: '12px 16px', background: '#f7f7f5',
-                borderLeft: '3px solid #e5e5e3',
-              }}>
+              <div
+                className="text-13 leading-7 text-subtle font-light px-4 py-3 bg-surface"
+                style={{ borderLeft: '3px solid #e5e5e3' }}
+              >
                 {provision.text_en}
               </div>
             </div>
 
             {/* Key details */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6,
-              marginBottom: 16,
-            }}>
+            <div className="grid grid-cols-2 gap-1.5 mb-4">
               {provision.applicable_to && (
-                <div style={{
-                  background: '#f7f7f5', padding: '8px 12px',
-                  border: '1px solid #e5e5e3',
-                }}>
-                  <div style={{ fontSize: 10, color: '#9b9b99', marginBottom: 2 }}>Applies to</div>
-                  <div style={{ fontSize: 12, fontWeight: 400, color: '#111110' }}>
-                    {provision.applicable_to}
-                  </div>
+                <div className="bg-surface px-3 py-2 border border-rule">
+                  <div className="text-10 text-muted mb-0.5">Applies to</div>
+                  <div className="text-12 font-normal text-ink">{provision.applicable_to}</div>
                 </div>
               )}
               {provision.minimum_fire_class && (
-                <div style={{
-                  background: '#f7f7f5', padding: '8px 12px',
-                  border: '1px solid #e5e5e3',
-                }}>
-                  <div style={{ fontSize: 10, color: '#9b9b99', marginBottom: 2 }}>Required class</div>
-                  <div style={{ fontSize: 12, fontWeight: 400, color: '#111110' }}>
-                    {provision.minimum_fire_class}
-                  </div>
+                <div className="bg-surface px-3 py-2 border border-rule">
+                  <div className="text-10 text-muted mb-0.5">Required class</div>
+                  <div className="text-12 font-normal text-ink">{provision.minimum_fire_class}</div>
                 </div>
               )}
               {provision.minimum_fire_resistance && (
-                <div style={{
-                  background: '#f7f7f5', padding: '8px 12px',
-                  border: '1px solid #e5e5e3',
-                }}>
-                  <div style={{ fontSize: 10, color: '#9b9b99', marginBottom: 2 }}>Required resistance</div>
-                  <div style={{ fontSize: 12, fontWeight: 400, color: '#111110' }}>
-                    {provision.minimum_fire_resistance}
-                  </div>
+                <div className="bg-surface px-3 py-2 border border-rule">
+                  <div className="text-10 text-muted mb-0.5">Required resistance</div>
+                  <div className="text-12 font-normal text-ink">{provision.minimum_fire_resistance}</div>
                 </div>
               )}
               {provision.values && Object.entries(provision.values).map(([k, v]) => (
-                <div key={k} style={{
-                  background: '#f7f7f5', padding: '8px 12px',
-                  border: '1px solid #e5e5e3',
-                }}>
-                  <div style={{ fontSize: 10, color: '#9b9b99', marginBottom: 2 }}>{k}</div>
-                  <div style={{ fontSize: 12, fontWeight: 400, color: '#111110' }}>{v}</div>
+                <div key={k} className="bg-surface px-3 py-2 border border-rule">
+                  <div className="text-10 text-muted mb-0.5">{k}</div>
+                  <div className="text-12 font-normal text-ink">{v}</div>
                 </div>
               ))}
             </div>
@@ -192,21 +138,14 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
                 href={provision.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: 'inline-block', fontSize: 12, color: '#111110', fontWeight: 400,
-                  textDecoration: 'none', padding: '6px 12px',
-                  border: '1px solid #e5e5e3',
-                  transition: 'border-color 0.1s',
-                }}
-                onMouseOver={e => e.currentTarget.style.borderColor = '#111110'}
-                onMouseOut={e => e.currentTarget.style.borderColor = '#e5e5e3'}
+                className="inline-block text-12 text-ink font-normal no-underline px-3 py-1.5 border border-rule hover:border-ink transition-colors duration-100"
               >
                 View on wetten.overheid.nl →
               </a>
             )}
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }

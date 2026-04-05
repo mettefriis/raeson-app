@@ -1,18 +1,14 @@
 import React, { useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import CodeProvisionModal from './CodeProvisionModal.jsx'
 
-// ---------------------------------------------------------------------------
-// Design tokens
-// ---------------------------------------------------------------------------
+// Verdict config
 const V = {
   pass:        { bg: '#f0fdf4', border: '#bbf7d0', color: '#15803d', dot: '#16a34a', label: 'PASS' },
   conditional: { bg: '#fefce8', border: '#fef08a', color: '#a16207', dot: '#ca8a04', label: 'CONDITIONAL' },
   fail:        { bg: '#fef2f2', border: '#fecaca', color: '#b91c1c', dot: '#dc2626', label: 'FAIL' },
 }
 
-// ---------------------------------------------------------------------------
-// Dimension metadata
-// ---------------------------------------------------------------------------
 const DIM_META = {
   fire_reaction:    { label: 'Fire reaction',        group: 'compliance' },
   fire_resistance:  { label: 'Fire resistance',      group: 'compliance' },
@@ -23,17 +19,16 @@ const DIM_META = {
   acoustic:         { label: 'Acoustic',             group: 'compliance' },
   moisture:         { label: 'Moisture',             group: 'compliance' },
   structural:       { label: 'Structural',           group: 'compliance' },
-  biophilic_quality:'Biophilic quality',
-  acoustic_quality: 'Acoustic quality',
-  thermal_comfort:  'Thermal comfort',
-  daylight_quality: 'Daylight quality',
+  biophilic_quality: 'Biophilic quality',
+  acoustic_quality:  'Acoustic quality',
+  thermal_comfort:   'Thermal comfort',
+  daylight_quality:  'Daylight quality',
 }
 
 const WELLBEING_DIMS = new Set([
   'biophilic_quality', 'acoustic_quality', 'thermal_comfort', 'daylight_quality'
 ])
 
-// Sort order: fail first, then conditional, then pass
 const VERDICT_ORDER = { fail: 0, conditional: 1, pass: 2 }
 
 function sortedDims(dims) {
@@ -51,16 +46,17 @@ function sortedDims(dims) {
 function VerdictBadge({ verdict, large }) {
   const s = V[verdict] || V.conditional
   return (
-    <span style={{
-      display: 'inline-block',
-      padding: large ? '4px 12px' : '2px 8px',
-      fontSize: large ? 11 : 10,
-      fontWeight: 500,
-      letterSpacing: '0.08em',
-      background: s.bg,
-      border: `1px solid ${s.border}`,
-      color: s.color,
-    }}>
+    <span
+      className="inline-block font-medium"
+      style={{
+        padding: large ? '4px 12px' : '2px 8px',
+        fontSize: large ? 11 : 10,
+        letterSpacing: '0.08em',
+        background: s.bg,
+        border: `1px solid ${s.border}`,
+        color: s.color,
+      }}
+    >
       {s.label}
     </span>
   )
@@ -69,14 +65,15 @@ function VerdictBadge({ verdict, large }) {
 function Dot({ verdict }) {
   const s = V[verdict] || V.conditional
   return (
-    <span style={{
-      display: 'inline-block',
-      width: 7, height: 7,
-      borderRadius: '50%',
-      background: s.dot,
-      flexShrink: 0,
-      marginTop: 1,
-    }} />
+    <span
+      className="inline-block shrink-0"
+      style={{
+        width: 7, height: 7,
+        borderRadius: '50%',
+        background: s.dot,
+        marginTop: 1,
+      }}
+    />
   )
 }
 
@@ -84,12 +81,7 @@ function CodeRef({ reference, onClick }) {
   return (
     <button
       onClick={() => onClick(reference)}
-      style={{
-        background: 'none', border: 'none', padding: 0,
-        fontSize: 11, color: '#111110', cursor: 'pointer',
-        textDecoration: 'underline', textDecorationStyle: 'dotted',
-        textUnderlineOffset: 2, fontFamily: 'inherit',
-      }}
+      className="text-11 text-ink bg-transparent border-none p-0 cursor-pointer underline decoration-dotted underline-offset-2"
     >
       {reference}
     </button>
@@ -97,7 +89,7 @@ function CodeRef({ reference, onClick }) {
 }
 
 // ---------------------------------------------------------------------------
-// Matrix row — compact summary, expands to full detail
+// Matrix row — compact summary, expands with smooth animation
 // ---------------------------------------------------------------------------
 
 function MatrixRow({ dim, onCodeClick }) {
@@ -107,37 +99,29 @@ function MatrixRow({ dim, onCodeClick }) {
     ? DIM_META[dim.dimension]
     : DIM_META[dim.dimension]?.label) || dim.dimension.replace(/_/g, ' ')
 
-  // Brief value for collapsed view — use specified_value up to first newline / 40 chars
   const brief = (v) => v ? v.split('\n')[0].slice(0, 44) : '—'
 
   return (
     <div>
       <button
         onClick={() => setOpen(o => !o)}
+        className="w-full flex items-start gap-2.5 px-3 py-2.5 border-none border-b border-row text-left transition-colors duration-100"
         style={{
-          width: '100%', display: 'flex', alignItems: 'flex-start', gap: 10,
-          padding: '9px 12px',
           background: open ? s.bg : 'transparent',
-          border: 'none', borderBottom: '1px solid #f0f0ee',
-          cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
-          transition: 'background 0.1s',
+          borderBottom: '1px solid #f0f0ee',
+          cursor: 'pointer',
         }}
         onMouseOver={e => { if (!open) e.currentTarget.style.background = '#fafaf9' }}
         onMouseOut={e => { if (!open) e.currentTarget.style.background = 'transparent' }}
       >
         <Dot verdict={dim.verdict} />
-        <span style={{ flex: 1, minWidth: 0 }}>
-          <span style={{ fontSize: 12, fontWeight: 400, color: '#111110', display: 'block' }}>
-            {label}
-          </span>
+        <span className="flex-1 min-w-0">
+          <span className="text-12 font-normal text-ink block">{label}</span>
           {!open && (
-            <span style={{
-              fontSize: 11, color: '#9b9b99', fontWeight: 300,
-              display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-            }}>
+            <span className="text-11 text-muted font-light block overflow-hidden text-ellipsis whitespace-nowrap">
               {brief(dim.specified_value)}
               {dim.proposed_value && dim.proposed_value !== dim.specified_value && (
-                <> <span style={{ color: '#c5c5c3' }}>→</span> {brief(dim.proposed_value)}</>
+                <> <span className="text-dim">→</span> {brief(dim.proposed_value)}</>
               )}
             </span>
           )}
@@ -145,53 +129,59 @@ function MatrixRow({ dim, onCodeClick }) {
         <VerdictBadge verdict={dim.verdict} />
       </button>
 
-      {open && (
-        <div style={{
-          padding: '12px 16px 14px 29px',
-          background: s.bg,
-          borderBottom: '1px solid #f0f0ee',
-          fontSize: 13,
-        }}>
-          <div style={{ color: '#9b9b99', fontWeight: 300, marginBottom: 8, fontSize: 12 }}>
-            {dim.requirement}
-          </div>
-          <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 8,
-          }}>
-            <div>
-              <div style={{ fontSize: 10, color: '#9b9b99', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2 }}>
-                Specified
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.18, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div
+              className="px-4 pb-3.5 text-13"
+              style={{
+                paddingLeft: 29,
+                background: s.bg,
+                borderBottom: '1px solid #f0f0ee',
+              }}
+            >
+              <div className="text-muted font-light mb-2 text-12 pt-3">{dim.requirement}</div>
+              <div className="grid grid-cols-2 gap-2.5 mb-2">
+                <div>
+                  <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    Specified
+                  </div>
+                  <div className="font-normal text-ink text-12">{dim.specified_value}</div>
+                </div>
+                <div>
+                  <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    Proposed
+                  </div>
+                  <div className="font-normal text-ink text-12">{dim.proposed_value}</div>
+                </div>
               </div>
-              <div style={{ fontWeight: 400, color: '#111110', fontSize: 12 }}>{dim.specified_value}</div>
-            </div>
-            <div>
-              <div style={{ fontSize: 10, color: '#9b9b99', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2 }}>
-                Proposed
+              {dim.delta && (
+                <div
+                  className="text-12 leading-relaxed px-2.5 py-1.5 bg-card mb-2"
+                  style={{ color: s.color, border: `1px solid ${s.border}` }}
+                >
+                  {dim.delta}
+                </div>
+              )}
+              <div className="text-11 text-muted">
+                <CodeRef reference={dim.code_reference} onClick={onCodeClick} />
               </div>
-              <div style={{ fontWeight: 400, color: '#111110', fontSize: 12 }}>{dim.proposed_value}</div>
             </div>
-          </div>
-          {dim.delta && (
-            <div style={{
-              fontSize: 12, color: s.color, lineHeight: 1.6,
-              padding: '6px 10px', background: '#ffffff',
-              border: `1px solid ${s.border}`,
-              marginBottom: 8,
-            }}>
-              {dim.delta}
-            </div>
-          )}
-          <div style={{ fontSize: 11, color: '#9b9b99' }}>
-            <CodeRef reference={dim.code_reference} onClick={onCodeClick} />
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Dimension Matrix — two-pane: compliance | wellbeing
+// Dimension Matrix
 // ---------------------------------------------------------------------------
 
 function DimensionMatrix({ dimensions, onCodeClick }) {
@@ -199,16 +189,13 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
   const wellbeing  = sortedDims(dimensions.filter(d =>  WELLBEING_DIMS.has(d.dimension)))
 
   const Section = ({ title, dims }) => (
-    <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{
-        fontSize: 10, color: '#9b9b99', letterSpacing: '0.08em',
-        textTransform: 'uppercase', padding: '0 12px 6px',
-      }}>
+    <div className="flex-1 min-w-0">
+      <div className="text-10 text-muted px-3 pb-1.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {title}
       </div>
-      <div style={{ border: '1px solid #e5e5e3', background: '#ffffff' }}>
+      <div className="border border-rule bg-card">
         {dims.length === 0
-          ? <div style={{ padding: '10px 12px', fontSize: 12, color: '#c5c5c3', fontWeight: 300 }}>No data</div>
+          ? <div className="px-3 py-2.5 text-12 text-dim font-light">No data</div>
           : dims.map((d, i) => <MatrixRow key={i} dim={d} onCodeClick={onCodeClick} />)
         }
       </div>
@@ -216,7 +203,7 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
   )
 
   return (
-    <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+    <div className="flex gap-3 mb-4">
       <Section title="Compliance" dims={compliance} />
       {wellbeing.length > 0 && <Section title="Wellbeing" dims={wellbeing} />}
     </div>
@@ -224,7 +211,7 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
 }
 
 // ---------------------------------------------------------------------------
-// Score bar — visual pass/conditional/fail tally
+// Score bar
 // ---------------------------------------------------------------------------
 
 function ScoreBar({ dimensions }) {
@@ -240,24 +227,20 @@ function ScoreBar({ dimensions }) {
   ].filter(s => counts[s.key] > 0)
 
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ display: 'flex', height: 4, gap: 1, marginBottom: 5 }}>
+    <div className="mb-3.5">
+      <div className="flex h-1 gap-px mb-1.5">
         {segments.map(s => (
-          <div key={s.key} style={{
-            flex: counts[s.key],
-            background: s.color,
-            height: '100%',
-          }} />
+          <div key={s.key} style={{ flex: counts[s.key], background: s.color, height: '100%' }} />
         ))}
       </div>
-      <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#9b9b99', fontWeight: 300 }}>
+      <div className="flex gap-3 text-11 text-muted font-light">
         {segments.map(s => (
-          <span key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span key={s.key} className="flex items-center gap-1">
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.color, display: 'inline-block' }} />
             {s.label}
           </span>
         ))}
-        <span style={{ marginLeft: 'auto' }}>{total} dimensions checked</span>
+        <span className="ml-auto">{total} dimensions checked</span>
       </div>
     </div>
   )
@@ -282,7 +265,6 @@ export default function AssessmentResult({ data, queryText }) {
   const [decision, setDecision] = useState(null)
   const [decisionNote, setDecisionNote] = useState('')
   const [savingDecision, setSavingDecision] = useState(false)
-  const [showNoteInput, setShowNoteInput] = useState(false)
 
   async function handleDecision(value) {
     if (!data.assessment_id) return
@@ -324,34 +306,29 @@ export default function AssessmentResult({ data, queryText }) {
     }
   }
 
-  const sv = V[data.overall_risk] || V.conditional
-
   return (
     <div>
-      {activeProvision && (
-        <CodeProvisionModal
-          codeReference={activeProvision}
-          onClose={() => setActiveProvision(null)}
-        />
-      )}
+      {/* Modal */}
+      <AnimatePresence>
+        {activeProvision && (
+          <CodeProvisionModal
+            codeReference={activeProvision}
+            onClose={() => setActiveProvision(null)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* ── Header card ── */}
-      <div style={{
-        padding: '20px 24px', background: '#ffffff',
-        border: '1px solid #e5e5e3', marginBottom: 12,
-      }}>
-        {/* Top row: title + overall verdict */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+      <div className="px-6 py-5 bg-card border border-rule mb-3">
+        {/* Title + overall verdict */}
+        <div className="flex justify-between items-start mb-3">
           <div>
-            <div style={{
-              fontSize: 10, color: '#9b9b99', marginBottom: 3,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-            }}>
+            <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Substitution assessment
             </div>
-            <div style={{ fontSize: 15, fontWeight: 400, color: '#111110', lineHeight: 1.4 }}>
+            <div className="text-15 font-normal text-ink leading-snug">
               {data.specified_product}
-              <span style={{ color: '#9b9b99', margin: '0 8px', fontWeight: 300 }}>→</span>
+              <span className="text-muted mx-2 font-light">→</span>
               {data.proposed_product}
             </div>
           </div>
@@ -359,44 +336,27 @@ export default function AssessmentResult({ data, queryText }) {
         </div>
 
         {/* Context strip */}
-        <div style={{
-          display: 'flex', gap: 14, fontSize: 11, color: '#9b9b99',
-          padding: '8px 0', borderTop: '1px solid #f0f0ee',
-          borderBottom: '1px solid #f0f0ee', marginBottom: 12,
-          flexWrap: 'wrap', fontWeight: 300,
-        }}>
-          <span><span style={{ color: '#c5c5c3' }}>Function </span>{data.building_function}</span>
-          <span><span style={{ color: '#c5c5c3' }}>Class </span>{data.building_class}</span>
-          <span><span style={{ color: '#c5c5c3' }}>Element </span>{data.building_element.replace(/_/g, ' ')}</span>
-          {data.climate_zone && <span><span style={{ color: '#c5c5c3' }}>Climate </span>{data.climate_zone}</span>}
-          <span><span style={{ color: '#c5c5c3' }}>Data </span>{data.data_completeness}</span>
+        <div className="flex gap-3.5 text-11 text-muted py-2 border-y border-row mb-3 flex-wrap font-light">
+          <span><span className="text-dim">Function </span>{data.building_function}</span>
+          <span><span className="text-dim">Class </span>{data.building_class}</span>
+          <span><span className="text-dim">Element </span>{data.building_element.replace(/_/g, ' ')}</span>
+          {data.climate_zone && <span><span className="text-dim">Climate </span>{data.climate_zone}</span>}
+          <span><span className="text-dim">Data </span>{data.data_completeness}</span>
         </div>
 
         {/* Score bar */}
         <ScoreBar dimensions={data.dimensions} />
 
         {/* Narrative */}
-        <p style={{ fontSize: 14, lineHeight: 1.75, color: '#333', fontWeight: 300, margin: 0 }}>
-          {data.risk_summary}
-        </p>
+        <p className="text-14 leading-7 text-subtle font-light m-0">{data.risk_summary}</p>
 
         {/* Actions */}
-        <div style={{
-          display: 'flex', gap: 8, marginTop: 14,
-          paddingTop: 12, borderTop: '1px solid #f0f0ee',
-        }}>
+        <div className="flex gap-2 mt-3.5 pt-3 border-t border-row">
           <button
             onClick={handleExportPdf}
             disabled={exportingPdf}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              padding: '7px 14px', fontSize: 12, fontWeight: 400,
-              background: '#ffffff', border: '1px solid #e5e5e3',
-              cursor: exportingPdf ? 'wait' : 'pointer',
-              color: '#6b6b69', fontFamily: 'inherit', transition: 'all 0.1s',
-            }}
-            onMouseOver={e => { e.currentTarget.style.borderColor = '#111110'; e.currentTarget.style.color = '#111110' }}
-            onMouseOut={e => { e.currentTarget.style.borderColor = '#e5e5e3'; e.currentTarget.style.color = '#6b6b69' }}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-12 font-normal bg-card border border-rule text-subtle hover:border-ink hover:text-ink transition-colors duration-100"
+            style={{ cursor: exportingPdf ? 'wait' : 'pointer' }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -410,51 +370,50 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Decision record ── */}
       {data.assessment_id && (
-        <div style={{ marginBottom: 24, padding: '16px 20px', border: '1px solid #e5e5e3', background: '#ffffff' }}>
-          <p style={{ fontSize: 11, color: '#9b9b99', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+        <div className="mb-6 px-5 py-4 border border-rule bg-card">
+          <p className="text-11 text-muted font-normal mb-3" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Decision
           </p>
 
           {decision ? (
-            <div style={{
-              padding: '10px 14px',
-              background: DECISIONS.find(d => d.value === decision)?.bg,
-              border: `1px solid ${DECISIONS.find(d => d.value === decision)?.border}`,
-              color: DECISIONS.find(d => d.value === decision)?.color,
-              fontSize: 13,
-            }}>
+            <div
+              className="px-3.5 py-2.5 text-13 font-light"
+              style={{
+                background: DECISIONS.find(d => d.value === decision)?.bg,
+                border: `1px solid ${DECISIONS.find(d => d.value === decision)?.border}`,
+                color: DECISIONS.find(d => d.value === decision)?.color,
+              }}
+            >
               {DECISIONS.find(d => d.value === decision)?.label} — saved
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', gap: 8 }}>
+            <div className="flex flex-col gap-2.5">
+              <div className="flex gap-2">
                 {DECISIONS.map(d => (
                   <button
                     key={d.value}
-                    onClick={() => { setShowNoteInput(true); handleDecision(d.value) }}
+                    onClick={() => handleDecision(d.value)}
                     disabled={savingDecision}
+                    className="px-3.5 py-1.5 text-12 disabled:opacity-50"
                     style={{
-                      padding: '7px 14px', fontSize: 12, fontFamily: 'inherit',
-                      background: d.bg, border: `1px solid ${d.border}`,
-                      color: d.color, cursor: 'pointer',
+                      background: d.bg,
+                      border: `1px solid ${d.border}`,
+                      color: d.color,
+                      cursor: 'pointer',
                     }}
                   >
                     {d.label}
                   </button>
                 ))}
               </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  placeholder="Optional note..."
-                  value={decisionNote}
-                  onChange={e => setDecisionNote(e.target.value)}
-                  style={{
-                    flex: 1, padding: '7px 10px', border: '1px solid #e5e5e3',
-                    fontSize: 12, fontFamily: 'inherit', color: '#111110',
-                    background: '#f7f7f5', outline: 'none',
-                  }}
-                />
-              </div>
+              <input
+                placeholder="Optional note..."
+                value={decisionNote}
+                onChange={e => setDecisionNote(e.target.value)}
+                className="px-2.5 py-1.5 border border-rule text-12 text-ink bg-surface font-light"
+                onFocus={e => e.target.style.borderColor = '#111110'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+              />
             </div>
           )}
         </div>
@@ -465,90 +424,85 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Recommendations ── */}
       {data.recommendations?.length > 0 && (
-        <div style={{
-          border: '1px solid #e5e5e3', borderLeft: '3px solid #111110',
-          marginBottom: 12, background: '#ffffff',
-        }}>
+        <div
+          className="mb-3 bg-card border border-rule"
+          style={{ borderLeft: '3px solid #111110' }}
+        >
           <button
             onClick={() => setShowRecs(r => !r)}
-            style={{
-              width: '100%', display: 'flex', justifyContent: 'space-between',
-              alignItems: 'center', padding: '12px 16px',
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
+            className="w-full flex justify-between items-center px-4 py-3 bg-transparent border-none cursor-pointer"
           >
-            <span style={{
-              fontSize: 10, fontWeight: 400, color: '#111110',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-            }}>
+            <span className="text-10 font-normal text-ink" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Recommendations ({data.recommendations.length})
             </span>
-            <span style={{ fontSize: 11, color: '#9b9b99' }}>{showRecs ? '▲' : '▼'}</span>
+            <span className="text-11 text-muted">{showRecs ? '▲' : '▼'}</span>
           </button>
-          {showRecs && (
-            <ul style={{
-              fontSize: 13, color: '#444', padding: '0 20px 14px 36px',
-              fontWeight: 300, display: 'flex', flexDirection: 'column', gap: 7, margin: 0,
-            }}>
-              {data.recommendations.map((rec, i) => (
-                <li key={i} style={{ lineHeight: 1.6 }}>{rec}</li>
-              ))}
-            </ul>
-          )}
+          <AnimatePresence initial={false}>
+            {showRecs && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.15, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+              >
+                <ul className="text-13 text-subtle font-light pl-9 pr-5 pb-3.5 flex flex-col gap-1.5 m-0" style={{ listStyle: 'disc' }}>
+                  {data.recommendations.map((rec, i) => (
+                    <li key={i} className="leading-relaxed">{rec}</li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
       {/* ── Alternatives ── */}
       {data.alternatives?.length > 0 && (
-        <div style={{
-          padding: '16px 20px', background: '#ffffff',
-          border: '1px solid #e5e5e3', borderLeft: '3px solid #111110',
-          marginBottom: 12,
-        }}>
-          <div style={{
-            fontSize: 10, fontWeight: 400, color: '#111110',
-            marginBottom: 12, letterSpacing: '0.08em', textTransform: 'uppercase',
-          }}>
+        <div
+          className="px-5 py-4 bg-card border border-rule mb-3"
+          style={{ borderLeft: '3px solid #111110' }}
+        >
+          <div className="text-10 font-normal text-ink mb-3" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Alternative products
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="flex flex-col gap-2.5">
             {data.alternatives.map((alt, i) => (
-              <div key={i} style={{
-                display: 'grid', gridTemplateColumns: '1fr auto',
-                gap: 12, alignItems: 'start',
-                paddingBottom: i < data.alternatives.length - 1 ? 10 : 0,
-                borderBottom: i < data.alternatives.length - 1 ? '1px solid #f0f0ee' : 'none',
-              }}>
+              <div
+                key={i}
+                className="grid gap-3 items-start"
+                style={{
+                  gridTemplateColumns: '1fr auto',
+                  paddingBottom: i < data.alternatives.length - 1 ? 10 : 0,
+                  borderBottom: i < data.alternatives.length - 1 ? '1px solid #f0f0ee' : 'none',
+                }}
+              >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-                    <span style={{ fontSize: 13, fontWeight: 400, color: '#111110' }}>{alt.name}</span>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-13 font-normal text-ink">{alt.name}</span>
                     {alt.verdict === 'conditional' && (
-                      <span style={{
-                        fontSize: 9, padding: '1px 6px', letterSpacing: '0.06em',
-                        background: '#fefce8', border: '1px solid #fef08a', color: '#a16207',
-                      }}>CONDITIONAL</span>
+                      <span
+                        className="text-[9px] px-1.5 py-px font-normal"
+                        style={{ letterSpacing: '0.06em', background: '#fefce8', border: '1px solid #fef08a', color: '#a16207' }}
+                      >
+                        CONDITIONAL
+                      </span>
                     )}
                   </div>
-                  <div style={{ fontSize: 11, color: '#9b9b99', fontWeight: 300, marginBottom: 4 }}>
+                  <div className="text-11 text-muted font-light mb-1">
                     {alt.manufacturer} · {alt.product_type}
                   </div>
-                  <div style={{
-                    fontSize: 11, color: '#6b6b69', fontWeight: 300,
-                    background: '#f7f7f5', padding: '3px 8px', display: 'inline-block',
-                  }}>
-                    {alt.why}
-                  </div>
+                  <div className="text-11 text-subtle font-light bg-surface px-2 py-0.5 inline-block">{alt.why}</div>
                 </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <div className="text-right shrink-0">
                   {alt.fire_euroclass && (
-                    <div style={{ fontSize: 11, color: '#6b6b69', fontWeight: 300 }}>
-                      <span style={{ color: '#9b9b99' }}>Fire </span>{alt.fire_euroclass}
+                    <div className="text-11 text-subtle font-light">
+                      <span className="text-muted">Fire </span>{alt.fire_euroclass}
                     </div>
                   )}
                   {alt.epd_co2_per_m2 != null && (
-                    <div style={{ fontSize: 11, color: '#6b6b69', fontWeight: 300 }}>
-                      <span style={{ color: '#9b9b99' }}>CO₂ </span>{alt.epd_co2_per_m2.toFixed(1)} kg/m²
+                    <div className="text-11 text-subtle font-light">
+                      <span className="text-muted">CO₂ </span>{alt.epd_co2_per_m2.toFixed(1)} kg/m²
                     </div>
                   )}
                 </div>
@@ -560,19 +514,15 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Data gaps ── */}
       {data.missing_data?.length > 0 && (
-        <div style={{
-          padding: '10px 14px', background: '#fefce8',
-          border: '1px solid #fef08a', fontSize: 12,
-          color: '#a16207', fontWeight: 300, marginBottom: 12,
-        }}>
-          <strong style={{ fontWeight: 500 }}>Data gaps: </strong>
+        <div className="px-3.5 py-2.5 bg-warn-light border border-warn-edge text-12 text-warn font-light mb-3">
+          <strong className="font-medium">Data gaps: </strong>
           {data.missing_data.join(' | ')}
         </div>
       )}
 
       {/* ── Referenced codes ── */}
       {data.code_documents_referenced?.length > 0 && (
-        <div style={{ marginTop: 8, fontSize: 11, color: '#c5c5c3', fontWeight: 300 }}>
+        <div className="mt-2 text-11 text-dim font-light">
           Referenced: {data.code_documents_referenced.join(', ')}
         </div>
       )}
