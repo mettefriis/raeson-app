@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { SignIn, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/clerk-react'
 import QueryForm from './components/QueryForm.jsx'
 import AssessmentResult from './components/AssessmentResult.jsx'
+import ProjectList from './components/ProjectList.jsx'
+import ProjectForm from './components/ProjectForm.jsx'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
@@ -72,6 +74,11 @@ function RaesonMark({ size = 14, color = 'currentColor' }) {
 
 export default function App() {
   const { getToken } = useAuth()
+
+  // View router: 'projects' | 'new-project' | 'assessment'
+  const [view, setView] = useState('projects')
+  const [activeProject, setActiveProject] = useState(null)
+
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loadingMsg, setLoadingMsg] = useState('Running compliance checks...')
@@ -148,11 +155,28 @@ export default function App() {
               demo
             </span>
           </div>
+          {/* Breadcrumb */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9b9b99' }}>
+            <span
+              onClick={() => { setView('projects'); setActiveProject(null); setResult(null) }}
+              style={{ cursor: 'pointer' }}
+              onMouseOver={e => e.currentTarget.style.color = '#111110'}
+              onMouseOut={e => e.currentTarget.style.color = '#9b9b99'}
+            >
+              Projects
+            </span>
+            {activeProject && (
+              <>
+                <span>›</span>
+                <span style={{ color: '#111110' }}>{activeProject.name}</span>
+              </>
+            )}
+          </div>
           <UserButton afterSignOutUrl="/" />
         </nav>
       </header>
 
-      {/* Sign-in gate — show sign-in screen if not authenticated */}
+      {/* Sign-in gate */}
       <SignedOut>
         <div style={{
           minHeight: '100vh', display: 'flex', alignItems: 'center',
@@ -162,97 +186,104 @@ export default function App() {
         </div>
       </SignedOut>
 
-      {/* Main — only shown when signed in */}
       <SignedIn>
       <main style={{ maxWidth: 800, margin: '0 auto', padding: '88px 24px 80px' }}>
 
-        {/* Query input */}
-        <QueryForm
-          value={queryText}
-          onChange={setQueryText}
-          onSubmit={handleSubmit}
-          loading={loading}
-        />
-
-        {/* Example scenarios */}
-        <div style={{ marginTop: 14, marginBottom: 40 }}>
-          <p style={{
-            fontSize: 11, color: '#9b9b99', marginBottom: 8,
-            letterSpacing: '0.06em', textTransform: 'uppercase',
-          }}>
-            Try a scenario
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {EXAMPLE_QUERIES.map((ex, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setQueryText(ex.query)
-                  handleSubmit(ex.query, null)
-                }}
-                disabled={loading}
-                style={{
-                  fontSize: 11, padding: '4px 10px',
-                  background: '#f7f7f5', border: '1px solid #e5e5e3',
-                  cursor: 'pointer', color: '#6b6b69',
-                  transition: 'all 0.1s', fontFamily: 'inherit',
-                }}
-                onMouseOver={e => {
-                  e.currentTarget.style.borderColor = '#111110'
-                  e.currentTarget.style.color = '#111110'
-                }}
-                onMouseOut={e => {
-                  e.currentTarget.style.borderColor = '#e5e5e3'
-                  e.currentTarget.style.color = '#6b6b69'
-                }}
-              >
-                {ex.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div style={{
-            padding: '12px 16px', background: '#fef2f2',
-            border: '1px solid #fecaca',
-            color: '#991b1b', fontSize: 13, marginBottom: 24,
-            fontWeight: 300,
-          }}>
-            {error}
-          </div>
+        {/* VIEW: Project list */}
+        {view === 'projects' && (
+          <ProjectList
+            onSelectProject={p => { setActiveProject(p); setView('assessment'); setResult(null) }}
+            onNewProject={() => setView('new-project')}
+          />
         )}
 
-        {/* Loading */}
-        {loading && (
-          <div style={{ padding: 40, textAlign: 'center', color: '#9b9b99' }}>
+        {/* VIEW: New project form */}
+        {view === 'new-project' && (
+          <ProjectForm
+            onCreated={p => { setActiveProject(p); setView('assessment'); setResult(null) }}
+            onCancel={() => setView('projects')}
+          />
+        )}
+
+        {/* VIEW: Assessment (within a project) */}
+        {view === 'assessment' && activeProject && (
+          <div>
+            {/* Project context strip */}
             <div style={{
-              width: 20, height: 20, border: '1.5px solid #e5e5e3',
-              borderTopColor: '#111110',
-              borderRadius: '50%',
-              animation: 'spin 0.8s linear infinite',
-              margin: '0 auto 12px',
-            }} />
-            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-            <p style={{ fontSize: 13, fontWeight: 300, letterSpacing: '0.02em' }}>
-              {loadingMsg}
-            </p>
+              padding: '10px 14px', background: '#ffffff', border: '1px solid #e5e5e3',
+              marginBottom: 24, display: 'flex', gap: 20, flexWrap: 'wrap',
+              fontSize: 11, color: '#6b6b69',
+            }}>
+              {activeProject.building_type && <span><span style={{ color: '#9b9b99' }}>Type </span>{activeProject.building_type}</span>}
+              {activeProject.building_class && <span><span style={{ color: '#9b9b99' }}>Class </span>{activeProject.building_class}</span>}
+              {activeProject.climate_zone && <span><span style={{ color: '#9b9b99' }}>Climate </span>{activeProject.climate_zone}</span>}
+              {activeProject.jurisdiction && <span><span style={{ color: '#9b9b99' }}>Code </span>{activeProject.jurisdiction}</span>}
+              {activeProject.architect_name && <span><span style={{ color: '#9b9b99' }}>Architect </span>{activeProject.architect_name}</span>}
+            </div>
+
+            {/* Query input */}
+            <QueryForm
+              value={queryText}
+              onChange={setQueryText}
+              onSubmit={handleSubmit}
+              loading={loading}
+            />
+
+            {/* Example scenarios */}
+            <div style={{ marginTop: 14, marginBottom: 40 }}>
+              <p style={{ fontSize: 11, color: '#9b9b99', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                Try a scenario
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {EXAMPLE_QUERIES.map((ex, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setQueryText(ex.query); handleSubmit(ex.query, null) }}
+                    disabled={loading}
+                    style={{
+                      fontSize: 11, padding: '4px 10px',
+                      background: '#f7f7f5', border: '1px solid #e5e5e3',
+                      cursor: 'pointer', color: '#6b6b69', fontFamily: 'inherit',
+                    }}
+                    onMouseOver={e => { e.currentTarget.style.borderColor = '#111110'; e.currentTarget.style.color = '#111110' }}
+                    onMouseOut={e => { e.currentTarget.style.borderColor = '#e5e5e3'; e.currentTarget.style.color = '#6b6b69' }}
+                  >
+                    {ex.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', fontSize: 13, marginBottom: 24, fontWeight: 300 }}>
+                {error}
+              </div>
+            )}
+
+            {/* Loading */}
+            {loading && (
+              <div style={{ padding: 40, textAlign: 'center', color: '#9b9b99' }}>
+                <div style={{
+                  width: 20, height: 20, border: '1.5px solid #e5e5e3',
+                  borderTopColor: '#111110', borderRadius: '50%',
+                  animation: 'spin 0.8s linear infinite', margin: '0 auto 12px',
+                }} />
+                <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+                <p style={{ fontSize: 13, fontWeight: 300, letterSpacing: '0.02em' }}>{loadingMsg}</p>
+              </div>
+            )}
+
+            {/* Results */}
+            {result && <AssessmentResult data={result} queryText={queryText} />}
           </div>
         )}
 
-        {/* Results */}
-        {result && <AssessmentResult data={result} queryText={queryText} />}
-
-        {/* Footer */}
         <footer style={{
-          marginTop: 60, paddingTop: 20,
-          borderTop: '1px solid #e5e5e3',
-          fontSize: 11, color: '#c5c5c3', fontWeight: 300,
-          letterSpacing: '0.02em',
+          marginTop: 60, paddingTop: 20, borderTop: '1px solid #e5e5e3',
+          fontSize: 11, color: '#c5c5c3', fontWeight: 300, letterSpacing: '0.02em',
         }}>
-          ræson demo — Dutch building code (Bbl) compliance engine.
-          Data is illustrative. Not for production use.
+          ræson — compliance intelligence for architects.
         </footer>
       </main>
       </SignedIn>

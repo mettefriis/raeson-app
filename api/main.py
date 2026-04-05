@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from api.routers.assessment import router as assessment_router
+from api.routers.projects import router as projects_router
 
 load_dotenv()
 
@@ -63,6 +64,7 @@ app.add_middleware(
 )
 
 app.include_router(assessment_router)
+app.include_router(projects_router)
 
 
 # ---------------------------------------------------------------------------

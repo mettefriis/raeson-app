@@ -41,8 +41,8 @@
 
 | # | Task | Notes | Done |
 |---|------|-------|------|
-| 3.1 | Integrate Clerk for auth | Drop-in React component. Free tier covers early stage. 1 day. | - [ ] |
-| 3.2 | Protect all API endpoints with auth middleware | JWT verification on every `/api/*` route | - [ ] |
+| 3.1 | Integrate Clerk for auth | ClerkProvider, SignedIn/SignedOut gate, UserButton in header | - [x] |
+| 3.2 | Protect all API endpoints with auth middleware | auth.py with get_optional_user / get_current_user deps | - [x] |
 | 3.3 | Firm onboarding flow | Sign up → create firm → invite team members | - [ ] |
 | 3.4 | Team member invite by email | Admin sends invite, member joins firm | - [ ] |
 | 3.5 | Role-based access | Admin (can invite, see billing) vs. Member (can assess) | - [ ] |
