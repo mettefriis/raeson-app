@@ -84,7 +84,10 @@ export default function ProjectForm({ onCreated, onCancel }) {
         },
         body: JSON.stringify(form),
       })
-      if (!res.ok) throw new Error('Failed to create project')
+      if (!res.ok) {
+        const body = await res.text()
+        throw new Error(`Failed to create project (${res.status}): ${body}`)
+      }
       const project = await res.json()
       onCreated(project)
     } catch (e) {
