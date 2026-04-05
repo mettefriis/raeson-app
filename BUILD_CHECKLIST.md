@@ -8,15 +8,17 @@
 
 | # | Task | Notes | Done |
 |---|------|-------|------|
-| 1.1 | Push codebase to private GitHub repo | Required for Railway/Vercel deploy | - [ ] |
-| 1.2 | Switch SQLite → Postgres | Railway provisions in 2 clicks. Required for concurrent users | - [ ] |
-| 1.3 | Deploy backend on Railway | Connect GitHub repo, set env vars (ANTHROPIC_API_KEY etc.) | - [ ] |
-| 1.4 | Deploy frontend on Vercel | Connect GitHub repo, set VITE_API_URL to Railway URL | - [ ] |
+| 1.1 | Push codebase to private GitHub repo | github.com/mettefriis/raeson-app | - [x] |
+| 1.2 | Switch SQLite → Postgres | DATABASE_URL env var, psycopg2-binary added | - [x] |
+| 1.3 | Deploy backend on Railway | Live — Dockerfile builder, ANTHROPIC_API_KEY set | - [x] |
+| 1.4 | Deploy frontend on Vercel | Live — Root Directory: frontend, VITE_API_URL set | - [x] |
 | 1.5 | Register domain (raeson.app or similar) | ~€15/year, point to Vercel | - [ ] |
 | 1.6 | Set up Railway EU region | GDPR — data must stay in EU | - [ ] |
-| 1.7 | Configure uptime monitoring | Railway built-in alerts, or Better Uptime (free tier) | - [ ] |
-| 1.8 | Set up error logging | Sentry free tier — catches backend exceptions in production | - [ ] |
+| 1.7 | Configure uptime monitoring | Better Uptime monitoring /api/health every 3 minutes | - [x] |
+| 1.8 | Set up error logging | Sentry DSN set in Railway — FastAPI + SQLAlchemy integrations | - [x] |
 | 1.9 | Automated DB backups | Railway Postgres daily backup, enable in dashboard | - [ ] |
+
+> **Status as of 2026-04-05:** Backend live on Railway, frontend live on Vercel, assessments working end-to-end.
 
 ---
 
@@ -24,14 +26,14 @@
 
 | # | Task | Notes | Done |
 |---|------|-------|------|
-| 2.1 | Add `jurisdiction` field to `CodeRequirement` | "DK", "NL", "SE", "NO", "DE" — needed before Nordic expansion | - [ ] |
-| 2.2 | Add `projects` table | name, project_number, address, building_type, building_class, climate_zone, architect_name, firm_name, created_at | - [ ] |
-| 2.3 | Add `project_id` FK to `AssessmentLog` | Links assessments to projects | - [ ] |
-| 2.4 | Add decision fields to `AssessmentLog` | decision, decision_timestamp, decision_by, decision_note | - [ ] |
-| 2.5 | Add `firm_id` FK to `AssessmentLog` | Links assessments to firm account | - [ ] |
-| 2.6 | Add `Firm` table | name, logo_url, created_at | - [ ] |
-| 2.7 | Add `User` table | email, firm_id, role (admin/member), created_at | - [ ] |
-| 2.8 | Write Alembic migration scripts | Replace manual `init_db()` with proper migrations for production | - [ ] |
+| 2.1 | Add `jurisdiction` field to `CodeRequirement` | "DK", "NL", "SE", "NO", "DE" — needed before Nordic expansion | - [x] |
+| 2.2 | Add `projects` table | name, project_number, address, building_type, building_class, climate_zone, architect_name, firm_name, created_at | - [x] |
+| 2.3 | Add `project_id` FK to `AssessmentLog` | Links assessments to projects | - [x] |
+| 2.4 | Add decision fields to `AssessmentLog` | decision, decision_timestamp, decision_by, decision_note | - [x] |
+| 2.5 | Add `firm_id` FK to `AssessmentLog` | Links assessments to firm account | - [x] |
+| 2.6 | Add `Firm` table | name, logo_url, created_at | - [x] |
+| 2.7 | Add `User` table | email, firm_id, role (admin/member), created_at | - [x] |
+| 2.8 | Write Alembic migration scripts | Replace manual `init_db()` with proper migrations for production | - [x] |
 
 ---
 

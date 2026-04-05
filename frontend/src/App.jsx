@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { SignIn, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/clerk-react'
 import QueryForm from './components/QueryForm.jsx'
 import AssessmentResult from './components/AssessmentResult.jsx'
 
@@ -70,6 +71,7 @@ function RaesonMark({ size = 14, color = 'currentColor' }) {
 }
 
 export default function App() {
+  const { getToken } = useAuth()
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loadingMsg, setLoadingMsg] = useState('Running compliance checks...')
@@ -83,20 +85,23 @@ export default function App() {
     setResult(null)
 
     try {
+      const token = await getToken()
+      const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {}
+
       let res
       if (file) {
-        // Multipart: text query + floor plan file
         const formData = new FormData()
         formData.append('query', query)
         formData.append('file', file)
         res = await fetch(`${API_BASE}/api/assess/with-plan`, {
           method: 'POST',
+          headers: { ...authHeader },
           body: formData,
         })
       } else {
         res = await fetch(`${API_BASE}/api/assess`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeader },
           body: JSON.stringify({ query }),
         })
       }
@@ -143,10 +148,22 @@ export default function App() {
               demo
             </span>
           </div>
+          <UserButton afterSignOutUrl="/" />
         </nav>
       </header>
 
-      {/* Main */}
+      {/* Sign-in gate — show sign-in screen if not authenticated */}
+      <SignedOut>
+        <div style={{
+          minHeight: '100vh', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', background: '#f7f7f5',
+        }}>
+          <SignIn routing="hash" />
+        </div>
+      </SignedOut>
+
+      {/* Main — only shown when signed in */}
+      <SignedIn>
       <main style={{ maxWidth: 800, margin: '0 auto', padding: '88px 24px 80px' }}>
 
         {/* Query input */}
@@ -238,6 +255,7 @@ export default function App() {
           Data is illustrative. Not for production use.
         </footer>
       </main>
+      </SignedIn>
     </div>
   )
 }
