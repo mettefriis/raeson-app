@@ -367,58 +367,45 @@ async def run_assessment(
     proposed = _find_product(db, proposed_name)
 
     missing_data = []
+    _llm_dimensions: list[DimensionResult] | None = None  # set if both products unknown
 
-    if not specified and specified_name:
+    # If either product is missing from DB, try a direct LLM assessment for both
+    if (not specified or not proposed) and specified_name and proposed_name:
         try:
-            from api.services.llm_service import lookup_product_properties
-            props = await lookup_product_properties(specified_name)
-            if props:
-                specified = Product(
-                    id=None,
-                    name=specified_name,
-                    manufacturer=props.get("manufacturer", "Unknown"),
-                    product_type=props.get("product_type", building_element),
-                    fire_euroclass=props.get("fire_euroclass"),
-                    lambda_value=props.get("lambda_value"),
-                    ce_marking=props.get("ce_marking", True),
-                    epd_co2_per_m2=props.get("epd_co2_per_m2"),
-                    service_life_years=props.get("service_life_years"),
-                )
-                conf = props.get("confidence", "low")
-                if conf != "high":
-                    missing_data.append(
-                        f"'{specified_name}' not in product database — properties sourced from published datasheets (confidence: {conf})"
-                    )
-        except Exception:
-            missing_data.append(
-                f"Specified product '{specified_name}' not found in database"
+            from api.services.llm_service import llm_direct_assessment
+            result = await llm_direct_assessment(
+                specified_name=specified_name,
+                proposed_name=proposed_name,
+                building_function=building_function,
+                building_class=building_class,
+                building_element=building_element,
+                climate_zone=climate_zone,
             )
+            if result and result.get("dimensions"):
+                _llm_dimensions = [
+                    DimensionResult(
+                        dimension=d["dimension"],
+                        verdict=RiskVerdict(d["verdict"]),
+                        requirement=d.get("requirement", ""),
+                        specified_value=d.get("specified_value", "unknown"),
+                        proposed_value=d.get("proposed_value", "unknown"),
+                        delta=d.get("delta"),
+                        code_reference=d.get("code_reference", ""),
+                    )
+                    for d in result["dimensions"]
+                ]
+                missing_data.append(
+                    f"One or more products not in database — assessment based on published product data"
+                )
+                if result.get("notes"):
+                    missing_data.extend(result["notes"])
+        except Exception:
+            pass
 
-    if not proposed and proposed_name:
-        try:
-            from api.services.llm_service import lookup_product_properties
-            props = await lookup_product_properties(proposed_name)
-            if props:
-                proposed = Product(
-                    id=None,
-                    name=proposed_name,
-                    manufacturer=props.get("manufacturer", "Unknown"),
-                    product_type=props.get("product_type", building_element),
-                    fire_euroclass=props.get("fire_euroclass"),
-                    lambda_value=props.get("lambda_value"),
-                    ce_marking=props.get("ce_marking", True),
-                    epd_co2_per_m2=props.get("epd_co2_per_m2"),
-                    service_life_years=props.get("service_life_years"),
-                )
-                conf = props.get("confidence", "low")
-                if conf != "high":
-                    missing_data.append(
-                        f"'{proposed_name}' not in product database — properties sourced from published datasheets (confidence: {conf})"
-                    )
-        except Exception:
-            missing_data.append(
-                f"Proposed product '{proposed_name}' not found in database"
-            )
+    if not specified:
+        missing_data.append(f"'{specified_name}' not found in product database")
+    if not proposed:
+        missing_data.append(f"'{proposed_name}' not found in product database")
 
     # Step 3: Compliance engine
     dimensions: list[DimensionResult] = []
@@ -449,6 +436,11 @@ async def run_assessment(
             adjacent_materials=adjacent_materials or [],
             br25_typology=br25_typology,
         )
+        overall = ComplianceEngine.overall_verdict(dimensions)
+        data_completeness = "medium"
+    elif _llm_dimensions is not None:
+        # Both products unknown — use LLM-assessed dimensions
+        dimensions = _llm_dimensions
         overall = ComplianceEngine.overall_verdict(dimensions)
         data_completeness = "medium"
     else:

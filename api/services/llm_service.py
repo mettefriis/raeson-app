@@ -84,7 +84,7 @@ async def parse_query(query: str) -> dict:
     c = get_client()
 
     message = c.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-6",
         max_tokens=500,
         system=PARSE_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": query}],
@@ -140,7 +140,7 @@ async def generate_narrative(assessment_data: dict) -> tuple[str, list[str]]:
     c = get_client()
 
     message = c.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-6",
         max_tokens=800,
         system=NARRATIVE_SYSTEM_PROMPT,
         messages=[{
@@ -165,40 +165,60 @@ async def generate_narrative(assessment_data: dict) -> tuple[str, list[str]]:
     return result.get("summary", ""), result.get("recommendations", [])
 
 
-PRODUCT_LOOKUP_PROMPT = """You are a construction product database for the European building market.
+DIRECT_ASSESSMENT_PROMPT = """You are a construction compliance expert for the Dutch (Bbl) and Danish (BR25) building codes.
 
-Given a product name, return its known technical properties as JSON.
-Use data from manufacturer TDS, DoP, and EPD documents. If uncertain, use typical values for the product category.
+When two products are not in a local database, assess the substitution directly using your knowledge of:
+- Published manufacturer TDS, DoP, and EPD data
+- EN 13501-1 Euroclass fire classification
+- Bbl (Netherlands) and BR25 (Denmark) code requirements
 
-Return ONLY this JSON structure (no markdown, no explanation):
+Return ONLY this JSON (no markdown, no explanation):
 {
-  "manufacturer": "string — brand/manufacturer name",
-  "product_type": "string — one of: facade_insulation, roof_insulation, floor_insulation, facade_cladding, window_glazing, fire_door, internal_wall",
-  "fire_euroclass": "string — Euroclass per EN 13501-1, e.g. A1, A2-s1,d0, B-s2,d0, C-s1,d0, D-s2,d2, E, F. null if unknown",
-  "lambda_value": "number — thermal conductivity W/(m·K). null if not applicable",
-  "ce_marking": true,
-  "epd_co2_per_m2": "number — embodied carbon kg CO2e/m² (typical 50mm thickness for insulation). null if unknown",
-  "service_life_years": "number — expected service life. null if unknown",
-  "confidence": "string — high/medium/low — how confident you are in these values"
+  "dimensions": [
+    {
+      "dimension": "fire_reaction",
+      "verdict": "pass|conditional|fail",
+      "requirement": "minimum requirement with code reference",
+      "specified_value": "fire class of specified product",
+      "proposed_value": "fire class of proposed product",
+      "delta": "explanation of difference and compliance implication",
+      "code_reference": "e.g. Bbl art. 3.72 lid 2"
+    }
+  ],
+  "overall_risk": "pass|conditional|fail",
+  "data_completeness": "high|medium|low",
+  "notes": ["any caveats about data confidence"]
 }
 
-For well-known products like Rockwool, Kingspan, Knauf, Isover, Paroc use published datasheet values.
-For unknown products, return best estimates with confidence=low."""
+Include dimensions for: fire_reaction (always), thermal (if applicable), carbon (if EPD data known).
+Use actual Euroclass values (A1, A2-s1,d0, B-s1,d0, etc.) from published datasheets.
+Be specific and cite actual values — do not be vague."""
 
 
-async def lookup_product_properties(product_name: str) -> dict | None:
+async def llm_direct_assessment(
+    specified_name: str,
+    proposed_name: str,
+    building_function: str,
+    building_class: str,
+    building_element: str,
+    climate_zone: str,
+) -> dict | None:
     """
-    Ask the LLM to return known technical properties for a named product.
-    Used as fallback when a product is not in our database.
-    Returns None if lookup fails.
+    Full LLM-based assessment when products are not in the local database.
+    Returns structured dimension results and overall verdict, or None on failure.
     """
     try:
         c = get_client()
+        query = (
+            f"Assess substitution of '{specified_name}' with '{proposed_name}' "
+            f"for {building_element} on a {building_function} building "
+            f"({building_class}) in {climate_zone} climate."
+        )
         message = c.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=400,
-            system=PRODUCT_LOOKUP_PROMPT,
-            messages=[{"role": "user", "content": product_name}],
+            model="claude-sonnet-4-6",
+            max_tokens=1000,
+            system=DIRECT_ASSESSMENT_PROMPT,
+            messages=[{"role": "user", "content": query}],
         )
         response_text = message.content[0].text.strip()
         if response_text.startswith("```"):
