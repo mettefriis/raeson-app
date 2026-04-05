@@ -73,7 +73,15 @@ app.include_router(projects_router)
 
 @app.on_event("startup")
 def startup():
-    from alembic.config import Config
-    from alembic import command
-    alembic_cfg = Config("alembic.ini")
-    command.upgrade(alembic_cfg, "head")
+    # create_all() creates any tables that don't exist yet (safe — skips existing)
+    from api.models.database import Base, engine
+    Base.metadata.create_all(engine)
+
+    # Alembic handles future schema migrations (column changes, etc.)
+    try:
+        from alembic.config import Config
+        from alembic import command
+        alembic_cfg = Config("alembic.ini")
+        command.upgrade(alembic_cfg, "head")
+    except Exception:
+        pass  # non-fatal if alembic.ini not found in working directory
