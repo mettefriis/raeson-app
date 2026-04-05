@@ -64,12 +64,15 @@ def get_optional_user(
 ) -> Optional[dict]:
     """
     Returns verified user claims if a valid token is present.
-    Returns None if no token — does NOT raise an error.
-    Use for endpoints that work with or without auth.
+    Returns None if no token OR if verification fails.
+    Never raises — safe for endpoints that work with or without auth.
     """
     if not credentials:
         return None
-    return _verify_token(credentials.credentials)
+    try:
+        return _verify_token(credentials.credentials)
+    except Exception:
+        return None
 
 
 def get_current_user(
