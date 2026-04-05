@@ -163,3 +163,49 @@ async def generate_narrative(assessment_data: dict) -> tuple[str, list[str]]:
 
     result = json.loads(response_text)
     return result.get("summary", ""), result.get("recommendations", [])
+
+
+PRODUCT_LOOKUP_PROMPT = """You are a construction product database for the European building market.
+
+Given a product name, return its known technical properties as JSON.
+Use data from manufacturer TDS, DoP, and EPD documents. If uncertain, use typical values for the product category.
+
+Return ONLY this JSON structure (no markdown, no explanation):
+{
+  "manufacturer": "string — brand/manufacturer name",
+  "product_type": "string — one of: facade_insulation, roof_insulation, floor_insulation, facade_cladding, window_glazing, fire_door, internal_wall",
+  "fire_euroclass": "string — Euroclass per EN 13501-1, e.g. A1, A2-s1,d0, B-s2,d0, C-s1,d0, D-s2,d2, E, F. null if unknown",
+  "lambda_value": "number — thermal conductivity W/(m·K). null if not applicable",
+  "ce_marking": true,
+  "epd_co2_per_m2": "number — embodied carbon kg CO2e/m² (typical 50mm thickness for insulation). null if unknown",
+  "service_life_years": "number — expected service life. null if unknown",
+  "confidence": "string — high/medium/low — how confident you are in these values"
+}
+
+For well-known products like Rockwool, Kingspan, Knauf, Isover, Paroc use published datasheet values.
+For unknown products, return best estimates with confidence=low."""
+
+
+async def lookup_product_properties(product_name: str) -> dict | None:
+    """
+    Ask the LLM to return known technical properties for a named product.
+    Used as fallback when a product is not in our database.
+    Returns None if lookup fails.
+    """
+    try:
+        c = get_client()
+        message = c.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            system=PRODUCT_LOOKUP_PROMPT,
+            messages=[{"role": "user", "content": product_name}],
+        )
+        response_text = message.content[0].text.strip()
+        if response_text.startswith("```"):
+            response_text = response_text.split("```")[1]
+            if response_text.startswith("json"):
+                response_text = response_text[4:]
+            response_text = response_text.strip()
+        return json.loads(response_text)
+    except Exception:
+        return None
