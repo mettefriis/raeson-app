@@ -8,7 +8,7 @@
   --color-dim: #c4c4c4;
   --color-surface: #f5f5f5;
   --color-rule: #e5e5e5;
-  --color-row: #f0f0f0;
+  --color-row: #e5e5e5;
   --color-card: #ffffff;
   --color-accent: #009767;
 
@@ -34,13 +34,13 @@
   --font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Named font sizes */
-  --text-10: 10px;
-  --text-11: 11px;
-  --text-12: 12px;
-  --text-13: 13px;
-  --text-14: 14px;
-  --text-15: 15px;
+  /* Named font sizes — matching Acquir's text-xs/sm/base scale */
+  --text-10: 11px;
+  --text-11: 12px;
+  --text-12: 13px;
+  --text-13: 14px;
+  --text-14: 15px;
+  --text-15: 16px;
 
   /* Border radii — 8px everywhere, pills at 9999px */
   --radius: 8px;
@@ -67,7 +67,6 @@
     color: var(--color-ink);
     font-weight: 400;
     line-height: 1.5;
-    letter-spacing: -0.374px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

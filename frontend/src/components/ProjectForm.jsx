@@ -172,8 +172,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
               className={fieldClass}
               value={form.jurisdiction}
               onChange={e => set('jurisdiction', e.target.value)}
-              onFocus={e => e.target.style.borderColor = '#111110'}
-              onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+              onFocus={e => e.target.style.borderColor = '#171717'}
+              onBlur={e => e.target.style.borderColor = '#e5e5e5'}
             >
               {JURISDICTIONS.map(j => (
                 <option key={j.value} value={j.value}>{j.label}</option>

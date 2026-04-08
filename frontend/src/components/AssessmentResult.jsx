@@ -109,7 +109,7 @@ function MatrixRow({ dim, onCodeClick }) {
         className="w-full flex items-start gap-2.5 px-3 py-2.5 border-none border-b border-row text-left transition-colors duration-100"
         style={{
           background: open ? s.bg : 'transparent',
-          borderBottom: '1px solid #f0f0ee',
+          borderBottom: '1px solid #e5e5e5',
           cursor: 'pointer',
         }}
         onMouseOver={e => { if (!open) e.currentTarget.style.background = '#f5f5f5' }}
@@ -117,7 +117,7 @@ function MatrixRow({ dim, onCodeClick }) {
       >
         <Dot verdict={dim.verdict} />
         <span className="flex-1 min-w-0">
-          <span className="text-12 font-normal text-ink block">{label}</span>
+          <span className="text-12 font-medium text-ink block" style={{ letterSpacing: '-0.015em' }}>{label}</span>
           {!open && (
             <span className="text-11 text-muted block overflow-hidden text-ellipsis whitespace-nowrap">
               {brief(dim.specified_value)}
@@ -144,7 +144,7 @@ function MatrixRow({ dim, onCodeClick }) {
               style={{
                 paddingLeft: 29,
                 background: s.bg,
-                borderBottom: '1px solid #f0f0ee',
+                borderBottom: '1px solid #e5e5e5',
               }}
             >
               <div className="text-muted mb-2 text-12 pt-3">{dim.requirement}</div>
@@ -327,9 +327,9 @@ export default function AssessmentResult({ data, queryText }) {
             <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Substitution assessment
             </div>
-            <div className="text-15 font-normal text-ink leading-snug">
+            <div className="text-15 font-semibold text-ink leading-snug" style={{ letterSpacing: '-0.025em' }}>
               {data.specified_product}
-              <span className="text-muted mx-2">→</span>
+              <span className="text-muted mx-2 font-normal">→</span>
               {data.proposed_product}
             </div>
           </div>
@@ -475,7 +475,7 @@ export default function AssessmentResult({ data, queryText }) {
                 style={{
                   gridTemplateColumns: '1fr auto',
                   paddingBottom: i < data.alternatives.length - 1 ? 10 : 0,
-                  borderBottom: i < data.alternatives.length - 1 ? '1px solid #f0f0ee' : 'none',
+                  borderBottom: i < data.alternatives.length - 1 ? '1px solid #e5e5e5' : 'none',
                 }}
               >
                 <div>

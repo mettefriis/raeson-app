@@ -84,9 +84,9 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         ) : (
           <>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <rect x="1" y="1" width="12" height="12" stroke="#c5c5c3" strokeWidth="1.5"/>
-              <line x1="7" y1="4" x2="7" y2="10" stroke="#c5c5c3" strokeWidth="1.5"/>
-              <line x1="4" y1="7" x2="10" y2="7" stroke="#c5c5c3" strokeWidth="1.5"/>
+              <rect x="1" y="1" width="12" height="12" stroke="#c4c4c4" strokeWidth="1.5"/>
+              <line x1="7" y1="4" x2="7" y2="10" stroke="#c4c4c4" strokeWidth="1.5"/>
+              <line x1="4" y1="7" x2="10" y2="7" stroke="#c4c4c4" strokeWidth="1.5"/>
             </svg>
             <span className="text-12 text-muted">
               Drop floor plan here for daylight assessment

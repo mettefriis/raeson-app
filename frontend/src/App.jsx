@@ -127,26 +127,26 @@ export default function App() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-rule"
         style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}>
-        <nav className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+        <nav className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <RaesonMark size={14} color="#111110" />
-            <span className="font-mono text-13 text-ink" style={{ letterSpacing: '-0.01em' }}>ræson</span>
-            <span className="font-mono text-10 text-muted border border-rule px-1.5 py-px" style={{ letterSpacing: '0.04em' }}>
+            <RaesonMark size={14} color="#171717" />
+            <span className="font-mono text-13 text-ink font-medium" style={{ letterSpacing: '-0.025em' }}>ræson</span>
+            <span className="font-mono text-10 text-muted border border-rule px-1.5 py-px rounded" style={{ letterSpacing: '0.04em' }}>
               demo
             </span>
           </div>
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-12 text-muted">
+          <div className="flex items-center gap-2 text-12 text-muted" style={{ letterSpacing: '-0.01em' }}>
             <button
               onClick={goProjects}
-              className="hover:text-ink transition-colors duration-100"
+              className="hover:text-ink transition-colors duration-150"
             >
               Projects
             </button>
             {activeProject && (
               <>
-                <span>›</span>
+                <span className="text-dim">›</span>
                 <span className="text-ink">{activeProject.name}</span>
               </>
             )}
@@ -164,7 +164,7 @@ export default function App() {
       </SignedOut>
 
       <SignedIn>
-        <main className="max-w-3xl mx-auto px-6 pb-20" style={{ paddingTop: 88 }}>
+        <main className="max-w-2xl mx-auto px-6 pb-20" style={{ paddingTop: 88 }}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view + (activeProject?.id || '')}

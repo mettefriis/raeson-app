@@ -75,7 +75,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
               className="px-5 py-4 bg-white border border-rule rounded-lg cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-150"
             >
               <div className="min-w-0">
-                <div className="text-13 text-ink mb-1 group-hover:text-ink transition-colors">
+                <div className="text-13 font-medium text-ink mb-1" style={{ letterSpacing: '-0.025em' }}>
                   {p.name}
                 </div>
                 <div className="text-11 text-muted flex gap-4 flex-wrap">
