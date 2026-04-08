@@ -35,7 +35,7 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label className="block text-12 text-subtle mb-2 font-normal" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+      <label className="block text-13 text-subtle font-medium mb-2.5">
         Describe the substitution scenario
       </label>
 
@@ -43,8 +43,9 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder="e.g., Contractor proposes Kingspan Kooltherm K15 instead of specified Rockwool Duorock 040 for facade insulation on a residential building (klasse 2) in Amsterdam."
-        rows={4}
-        className="w-full px-3.5 py-3 text-14 bg-white text-ink border border-rule rounded-lg resize-y transition-colors duration-150 leading-relaxed"
+        rows={5}
+        className="w-full px-4 py-3.5 text-15 bg-white text-ink border border-rule rounded-lg resize-y transition-colors duration-150"
+        style={{ lineHeight: 1.6 }}
         style={{ boxSizing: 'border-box' }}
         onFocus={e => e.target.style.borderColor = '#171717'}
         onBlur={e => e.target.style.borderColor = '#e5e5e5'}
@@ -106,7 +107,7 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
       <button
         type="submit"
         disabled={loading || !value.trim()}
-        className="mt-2.5 px-6 py-2.5 text-13 font-medium text-white rounded-lg transition-opacity duration-150 disabled:cursor-default"
+        className="mt-3 px-7 py-3 text-14 font-medium text-white rounded-lg transition-opacity duration-150 disabled:cursor-default"
         style={{
           background: loading || !value.trim() ? '#a3a3a3' : '#009767',
           letterSpacing: '-0.01em',

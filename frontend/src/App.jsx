@@ -127,27 +127,27 @@ export default function App() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-rule"
         style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}>
-        <nav className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <RaesonMark size={14} color="#111110" />
-            <span className="font-mono text-13 text-ink" style={{ letterSpacing: '-0.01em' }}>ræson</span>
-            <span className="font-mono text-10 text-muted border border-rule px-1.5 py-px" style={{ letterSpacing: '0.04em' }}>
+        <nav className="max-w-[900px] mx-auto px-8 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <RaesonMark size={16} color="#171717" />
+            <span className="font-mono text-14 font-medium text-ink" style={{ letterSpacing: '-0.02em' }}>ræson</span>
+            <span className="font-mono text-10 text-muted border border-rule px-1.5 py-px rounded" style={{ letterSpacing: '0.04em' }}>
               demo
             </span>
           </div>
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-12 text-muted">
+          <div className="flex items-center gap-2 text-13 text-muted">
             <button
               onClick={goProjects}
-              className="hover:text-ink transition-colors duration-100"
+              className="hover:text-ink transition-colors duration-150"
             >
               Projects
             </button>
             {activeProject && (
               <>
-                <span>›</span>
-                <span className="text-ink">{activeProject.name}</span>
+                <span className="text-dim">›</span>
+                <span className="text-ink font-medium">{activeProject.name}</span>
               </>
             )}
           </div>
@@ -164,7 +164,7 @@ export default function App() {
       </SignedOut>
 
       <SignedIn>
-        <main className="max-w-3xl mx-auto px-6 pb-20" style={{ paddingTop: 88 }}>
+        <main className="max-w-[900px] mx-auto px-8 pb-24" style={{ paddingTop: 88 }}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view + (activeProject?.id || '')}
@@ -193,7 +193,7 @@ export default function App() {
               {view === 'assessment' && activeProject && (
                 <div>
                   {/* Project context strip */}
-                  <div className="px-3.5 py-2.5 bg-surface border border-rule rounded-lg mb-6 flex gap-5 flex-wrap text-11 text-subtle font-light">
+                  <div className="px-4 py-3 bg-surface border border-rule rounded-lg mb-8 flex gap-6 flex-wrap text-12 text-subtle">
                     {activeProject.building_type && (
                       <span><span className="text-muted">Type </span>{activeProject.building_type}</span>
                     )}
@@ -219,17 +219,17 @@ export default function App() {
                   />
 
                   {/* Example scenarios */}
-                  <div className="mt-3.5 mb-10">
-                    <p className="text-11 text-muted mb-2" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  <div className="mt-4 mb-12">
+                    <p className="text-12 text-muted mb-3" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                       Try a scenario
                     </p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                       {EXAMPLE_QUERIES.map((ex, i) => (
                         <button
                           key={i}
                           onClick={() => { setQueryText(ex.query); handleSubmit(ex.query, null) }}
                           disabled={loading}
-                          className="text-11 px-2.5 py-1 bg-white border border-rule rounded-md text-subtle hover:border-ink hover:text-ink transition-colors duration-150 disabled:opacity-40"
+                          className="text-12 px-3 py-1.5 bg-white border border-rule rounded-lg text-subtle hover:border-ink hover:text-ink transition-colors duration-150 disabled:opacity-40"
                         >
                           {ex.label}
                         </button>
@@ -272,7 +272,7 @@ export default function App() {
             </motion.div>
           </AnimatePresence>
 
-          <footer className="mt-16 pt-5 border-t border-rule text-11 text-dim font-light" style={{ letterSpacing: '0.02em' }}>
+          <footer className="mt-20 pt-6 border-t border-rule text-12 text-dim" style={{ letterSpacing: '0.02em' }}>
             ræson — compliance intelligence for architects.
           </footer>
         </main>
