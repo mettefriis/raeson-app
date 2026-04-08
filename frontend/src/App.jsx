@@ -123,10 +123,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-surface text-ink">
+    <div className="min-h-screen bg-white text-ink">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-rule"
-        style={{ background: 'rgba(247,247,245,0.88)', backdropFilter: 'blur(10px)' }}>
+        style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)' }}>
         <nav className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <RaesonMark size={14} color="#111110" />
@@ -158,7 +158,7 @@ export default function App() {
 
       {/* Sign-in gate */}
       <SignedOut>
-        <div className="min-h-screen flex items-center justify-center bg-surface">
+        <div className="min-h-screen flex items-center justify-center bg-white">
           <SignIn routing="hash" />
         </div>
       </SignedOut>
@@ -193,7 +193,7 @@ export default function App() {
               {view === 'assessment' && activeProject && (
                 <div>
                   {/* Project context strip */}
-                  <div className="px-3.5 py-2.5 bg-card border border-rule mb-6 flex gap-5 flex-wrap text-11 text-subtle font-light">
+                  <div className="px-3.5 py-2.5 bg-surface border border-rule rounded-lg mb-6 flex gap-5 flex-wrap text-11 text-subtle font-light">
                     {activeProject.building_type && (
                       <span><span className="text-muted">Type </span>{activeProject.building_type}</span>
                     )}
@@ -229,7 +229,7 @@ export default function App() {
                           key={i}
                           onClick={() => { setQueryText(ex.query); handleSubmit(ex.query, null) }}
                           disabled={loading}
-                          className="text-11 px-2.5 py-1 bg-surface border border-rule text-subtle hover:border-ink hover:text-ink transition-colors duration-100 disabled:opacity-40"
+                          className="text-11 px-2.5 py-1 bg-white border border-rule rounded-md text-subtle hover:border-ink hover:text-ink transition-colors duration-150 disabled:opacity-40"
                         >
                           {ex.label}
                         </button>
@@ -239,7 +239,7 @@ export default function App() {
 
                   {/* Error */}
                   {error && (
-                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 mb-6 font-light">
+                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 mb-6 rounded-lg font-light">
                       {error}
                     </div>
                   )}
@@ -248,8 +248,7 @@ export default function App() {
                   {loading && (
                     <div className="py-10 text-center text-muted">
                       <div
-                        className="w-5 h-5 border border-rule border-t-ink animate-spin mx-auto mb-3"
-                        style={{ borderRadius: '50%' }}
+                        className="w-5 h-5 border-2 border-rule border-t-accent animate-spin mx-auto mb-3 rounded-full"
                       />
                       <p className="text-13 font-light" style={{ letterSpacing: '0.02em' }}>{loadingMsg}</p>
                     </div>

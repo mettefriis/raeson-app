@@ -4,9 +4,9 @@ import CodeProvisionModal from './CodeProvisionModal.jsx'
 
 // Verdict config
 const V = {
-  pass:        { bg: '#f0fdf4', border: '#bbf7d0', color: '#15803d', dot: '#16a34a', label: 'PASS' },
-  conditional: { bg: '#fefce8', border: '#fef08a', color: '#a16207', dot: '#ca8a04', label: 'CONDITIONAL' },
-  fail:        { bg: '#fef2f2', border: '#fecaca', color: '#b91c1c', dot: '#dc2626', label: 'FAIL' },
+  pass:        { bg: '#f0fdf4', border: '#bbf7d0', color: '#009767', dot: '#009767', label: 'PASS' },
+  conditional: { bg: 'rgba(161,98,7,0.06)', border: '#a16207', color: '#a16207', dot: '#ca8a04', label: 'CONDITIONAL' },
+  fail:        { bg: 'rgba(239,68,68,0.06)', border: '#ef4444', color: '#ef4444', dot: '#ef4444', label: 'FAIL' },
 }
 
 const DIM_META = {
@@ -51,7 +51,8 @@ function VerdictBadge({ verdict, large }) {
       style={{
         padding: large ? '4px 12px' : '2px 8px',
         fontSize: large ? 11 : 10,
-        letterSpacing: '0.08em',
+        letterSpacing: '0.06em',
+        borderRadius: 9999,
         background: s.bg,
         border: `1px solid ${s.border}`,
         color: s.color,
@@ -111,7 +112,7 @@ function MatrixRow({ dim, onCodeClick }) {
           borderBottom: '1px solid #f0f0ee',
           cursor: 'pointer',
         }}
-        onMouseOver={e => { if (!open) e.currentTarget.style.background = '#fafaf9' }}
+        onMouseOver={e => { if (!open) e.currentTarget.style.background = '#f5f5f5' }}
         onMouseOut={e => { if (!open) e.currentTarget.style.background = 'transparent' }}
       >
         <Dot verdict={dim.verdict} />
@@ -163,7 +164,7 @@ function MatrixRow({ dim, onCodeClick }) {
               </div>
               {dim.delta && (
                 <div
-                  className="text-12 leading-relaxed px-2.5 py-1.5 bg-card mb-2"
+                  className="text-12 leading-relaxed px-2.5 py-1.5 bg-white rounded mb-2"
                   style={{ color: s.color, border: `1px solid ${s.border}` }}
                 >
                   {dim.delta}
@@ -193,7 +194,7 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
       <div className="text-10 text-muted px-3 pb-1.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {title}
       </div>
-      <div className="border border-rule bg-card">
+      <div className="border border-rule bg-white rounded-lg overflow-hidden">
         {dims.length === 0
           ? <div className="px-3 py-2.5 text-12 text-dim font-light">No data</div>
           : dims.map((d, i) => <MatrixRow key={i} dim={d} onCodeClick={onCodeClick} />)
@@ -253,9 +254,9 @@ function ScoreBar({ dimensions }) {
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const DECISIONS = [
-  { value: 'approved',       label: 'Approve',           color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
-  { value: 'info_requested', label: 'Request more info', color: '#a16207', bg: '#fefce8', border: '#fef08a' },
-  { value: 'rejected',       label: 'Reject',            color: '#b91c1c', bg: '#fef2f2', border: '#fecaca' },
+  { value: 'approved',       label: 'Approve',           color: '#009767', bg: '#f0fdf4', border: '#bbf7d0' },
+  { value: 'info_requested', label: 'Request more info', color: '#a16207', bg: 'rgba(161,98,7,0.06)', border: '#a16207' },
+  { value: 'rejected',       label: 'Reject',            color: '#ef4444', bg: 'rgba(239,68,68,0.06)', border: '#ef4444' },
 ]
 
 export default function AssessmentResult({ data, queryText }) {
@@ -319,7 +320,7 @@ export default function AssessmentResult({ data, queryText }) {
       </AnimatePresence>
 
       {/* ── Header card ── */}
-      <div className="px-6 py-5 bg-card border border-rule mb-3">
+      <div className="px-6 py-5 bg-white border border-rule rounded-lg mb-3">
         {/* Title + overall verdict */}
         <div className="flex justify-between items-start mb-3">
           <div>
@@ -355,7 +356,7 @@ export default function AssessmentResult({ data, queryText }) {
           <button
             onClick={handleExportPdf}
             disabled={exportingPdf}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-12 font-normal bg-card border border-rule text-subtle hover:border-ink hover:text-ink transition-colors duration-100"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-12 font-normal bg-surface border border-rule rounded-lg text-subtle hover:border-ink hover:text-ink transition-colors duration-150"
             style={{ cursor: exportingPdf ? 'wait' : 'pointer' }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square">
@@ -370,7 +371,7 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Decision record ── */}
       {data.assessment_id && (
-        <div className="mb-6 px-5 py-4 border border-rule bg-card">
+        <div className="mb-6 px-5 py-4 border border-rule bg-white rounded-lg">
           <p className="text-11 text-muted font-normal mb-3" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Decision
           </p>
@@ -394,7 +395,7 @@ export default function AssessmentResult({ data, queryText }) {
                     key={d.value}
                     onClick={() => handleDecision(d.value)}
                     disabled={savingDecision}
-                    className="px-3.5 py-1.5 text-12 disabled:opacity-50"
+                    className="px-3.5 py-1.5 text-12 font-medium rounded-lg disabled:opacity-50"
                     style={{
                       background: d.bg,
                       border: `1px solid ${d.border}`,
@@ -410,9 +411,9 @@ export default function AssessmentResult({ data, queryText }) {
                 placeholder="Optional note..."
                 value={decisionNote}
                 onChange={e => setDecisionNote(e.target.value)}
-                className="px-2.5 py-1.5 border border-rule text-12 text-ink bg-surface font-light"
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                className="px-3 py-1.5 border border-rule text-12 text-ink bg-white rounded-lg"
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               />
             </div>
           )}
@@ -425,8 +426,8 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Recommendations ── */}
       {data.recommendations?.length > 0 && (
         <div
-          className="mb-3 bg-card border border-rule"
-          style={{ borderLeft: '3px solid #111110' }}
+          className="mb-3 bg-white border border-rule rounded-lg overflow-hidden"
+          style={{ borderLeft: '3px solid #009767' }}
         >
           <button
             onClick={() => setShowRecs(r => !r)}
@@ -460,8 +461,8 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Alternatives ── */}
       {data.alternatives?.length > 0 && (
         <div
-          className="px-5 py-4 bg-card border border-rule mb-3"
-          style={{ borderLeft: '3px solid #111110' }}
+          className="px-5 py-4 bg-white border border-rule rounded-lg mb-3 overflow-hidden"
+          style={{ borderLeft: '3px solid #009767' }}
         >
           <div className="text-10 font-normal text-ink mb-3" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Alternative products
@@ -482,8 +483,8 @@ export default function AssessmentResult({ data, queryText }) {
                     <span className="text-13 font-normal text-ink">{alt.name}</span>
                     {alt.verdict === 'conditional' && (
                       <span
-                        className="text-[9px] px-1.5 py-px font-normal"
-                        style={{ letterSpacing: '0.06em', background: '#fefce8', border: '1px solid #fef08a', color: '#a16207' }}
+                        className="text-[9px] px-1.5 py-px font-medium rounded-full"
+                        style={{ letterSpacing: '0.06em', background: 'rgba(161,98,7,0.06)', border: '1px solid #a16207', color: '#a16207' }}
                       >
                         CONDITIONAL
                       </span>
@@ -492,7 +493,7 @@ export default function AssessmentResult({ data, queryText }) {
                   <div className="text-11 text-muted font-light mb-1">
                     {alt.manufacturer} · {alt.product_type}
                   </div>
-                  <div className="text-11 text-subtle font-light bg-surface px-2 py-0.5 inline-block">{alt.why}</div>
+                  <div className="text-11 text-subtle bg-surface px-2 py-0.5 inline-block rounded">{alt.why}</div>
                 </div>
                 <div className="text-right shrink-0">
                   {alt.fire_euroclass && (
@@ -514,7 +515,7 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Data gaps ── */}
       {data.missing_data?.length > 0 && (
-        <div className="px-3.5 py-2.5 bg-warn-light border border-warn-edge text-12 text-warn font-light mb-3">
+        <div className="px-3.5 py-2.5 bg-warn-light border border-warn-edge text-12 text-warn rounded-lg mb-3">
           <strong className="font-medium">Data gaps: </strong>
           {data.missing_data.join(' | ')}
         </div>

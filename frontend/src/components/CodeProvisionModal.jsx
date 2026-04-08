@@ -38,8 +38,8 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
         exit={{ opacity: 0, scale: 0.97, y: 8 }}
         transition={{ duration: 0.15, ease: 'easeOut' }}
         onClick={e => e.stopPropagation()}
-        className="bg-card w-full max-h-[80vh] overflow-y-auto px-7 py-6 border border-rule"
-        style={{ maxWidth: 600, boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}
+        className="bg-white w-full max-h-[80vh] overflow-y-auto px-7 py-6 border border-rule rounded-xl"
+        style={{ maxWidth: 600, boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}
       >
         {/* Header */}
         <div className="flex justify-between items-start mb-5 pb-4 border-b border-rule">
@@ -64,7 +64,7 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
         )}
 
         {error && (
-          <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 font-light">
+          <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 rounded-lg">
             {error}
           </div>
         )}
@@ -72,7 +72,7 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
         {provision && (
           <div>
             {/* Document context */}
-            <div className="bg-surface px-4 py-3 mb-4 text-12 text-subtle font-light border border-rule">
+            <div className="bg-surface px-4 py-3 mb-4 text-12 text-subtle border border-rule rounded-lg">
               <div className="font-normal text-ink mb-0.5">{provision.document}</div>
               {provision.chapter && <div>{provision.chapter}</div>}
               {provision.section && <div>{provision.section}</div>}
@@ -84,8 +84,8 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
                 Origineel (NL)
               </div>
               <div
-                className="text-13 leading-7 text-subtle font-light px-4 py-3 bg-surface italic"
-                style={{ borderLeft: '3px solid #111110' }}
+                className="text-13 leading-7 text-subtle px-4 py-3 bg-surface italic rounded-lg"
+                style={{ borderLeft: '3px solid #009767' }}
               >
                 {provision.text_nl}
               </div>
@@ -97,8 +97,8 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
                 Translation (EN)
               </div>
               <div
-                className="text-13 leading-7 text-subtle font-light px-4 py-3 bg-surface"
-                style={{ borderLeft: '3px solid #e5e5e3' }}
+                className="text-13 leading-7 text-subtle px-4 py-3 bg-surface rounded-lg"
+                style={{ borderLeft: '3px solid #e5e5e5' }}
               >
                 {provision.text_en}
               </div>
@@ -107,19 +107,19 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
             {/* Key details */}
             <div className="grid grid-cols-2 gap-1.5 mb-4">
               {provision.applicable_to && (
-                <div className="bg-surface px-3 py-2 border border-rule">
+                <div className="bg-surface px-3 py-2 border border-rule rounded-lg">
                   <div className="text-10 text-muted mb-0.5">Applies to</div>
                   <div className="text-12 font-normal text-ink">{provision.applicable_to}</div>
                 </div>
               )}
               {provision.minimum_fire_class && (
-                <div className="bg-surface px-3 py-2 border border-rule">
+                <div className="bg-surface px-3 py-2 border border-rule rounded-lg">
                   <div className="text-10 text-muted mb-0.5">Required class</div>
                   <div className="text-12 font-normal text-ink">{provision.minimum_fire_class}</div>
                 </div>
               )}
               {provision.minimum_fire_resistance && (
-                <div className="bg-surface px-3 py-2 border border-rule">
+                <div className="bg-surface px-3 py-2 border border-rule rounded-lg">
                   <div className="text-10 text-muted mb-0.5">Required resistance</div>
                   <div className="text-12 font-normal text-ink">{provision.minimum_fire_resistance}</div>
                 </div>
@@ -138,7 +138,7 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
                 href={provision.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block text-12 text-ink font-normal no-underline px-3 py-1.5 border border-rule hover:border-ink transition-colors duration-100"
+                className="inline-block text-12 text-ink font-medium no-underline px-3 py-1.5 border border-rule rounded-lg hover:border-ink transition-colors duration-150"
               >
                 View on wetten.overheid.nl →
               </a>

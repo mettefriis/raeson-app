@@ -41,8 +41,8 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
         </div>
         <button
           onClick={onNewProject}
-          className="px-4 py-2 bg-ink text-surface text-12 hover:bg-subtle transition-colors duration-100"
-          style={{ letterSpacing: '0.01em' }}
+          className="px-4 py-2 text-white text-12 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
+          style={{ background: '#009767', letterSpacing: '-0.01em' }}
         >
           + New project
         </button>
@@ -50,11 +50,12 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
 
       {/* Empty state */}
       {projects.length === 0 && (
-        <div className="py-16 text-center border border-rule bg-card">
-          <p className="text-13 text-muted font-light mb-5">No projects yet.</p>
+        <div className="py-16 text-center border border-rule bg-surface rounded-lg">
+          <p className="text-13 text-muted mb-5">No projects yet.</p>
           <button
             onClick={onNewProject}
-            className="px-4 py-2 bg-ink text-surface text-12 hover:bg-subtle transition-colors duration-100"
+            className="px-4 py-2 text-white text-12 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
+            style={{ background: '#009767' }}
           >
             Create your first project
           </button>
@@ -63,7 +64,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
 
       {/* Project list */}
       {projects.length > 0 && (
-        <div className="flex flex-col" style={{ gap: 1 }}>
+        <div className="flex flex-col gap-2">
           {projects.map((p, i) => (
             <motion.div
               key={p.id}
@@ -71,7 +72,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.15, ease: 'easeOut' }}
               onClick={() => onSelectProject(p)}
-              className="px-5 py-4 bg-card border border-rule cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-100"
+              className="px-5 py-4 bg-white border border-rule rounded-lg cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-150"
             >
               <div className="min-w-0">
                 <div className="text-13 text-ink mb-1 group-hover:text-ink transition-colors">

@@ -44,10 +44,10 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         onChange={e => onChange(e.target.value)}
         placeholder="e.g., Contractor proposes Kingspan Kooltherm K15 instead of specified Rockwool Duorock 040 for facade insulation on a residential building (klasse 2) in Amsterdam."
         rows={4}
-        className="w-full px-3.5 py-3 text-14 font-light bg-card text-ink border border-rule resize-y transition-colors duration-100 leading-relaxed"
+        className="w-full px-3.5 py-3 text-14 bg-white text-ink border border-rule rounded-lg resize-y transition-colors duration-150 leading-relaxed"
         style={{ boxSizing: 'border-box' }}
-        onFocus={e => e.target.style.borderColor = '#111110'}
-        onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+        onFocus={e => e.target.style.borderColor = '#171717'}
+        onBlur={e => e.target.style.borderColor = '#e5e5e5'}
       />
 
       {/* Floor plan drop zone */}
@@ -56,9 +56,9 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className="mt-2 px-3.5 py-2.5 flex items-center gap-2.5 transition-all duration-100 min-h-[38px]"
+        className="mt-2 px-3.5 py-2.5 flex items-center gap-2.5 transition-all duration-150 min-h-[38px] rounded-lg"
         style={{
-          border: dragging ? '1px dashed #111110' : file ? '1px dashed #15803d' : '1px dashed #c5c5c3',
+          border: dragging ? '1px dashed #171717' : file ? '1px dashed #009767' : '1px dashed #d4d4d4',
           background: dragging || file ? '#f0fdf4' : 'transparent',
           cursor: file ? 'default' : 'pointer',
         }}
@@ -66,8 +66,8 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         {file ? (
           <>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <rect x="1" y="1" width="12" height="12" stroke="#15803d" strokeWidth="1.5"/>
-              <polyline points="3.5,7 6,9.5 10.5,4.5" stroke="#15803d" strokeWidth="1.5" fill="none" strokeLinecap="square"/>
+              <rect x="1" y="1" width="12" height="12" stroke="#009767" strokeWidth="1.5" rx="2"/>
+              <polyline points="3.5,7 6,9.5 10.5,4.5" stroke="#009767" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
             </svg>
             <span className="text-12 text-pass flex-1 font-light">
               {file.name}
@@ -106,10 +106,10 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
       <button
         type="submit"
         disabled={loading || !value.trim()}
-        className="mt-2.5 px-6 py-2.5 text-13 font-normal text-card transition-colors duration-100 disabled:cursor-default"
+        className="mt-2.5 px-6 py-2.5 text-13 font-medium text-white rounded-lg transition-opacity duration-150 disabled:cursor-default"
         style={{
-          background: loading || !value.trim() ? '#9b9b99' : '#111110',
-          letterSpacing: '0.01em',
+          background: loading || !value.trim() ? '#a3a3a3' : '#009767',
+          letterSpacing: '-0.01em',
         }}
       >
         {loading ? 'Assessing...' : 'Assess substitution'}

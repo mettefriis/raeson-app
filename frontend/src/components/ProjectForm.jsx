@@ -38,8 +38,8 @@ const JURISDICTIONS = [
   { value: 'DE', label: 'Germany (GEG)' },
 ]
 
-const fieldClass = "w-full px-2.5 py-2 border border-rule bg-card text-13 text-ink font-light transition-colors duration-100"
-const labelClass = "text-11 text-subtle font-normal block mb-1.5"
+const fieldClass = "w-full px-3 py-2 border border-rule bg-white text-13 text-ink rounded-lg transition-colors duration-150"
+const labelClass = "text-11 text-subtle font-medium block mb-1.5"
 
 export default function ProjectForm({ onCreated, onCancel }) {
   const { getToken } = useAuth()
@@ -114,8 +114,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Ørestad Housing Block 4B"
                 value={form.name}
                 onChange={e => set('name', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               />
             </div>
             <div>
@@ -127,8 +127,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. 2024-087"
                 value={form.project_number}
                 onChange={e => set('project_number', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               />
             </div>
           </div>
@@ -144,8 +144,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Ørestads Boulevard 55"
                 value={form.address}
                 onChange={e => set('address', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               />
             </div>
             <div>
@@ -157,8 +157,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Copenhagen"
                 value={form.city}
                 onChange={e => set('city', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               />
             </div>
           </div>
@@ -191,8 +191,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 className={fieldClass}
                 value={form.building_type}
                 onChange={e => set('building_type', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               >
                 {BUILDING_TYPES.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
@@ -207,8 +207,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 className={fieldClass}
                 value={form.building_class}
                 onChange={e => set('building_class', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               >
                 {BUILDING_CLASSES.map(c => (
                   <option key={c.value} value={c.value}>{c.label}</option>
@@ -227,8 +227,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 className={fieldClass}
                 value={form.climate_zone}
                 onChange={e => set('climate_zone', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               >
                 {CLIMATE_ZONES.map(z => (
                   <option key={z.value} value={z.value}>{z.label}</option>
@@ -244,14 +244,14 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Anna Møller"
                 value={form.architect_name}
                 onChange={e => set('architect_name', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#111110'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e3'}
+                onFocus={e => e.target.style.borderColor = '#171717'}
+                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
               />
             </div>
           </div>
 
           {error && (
-            <div className="px-3.5 py-2.5 bg-fail-light border border-fail-edge text-fail text-13 font-light">
+            <div className="px-3.5 py-2.5 bg-fail-light border border-fail-edge text-fail text-13 rounded-lg">
               {error}
             </div>
           )}
@@ -261,15 +261,15 @@ export default function ProjectForm({ onCreated, onCancel }) {
             <button
               type="submit"
               disabled={saving}
-              className="px-5 py-2.5 bg-ink text-surface text-12 hover:bg-subtle transition-colors duration-100 disabled:opacity-60"
-              style={{ letterSpacing: '0.01em' }}
+              className="px-5 py-2.5 text-white text-12 font-medium rounded-lg transition-opacity duration-150 disabled:opacity-60"
+              style={{ background: '#009767', letterSpacing: '-0.01em' }}
             >
               {saving ? 'Creating...' : 'Create project'}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="px-5 py-2.5 bg-transparent text-subtle text-12 border border-rule hover:border-ink hover:text-ink transition-colors duration-100"
+              className="px-5 py-2.5 bg-surface text-subtle text-12 border border-rule rounded-lg hover:border-ink hover:text-ink transition-colors duration-150"
             >
               Cancel
             </button>
