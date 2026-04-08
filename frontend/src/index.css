@@ -3,9 +3,9 @@
 @theme {
   /* Core palette — Acquir/Vercel style */
   --color-ink: #171717;
-  --color-subtle: #8a8a8a;
-  --color-muted: #a3a3a3;
-  --color-dim: #d4d4d4;
+  --color-subtle: #737373;
+  --color-muted: #8d8d8d;
+  --color-dim: #c4c4c4;
   --color-surface: #f5f5f5;
   --color-rule: #e5e5e5;
   --color-row: #f0f0f0;
@@ -66,7 +66,8 @@
     background-color: #ffffff;
     color: var(--color-ink);
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.5;
+    letter-spacing: -0.374px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

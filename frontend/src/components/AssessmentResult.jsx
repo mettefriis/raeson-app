@@ -119,7 +119,7 @@ function MatrixRow({ dim, onCodeClick }) {
         <span className="flex-1 min-w-0">
           <span className="text-12 font-normal text-ink block">{label}</span>
           {!open && (
-            <span className="text-11 text-muted font-light block overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="text-11 text-muted block overflow-hidden text-ellipsis whitespace-nowrap">
               {brief(dim.specified_value)}
               {dim.proposed_value && dim.proposed_value !== dim.specified_value && (
                 <> <span className="text-dim">→</span> {brief(dim.proposed_value)}</>
@@ -147,7 +147,7 @@ function MatrixRow({ dim, onCodeClick }) {
                 borderBottom: '1px solid #f0f0ee',
               }}
             >
-              <div className="text-muted font-light mb-2 text-12 pt-3">{dim.requirement}</div>
+              <div className="text-muted mb-2 text-12 pt-3">{dim.requirement}</div>
               <div className="grid grid-cols-2 gap-2.5 mb-2">
                 <div>
                   <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
@@ -196,7 +196,7 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
       </div>
       <div className="border border-rule bg-white rounded-lg overflow-hidden">
         {dims.length === 0
-          ? <div className="px-3 py-2.5 text-12 text-dim font-light">No data</div>
+          ? <div className="px-3 py-2.5 text-12 text-dim">No data</div>
           : dims.map((d, i) => <MatrixRow key={i} dim={d} onCodeClick={onCodeClick} />)
         }
       </div>
@@ -234,7 +234,7 @@ function ScoreBar({ dimensions }) {
           <div key={s.key} style={{ flex: counts[s.key], background: s.color, height: '100%' }} />
         ))}
       </div>
-      <div className="flex gap-3 text-11 text-muted font-light">
+      <div className="flex gap-3 text-11 text-muted">
         {segments.map(s => (
           <span key={s.key} className="flex items-center gap-1">
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.color, display: 'inline-block' }} />
@@ -329,7 +329,7 @@ export default function AssessmentResult({ data, queryText }) {
             </div>
             <div className="text-15 font-normal text-ink leading-snug">
               {data.specified_product}
-              <span className="text-muted mx-2 font-light">→</span>
+              <span className="text-muted mx-2">→</span>
               {data.proposed_product}
             </div>
           </div>
@@ -337,7 +337,7 @@ export default function AssessmentResult({ data, queryText }) {
         </div>
 
         {/* Context strip */}
-        <div className="flex gap-3.5 text-11 text-muted py-2 border-y border-row mb-3 flex-wrap font-light">
+        <div className="flex gap-3.5 text-11 text-muted py-2 border-y border-row mb-3 flex-wrap">
           <span><span className="text-dim">Function </span>{data.building_function}</span>
           <span><span className="text-dim">Class </span>{data.building_class}</span>
           <span><span className="text-dim">Element </span>{data.building_element.replace(/_/g, ' ')}</span>
@@ -349,7 +349,7 @@ export default function AssessmentResult({ data, queryText }) {
         <ScoreBar dimensions={data.dimensions} />
 
         {/* Narrative */}
-        <p className="text-14 leading-7 text-subtle font-light m-0">{data.risk_summary}</p>
+        <p className="text-14 leading-7 text-subtle m-0">{data.risk_summary}</p>
 
         {/* Actions */}
         <div className="flex gap-2 mt-3.5 pt-3 border-t border-row">
@@ -378,7 +378,7 @@ export default function AssessmentResult({ data, queryText }) {
 
           {decision ? (
             <div
-              className="px-3.5 py-2.5 text-13 font-light"
+              className="px-3.5 py-2.5 text-13"
               style={{
                 background: DECISIONS.find(d => d.value === decision)?.bg,
                 border: `1px solid ${DECISIONS.find(d => d.value === decision)?.border}`,
@@ -447,7 +447,7 @@ export default function AssessmentResult({ data, queryText }) {
                 transition={{ duration: 0.15, ease: 'easeInOut' }}
                 style={{ overflow: 'hidden' }}
               >
-                <ul className="text-13 text-subtle font-light pl-9 pr-5 pb-3.5 flex flex-col gap-1.5 m-0" style={{ listStyle: 'disc' }}>
+                <ul className="text-13 text-subtle pl-9 pr-5 pb-3.5 flex flex-col gap-1.5 m-0" style={{ listStyle: 'disc' }}>
                   {data.recommendations.map((rec, i) => (
                     <li key={i} className="leading-relaxed">{rec}</li>
                   ))}
@@ -490,19 +490,19 @@ export default function AssessmentResult({ data, queryText }) {
                       </span>
                     )}
                   </div>
-                  <div className="text-11 text-muted font-light mb-1">
+                  <div className="text-11 text-muted mb-1">
                     {alt.manufacturer} · {alt.product_type}
                   </div>
                   <div className="text-11 text-subtle bg-surface px-2 py-0.5 inline-block rounded">{alt.why}</div>
                 </div>
                 <div className="text-right shrink-0">
                   {alt.fire_euroclass && (
-                    <div className="text-11 text-subtle font-light">
+                    <div className="text-11 text-subtle">
                       <span className="text-muted">Fire </span>{alt.fire_euroclass}
                     </div>
                   )}
                   {alt.epd_co2_per_m2 != null && (
-                    <div className="text-11 text-subtle font-light">
+                    <div className="text-11 text-subtle">
                       <span className="text-muted">CO₂ </span>{alt.epd_co2_per_m2.toFixed(1)} kg/m²
                     </div>
                   )}
@@ -523,7 +523,7 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Referenced codes ── */}
       {data.code_documents_referenced?.length > 0 && (
-        <div className="mt-2 text-11 text-dim font-light">
+        <div className="mt-2 text-11 text-dim">
           Referenced: {data.code_documents_referenced.join(', ')}
         </div>
       )}

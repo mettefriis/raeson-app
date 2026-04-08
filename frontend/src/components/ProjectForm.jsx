@@ -95,7 +95,7 @@ export default function ProjectForm({ onCreated, onCancel }) {
         <p className="text-11 text-muted mb-1" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
           New Project
         </p>
-        <p className="text-13 text-subtle font-light">
+        <p className="text-13 text-subtle">
           Set the project context once — all assessments inherit it.
         </p>
       </div>

@@ -22,7 +22,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   }, [])
 
   if (loading) return (
-    <div className="py-10 text-center text-muted text-13 font-light">
+    <div className="py-10 text-center text-muted text-13">
       Loading projects...
     </div>
   )
@@ -35,7 +35,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
           <p className="text-11 text-muted mb-1" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Projects
           </p>
-          <p className="text-13 text-subtle font-light">
+          <p className="text-13 text-subtle">
             Select a project to run an assessment.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
                 <div className="text-13 text-ink mb-1 group-hover:text-ink transition-colors">
                   {p.name}
                 </div>
-                <div className="text-11 text-muted flex gap-4 flex-wrap font-light">
+                <div className="text-11 text-muted flex gap-4 flex-wrap">
                   {p.project_number && <span>{p.project_number}</span>}
                   {p.city && <span>{p.city}</span>}
                   {p.building_type && <span>{p.building_type}</span>}
@@ -90,7 +90,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
                 </div>
               </div>
               <div className="text-right ml-8 shrink-0">
-                <div className="text-11 text-muted font-light">
+                <div className="text-11 text-muted">
                   {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
                 </div>
               </div>

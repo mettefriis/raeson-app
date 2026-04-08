@@ -58,7 +58,7 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
         </div>
 
         {loading && (
-          <div className="py-5 text-center text-muted font-light text-13">
+          <div className="py-5 text-center text-muted text-13">
             Loading provision...
           </div>
         )}

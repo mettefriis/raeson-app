@@ -193,7 +193,7 @@ export default function App() {
               {view === 'assessment' && activeProject && (
                 <div>
                   {/* Project context strip */}
-                  <div className="px-3.5 py-2.5 bg-surface border border-rule rounded-lg mb-6 flex gap-5 flex-wrap text-11 text-subtle font-light">
+                  <div className="px-3.5 py-2.5 bg-surface border border-rule rounded-lg mb-6 flex gap-5 flex-wrap text-11 text-subtle">
                     {activeProject.building_type && (
                       <span><span className="text-muted">Type </span>{activeProject.building_type}</span>
                     )}
@@ -239,7 +239,7 @@ export default function App() {
 
                   {/* Error */}
                   {error && (
-                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 mb-6 rounded-lg font-light">
+                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 mb-6 rounded-lg">
                       {error}
                     </div>
                   )}
@@ -250,7 +250,7 @@ export default function App() {
                       <div
                         className="w-5 h-5 border-2 border-rule border-t-accent animate-spin mx-auto mb-3 rounded-full"
                       />
-                      <p className="text-13 font-light" style={{ letterSpacing: '0.02em' }}>{loadingMsg}</p>
+                      <p className="text-13" style={{ letterSpacing: '0.02em' }}>{loadingMsg}</p>
                     </div>
                   )}
 
@@ -272,7 +272,7 @@ export default function App() {
             </motion.div>
           </AnimatePresence>
 
-          <footer className="mt-16 pt-5 border-t border-rule text-11 text-dim font-light" style={{ letterSpacing: '0.02em' }}>
+          <footer className="mt-16 pt-5 border-t border-rule text-11 text-dim" style={{ letterSpacing: '0.02em' }}>
             ræson — compliance intelligence for architects.
           </footer>
         </main>

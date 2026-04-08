@@ -69,7 +69,7 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
               <rect x="1" y="1" width="12" height="12" stroke="#009767" strokeWidth="1.5" rx="2"/>
               <polyline points="3.5,7 6,9.5 10.5,4.5" stroke="#009767" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
             </svg>
-            <span className="text-12 text-pass flex-1 font-light">
+            <span className="text-12 text-pass flex-1">
               {file.name}
               <span className="text-muted ml-1.5">({(file.size / 1024).toFixed(0)} KB)</span>
             </span>
@@ -88,7 +88,7 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
               <line x1="7" y1="4" x2="7" y2="10" stroke="#c5c5c3" strokeWidth="1.5"/>
               <line x1="4" y1="7" x2="10" y2="7" stroke="#c5c5c3" strokeWidth="1.5"/>
             </svg>
-            <span className="text-12 text-muted font-light">
+            <span className="text-12 text-muted">
               Drop floor plan here for daylight assessment
               <span className="text-dim ml-1.5">— JPG, PNG, or IFC</span>
             </span>
