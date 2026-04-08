@@ -117,9 +117,9 @@ function MatrixRow({ dim, onCodeClick }) {
       >
         <Dot verdict={dim.verdict} />
         <span className="flex-1 min-w-0">
-          <span className="text-13 font-medium text-ink block">{label}</span>
+          <span className="text-12 font-normal text-ink block">{label}</span>
           {!open && (
-            <span className="text-12 text-muted block overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="text-11 text-muted font-light block overflow-hidden text-ellipsis whitespace-nowrap">
               {brief(dim.specified_value)}
               {dim.proposed_value && dim.proposed_value !== dim.specified_value && (
                 <> <span className="text-dim">→</span> {brief(dim.proposed_value)}</>
@@ -191,11 +191,10 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
 
   const Section = ({ title, dims }) => (
     <div className="flex-1 min-w-0">
-      <div className="text-11 text-muted px-4 pb-2 font-medium" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+      <div className="text-10 text-muted px-3 pb-1.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {title}
       </div>
-      <div className="border border-rule bg-white rounded-xl overflow-hidden"
-          style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)' }}>
+      <div className="border border-rule bg-white rounded-lg overflow-hidden">
         {dims.length === 0
           ? <div className="px-3 py-2.5 text-12 text-dim font-light">No data</div>
           : dims.map((d, i) => <MatrixRow key={i} dim={d} onCodeClick={onCodeClick} />)
@@ -321,17 +320,16 @@ export default function AssessmentResult({ data, queryText }) {
       </AnimatePresence>
 
       {/* ── Header card ── */}
-      <div className="px-7 py-6 bg-white border border-rule rounded-xl mb-4"
-        style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)' }}>
+      <div className="px-6 py-5 bg-white border border-rule rounded-lg mb-3">
         {/* Title + overall verdict */}
         <div className="flex justify-between items-start mb-3">
           <div>
-            <div className="text-11 text-muted mb-2 font-medium" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Substitution assessment
             </div>
-            <div className="font-semibold text-ink leading-snug" style={{ fontSize: 20, letterSpacing: '-0.2px' }}>
+            <div className="text-15 font-normal text-ink leading-snug">
               {data.specified_product}
-              <span className="text-muted mx-2.5 font-normal">→</span>
+              <span className="text-muted mx-2 font-light">→</span>
               {data.proposed_product}
             </div>
           </div>
@@ -339,7 +337,7 @@ export default function AssessmentResult({ data, queryText }) {
         </div>
 
         {/* Context strip */}
-        <div className="flex gap-4 text-12 text-muted py-3 border-y border-row mb-4 flex-wrap">
+        <div className="flex gap-3.5 text-11 text-muted py-2 border-y border-row mb-3 flex-wrap font-light">
           <span><span className="text-dim">Function </span>{data.building_function}</span>
           <span><span className="text-dim">Class </span>{data.building_class}</span>
           <span><span className="text-dim">Element </span>{data.building_element.replace(/_/g, ' ')}</span>
@@ -351,10 +349,10 @@ export default function AssessmentResult({ data, queryText }) {
         <ScoreBar dimensions={data.dimensions} />
 
         {/* Narrative */}
-        <p className="text-subtle m-0" style={{ fontSize: 15, lineHeight: 1.65 }}>{data.risk_summary}</p>
+        <p className="text-14 leading-7 text-subtle font-light m-0">{data.risk_summary}</p>
 
         {/* Actions */}
-        <div className="flex gap-2 mt-5 pt-4 border-t border-row">
+        <div className="flex gap-2 mt-3.5 pt-3 border-t border-row">
           <button
             onClick={handleExportPdf}
             disabled={exportingPdf}
@@ -373,9 +371,8 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Decision record ── */}
       {data.assessment_id && (
-        <div className="mb-6 px-6 py-5 border border-rule bg-white rounded-xl"
-          style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)' }}>
-          <p className="text-12 text-muted font-medium mb-4" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <div className="mb-6 px-5 py-4 border border-rule bg-white rounded-lg">
+          <p className="text-11 text-muted font-normal mb-3" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Decision
           </p>
 

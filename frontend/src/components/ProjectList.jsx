@@ -30,18 +30,18 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-end justify-between mb-10">
+      <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-ink font-semibold mb-1.5" style={{ fontSize: 28, letterSpacing: '-0.3px', lineHeight: 1.14 }}>
+          <p className="text-11 text-muted mb-1" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Projects
-          </h1>
-          <p className="text-15 text-subtle">
+          </p>
+          <p className="text-13 text-subtle font-light">
             Select a project to run an assessment.
           </p>
         </div>
         <button
           onClick={onNewProject}
-          className="px-5 py-2.5 text-white text-13 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
+          className="px-4 py-2 text-white text-12 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
           style={{ background: '#009767', letterSpacing: '-0.01em' }}
         >
           + New project
@@ -72,26 +72,25 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.15, ease: 'easeOut' }}
               onClick={() => onSelectProject(p)}
-              className="px-6 py-5 bg-white border border-rule rounded-lg cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-150"
-            style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)' }}
+              className="px-5 py-4 bg-white border border-rule rounded-lg cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-150"
             >
               <div className="min-w-0">
-                <div className="text-15 font-medium text-ink mb-1.5" style={{ letterSpacing: '-0.2px' }}>
+                <div className="text-13 text-ink mb-1 group-hover:text-ink transition-colors">
                   {p.name}
                 </div>
-                <div className="text-13 text-muted flex gap-4 flex-wrap">
+                <div className="text-11 text-muted flex gap-4 flex-wrap font-light">
                   {p.project_number && <span>{p.project_number}</span>}
                   {p.city && <span>{p.city}</span>}
                   {p.building_type && <span>{p.building_type}</span>}
                   {p.jurisdiction && (
-                    <span className="font-mono border border-rule px-1.5 py-px rounded text-11" style={{ letterSpacing: '0.02em' }}>
+                    <span className="font-mono border border-rule px-1 text-10" style={{ letterSpacing: '0.02em' }}>
                       {p.jurisdiction}
                     </span>
                   )}
                 </div>
               </div>
               <div className="text-right ml-8 shrink-0">
-                <div className="text-12 text-muted">
+                <div className="text-11 text-muted font-light">
                   {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
                 </div>
               </div>
