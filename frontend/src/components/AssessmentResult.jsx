@@ -63,20 +63,6 @@ function VerdictBadge({ verdict, large }) {
   )
 }
 
-function Dot({ verdict }) {
-  const s = V[verdict] || V.conditional
-  return (
-    <span
-      className="inline-block shrink-0"
-      style={{
-        width: 7, height: 7,
-        borderRadius: '50%',
-        background: s.dot,
-        marginTop: 1,
-      }}
-    />
-  )
-}
 
 function CodeRef({ reference, onClick }) {
   return (
@@ -106,7 +92,7 @@ function MatrixRow({ dim, onCodeClick }) {
     <div>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-start gap-2.5 px-3 py-2.5 border-none border-b border-row text-left transition-colors duration-100"
+        className="w-full flex items-center gap-0 px-4 py-2.5 border-none text-left transition-colors duration-150"
         style={{
           background: open ? s.bg : 'transparent',
           borderBottom: '1px solid #e5e5e5',
@@ -115,7 +101,6 @@ function MatrixRow({ dim, onCodeClick }) {
         onMouseOver={e => { if (!open) e.currentTarget.style.background = '#f5f5f5' }}
         onMouseOut={e => { if (!open) e.currentTarget.style.background = 'transparent' }}
       >
-        <Dot verdict={dim.verdict} />
         <span className="flex-1 min-w-0">
           <span className="text-12 font-medium text-ink block" style={{ letterSpacing: '-0.015em' }}>{label}</span>
           {!open && (
@@ -140,9 +125,8 @@ function MatrixRow({ dim, onCodeClick }) {
             style={{ overflow: 'hidden' }}
           >
             <div
-              className="px-4 pb-3.5 text-13"
+              className="px-4 pb-4 text-13"
               style={{
-                paddingLeft: 29,
                 background: s.bg,
                 borderBottom: '1px solid #e5e5e5',
               }}
@@ -221,29 +205,17 @@ function ScoreBar({ dimensions }) {
   const total = dimensions.length
   if (total === 0) return null
 
-  const segments = [
-    { key: 'fail',        color: '#dc2626', label: `${counts.fail} fail` },
-    { key: 'conditional', color: '#ca8a04', label: `${counts.conditional} conditional` },
-    { key: 'pass',        color: '#16a34a', label: `${counts.pass} pass` },
-  ].filter(s => counts[s.key] > 0)
+  const parts = [
+    counts.fail > 0        && <span key="fail"        style={{ color: '#ef4444' }}>{counts.fail} fail</span>,
+    counts.conditional > 0 && <span key="conditional" style={{ color: '#a16207' }}>{counts.conditional} conditional</span>,
+    counts.pass > 0        && <span key="pass"        style={{ color: '#009767' }}>{counts.pass} pass</span>,
+  ].filter(Boolean)
 
   return (
-    <div className="mb-3.5">
-      <div className="flex h-1 gap-px mb-1.5">
-        {segments.map(s => (
-          <div key={s.key} style={{ flex: counts[s.key], background: s.color, height: '100%' }} />
-        ))}
-      </div>
-      <div className="flex gap-3 text-11 text-muted">
-        {segments.map(s => (
-          <span key={s.key} className="flex items-center gap-1">
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.color, display: 'inline-block' }} />
-            {s.label}
-          </span>
-        ))}
-        <span className="ml-auto">{total} dimensions checked</span>
-      </div>
-    </div>
+    <p className="text-12 text-muted mb-3.5">
+      {total} dimensions —{' '}
+      {parts.map((p, i) => <React.Fragment key={i}>{p}{i < parts.length - 1 ? ' · ' : ''}</React.Fragment>)}
+    </p>
   )
 }
 

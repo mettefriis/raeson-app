@@ -246,12 +246,13 @@ export default function App() {
 
                   {/* Loading */}
                   {loading && (
-                    <div className="py-10 text-center text-muted">
-                      <div
-                        className="w-5 h-5 border-2 border-rule border-t-accent animate-spin mx-auto mb-3 rounded-full"
-                      />
-                      <p className="text-13" style={{ letterSpacing: '0.02em' }}>{loadingMsg}</p>
-                    </div>
+                    <motion.p
+                      animate={{ opacity: [1, 0.4, 1] }}
+                      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                      className="py-10 text-center text-13 text-muted"
+                    >
+                      {loadingMsg}
+                    </motion.p>
                   )}
 
                   {/* Results */}

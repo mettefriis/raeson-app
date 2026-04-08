@@ -31,7 +31,7 @@
   --color-fail-dot: #ef4444;
 
   /* Typography */
-  --font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Named font sizes — matching Acquir's text-xs/sm/base scale */
