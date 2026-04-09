@@ -35,7 +35,7 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label className="block text-12 text-subtle mb-2 font-normal" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+      <label className="block text-[11px] text-muted mb-3 font-medium uppercase tracking-widest">
         Describe the substitution scenario
       </label>
 
@@ -44,10 +44,10 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         onChange={e => onChange(e.target.value)}
         placeholder="e.g., Contractor proposes Kingspan Kooltherm K15 instead of specified Rockwool Duorock 040 for facade insulation on a residential building (klasse 2) in Amsterdam."
         rows={4}
-        className="w-full px-3.5 py-3 text-14 bg-white text-ink border border-rule rounded-lg resize-y transition-colors duration-150 leading-relaxed"
-        style={{ boxSizing: 'border-box' }}
-        onFocus={e => e.target.style.borderColor = '#171717'}
-        onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+        className="w-full px-0 py-3 text-sm bg-transparent text-ink border-0 border-b border-rule resize-none outline-none transition-colors duration-150 leading-relaxed placeholder:text-muted"
+        style={{ borderRadius: 0 }}
+        onFocus={e => e.target.style.borderBottomColor = '#171717'}
+        onBlur={e => e.target.style.borderBottomColor = '#e5e5e5'}
       />
 
       {/* Floor plan drop zone */}
@@ -56,10 +56,10 @@ export default function QueryForm({ value, onChange, onSubmit, loading }) {
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className="mt-2 px-3.5 py-2.5 flex items-center gap-2.5 transition-all duration-150 min-h-[38px] rounded-lg"
+        className="mt-3 px-0 py-2.5 flex items-center gap-2.5 transition-all duration-150 min-h-[38px] border-b"
         style={{
-          border: dragging ? '1px dashed #171717' : file ? '1px dashed #009767' : '1px dashed #d4d4d4',
-          background: dragging || file ? '#f0fdf4' : 'transparent',
+          borderColor: dragging ? '#171717' : file ? '#009767' : '#e5e5e5',
+          background: 'transparent',
           cursor: file ? 'default' : 'pointer',
         }}
       >

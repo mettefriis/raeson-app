@@ -38,8 +38,8 @@ const JURISDICTIONS = [
   { value: 'DE', label: 'Germany (GEG)' },
 ]
 
-const fieldClass = "w-full px-3 py-2 border border-rule bg-white text-13 text-ink rounded-lg transition-colors duration-150"
-const labelClass = "text-11 text-subtle font-medium block mb-1.5"
+const fieldClass = "w-full px-0 py-2 border-0 border-b border-rule bg-transparent text-sm text-ink outline-none transition-colors duration-150 rounded-none"
+const labelClass = "text-[11px] text-muted font-medium block mb-1.5 uppercase tracking-widest"
 
 export default function ProjectForm({ onCreated, onCancel }) {
   const { getToken } = useAuth()
@@ -92,10 +92,10 @@ export default function ProjectForm({ onCreated, onCancel }) {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-11 text-muted mb-1" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <p className="text-[11px] font-medium text-muted mb-1.5 uppercase tracking-widest">
           New Project
         </p>
-        <p className="text-13 text-subtle">
+        <p className="text-sm text-subtle tracking-tight">
           Set the project context once — all assessments inherit it.
         </p>
       </div>
@@ -251,7 +251,7 @@ export default function ProjectForm({ onCreated, onCancel }) {
           </div>
 
           {error && (
-            <div className="px-3.5 py-2.5 bg-fail-light border border-fail-edge text-fail text-13 rounded-lg">
+            <div className="px-3.5 py-2.5 bg-fail-light border border-fail-edge text-fail text-sm rounded-2xl">
               {error}
             </div>
           )}

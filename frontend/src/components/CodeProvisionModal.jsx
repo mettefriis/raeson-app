@@ -38,7 +38,7 @@ export default function CodeProvisionModal({ codeReference, onClose }) {
         exit={{ opacity: 0, scale: 0.97, y: 8 }}
         transition={{ duration: 0.15, ease: 'easeOut' }}
         onClick={e => e.stopPropagation()}
-        className="bg-white w-full max-h-[80vh] overflow-y-auto px-7 py-6 border border-rule rounded-xl"
+        className="bg-white w-full max-h-[80vh] overflow-y-auto px-7 py-6 border border-rule rounded-2xl"
         style={{ maxWidth: 600, boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}
       >
         {/* Header */}

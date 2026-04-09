@@ -30,12 +30,12 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-10 pt-4">
         <div>
-          <p className="text-11 text-muted mb-1" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <p className="text-[11px] font-medium text-muted mb-1.5 uppercase tracking-widest">
             Projects
           </p>
-          <p className="text-13 text-subtle">
+          <p className="text-sm text-subtle tracking-tight">
             Select a project to run an assessment.
           </p>
         </div>
@@ -50,8 +50,8 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
 
       {/* Empty state */}
       {projects.length === 0 && (
-        <div className="py-16 text-center border border-rule bg-surface rounded-lg">
-          <p className="text-13 text-muted mb-5">No projects yet.</p>
+        <div className="py-16 text-center bg-surface rounded-2xl">
+          <p className="text-sm text-muted mb-5">No projects yet.</p>
           <button
             onClick={onNewProject}
             className="px-4 py-2 text-white text-12 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
@@ -64,7 +64,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
 
       {/* Project list */}
       {projects.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {projects.map((p, i) => (
             <motion.div
               key={p.id}
@@ -72,25 +72,28 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.15, ease: 'easeOut' }}
               onClick={() => onSelectProject(p)}
-              className="px-5 py-4 bg-white border border-rule rounded-lg cursor-pointer flex items-center justify-between group hover:border-ink transition-colors duration-150"
+              className="px-6 py-5 bg-surface rounded-2xl cursor-pointer flex items-center justify-between transition-colors duration-150"
+              style={{ background: '#f5f5f5' }}
+              onMouseOver={e => e.currentTarget.style.background = '#ebebeb'}
+              onMouseOut={e => e.currentTarget.style.background = '#f5f5f5'}
             >
               <div className="min-w-0">
-                <div className="text-13 font-medium text-ink mb-1" style={{ letterSpacing: '-0.025em' }}>
+                <div className="text-sm font-medium text-ink mb-1.5 tracking-tight">
                   {p.name}
                 </div>
-                <div className="text-11 text-muted flex gap-4 flex-wrap">
+                <div className="text-xs text-muted flex gap-4 flex-wrap">
                   {p.project_number && <span>{p.project_number}</span>}
                   {p.city && <span>{p.city}</span>}
                   {p.building_type && <span>{p.building_type}</span>}
                   {p.jurisdiction && (
-                    <span className="font-mono border border-rule px-1 text-10" style={{ letterSpacing: '0.02em' }}>
+                    <span className="font-mono text-[10px]" style={{ letterSpacing: '0.02em' }}>
                       {p.jurisdiction}
                     </span>
                   )}
                 </div>
               </div>
               <div className="text-right ml-8 shrink-0">
-                <div className="text-11 text-muted">
+                <div className="text-xs text-muted tabular-nums">
                   {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
                 </div>
               </div>

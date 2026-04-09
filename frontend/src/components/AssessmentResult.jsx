@@ -178,7 +178,7 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
       <div className="text-10 text-muted px-3 pb-1.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {title}
       </div>
-      <div className="border border-rule bg-white rounded-lg overflow-hidden">
+      <div className="border border-rule bg-white rounded-2xl overflow-hidden">
         {dims.length === 0
           ? <div className="px-3 py-2.5 text-12 text-dim">No data</div>
           : dims.map((d, i) => <MatrixRow key={i} dim={d} onCodeClick={onCodeClick} />)
@@ -212,7 +212,7 @@ function ScoreBar({ dimensions }) {
   ].filter(Boolean)
 
   return (
-    <p className="text-12 text-muted mb-3.5">
+    <p className="text-xs text-muted mb-3.5 tabular-nums">
       {total} dimensions —{' '}
       {parts.map((p, i) => <React.Fragment key={i}>{p}{i < parts.length - 1 ? ' · ' : ''}</React.Fragment>)}
     </p>
@@ -292,14 +292,14 @@ export default function AssessmentResult({ data, queryText }) {
       </AnimatePresence>
 
       {/* ── Header card ── */}
-      <div className="px-6 py-5 bg-white border border-rule rounded-lg mb-3">
+      <div className="px-6 py-5 bg-white border border-rule rounded-2xl mb-3">
         {/* Title + overall verdict */}
         <div className="flex justify-between items-start mb-3">
           <div>
             <div className="text-10 text-muted mb-0.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Substitution assessment
             </div>
-            <div className="text-15 font-semibold text-ink leading-snug" style={{ letterSpacing: '-0.025em' }}>
+            <div className="text-[22px] font-semibold text-ink leading-snug" style={{ letterSpacing: '-0.025em' }}>
               {data.specified_product}
               <span className="text-muted mx-2 font-normal">→</span>
               {data.proposed_product}
@@ -343,7 +343,7 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Decision record ── */}
       {data.assessment_id && (
-        <div className="mb-6 px-5 py-4 border border-rule bg-white rounded-lg">
+        <div className="mb-6 px-5 py-4 border border-rule bg-white rounded-2xl">
           <p className="text-11 text-muted font-normal mb-3" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Decision
           </p>
@@ -398,7 +398,7 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Recommendations ── */}
       {data.recommendations?.length > 0 && (
         <div
-          className="mb-3 bg-white border border-rule rounded-lg overflow-hidden"
+          className="mb-3 bg-white border border-rule rounded-2xl overflow-hidden"
           style={{ borderLeft: '3px solid #009767' }}
         >
           <button
@@ -433,7 +433,7 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Alternatives ── */}
       {data.alternatives?.length > 0 && (
         <div
-          className="px-5 py-4 bg-white border border-rule rounded-lg mb-3 overflow-hidden"
+          className="px-5 py-4 bg-white border border-rule rounded-2xl mb-3 overflow-hidden"
           style={{ borderLeft: '3px solid #009767' }}
         >
           <div className="text-10 font-normal text-ink mb-3" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>

@@ -4,7 +4,7 @@
   /* Core palette — Acquir/Vercel style */
   --color-ink: #171717;
   --color-subtle: #737373;
-  --color-muted: #8d8d8d;
+  --color-muted: #a3a3a3;
   --color-dim: #c4c4c4;
   --color-surface: #f5f5f5;
   --color-rule: #e5e5e5;
@@ -31,7 +31,7 @@
   --color-fail-dot: #ef4444;
 
   /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Geist', 'Geist Fallback', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Named font sizes — matching Acquir's text-xs/sm/base scale */
@@ -49,7 +49,7 @@
   --radius-md: 8px;
   --radius-lg: 8px;
   --radius-xl: 10px;
-  --radius-2xl: 12px;
+  --radius-2xl: 16px;
   --radius-3xl: 9999px;
 }
 

@@ -131,7 +131,7 @@ export default function App() {
           <div className="flex items-center gap-2.5">
             <RaesonMark size={14} color="#171717" />
             <span className="font-mono text-13 text-ink font-medium" style={{ letterSpacing: '-0.025em' }}>ræson</span>
-            <span className="font-mono text-10 text-muted border border-rule px-1.5 py-px rounded" style={{ letterSpacing: '0.04em' }}>
+            <span className="text-[9px] font-medium uppercase tracking-widest text-ink bg-surface px-2 py-0.5 rounded-full">
               demo
             </span>
           </div>
@@ -164,7 +164,7 @@ export default function App() {
       </SignedOut>
 
       <SignedIn>
-        <main className="max-w-2xl mx-auto px-6 pb-20" style={{ paddingTop: 88 }}>
+        <main className="max-w-2xl mx-auto px-6 pb-20" style={{ paddingTop: 104 }}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view + (activeProject?.id || '')}
@@ -193,7 +193,7 @@ export default function App() {
               {view === 'assessment' && activeProject && (
                 <div>
                   {/* Project context strip */}
-                  <div className="px-3.5 py-2.5 bg-surface border border-rule rounded-lg mb-6 flex gap-5 flex-wrap text-11 text-subtle">
+                  <div className="px-4 py-3 bg-surface rounded-2xl mb-6 flex gap-5 flex-wrap text-xs text-subtle">
                     {activeProject.building_type && (
                       <span><span className="text-muted">Type </span>{activeProject.building_type}</span>
                     )}
@@ -220,7 +220,7 @@ export default function App() {
 
                   {/* Example scenarios */}
                   <div className="mt-3.5 mb-10">
-                    <p className="text-11 text-muted mb-2" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    <p className="text-[11px] font-medium text-muted mb-2 uppercase tracking-widest">
                       Try a scenario
                     </p>
                     <div className="flex flex-wrap gap-1.5">
@@ -229,7 +229,7 @@ export default function App() {
                           key={i}
                           onClick={() => { setQueryText(ex.query); handleSubmit(ex.query, null) }}
                           disabled={loading}
-                          className="text-11 px-2.5 py-1 bg-white border border-rule rounded-md text-subtle hover:border-ink hover:text-ink transition-colors duration-150 disabled:opacity-40"
+                          className="text-xs px-2.5 py-1 bg-surface rounded-full text-muted hover:bg-[#ebebeb] hover:text-ink transition-colors duration-150 disabled:opacity-40"
                         >
                           {ex.label}
                         </button>
@@ -239,7 +239,7 @@ export default function App() {
 
                   {/* Error */}
                   {error && (
-                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-13 mb-6 rounded-lg">
+                    <div className="px-4 py-3 bg-fail-light border border-fail-edge text-fail text-sm mb-6 rounded-2xl">
                       {error}
                     </div>
                   )}
