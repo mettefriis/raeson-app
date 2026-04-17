@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'motion/react'
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 const C = {
-  bg:      '#F8F6F2',
+  bg:      '#F0D4D0',
   surface: '#F5F5F5',
   card:    '#FFFFFF',
   border:  '#E5E5E5',
@@ -64,66 +64,65 @@ function FadeUp({ children, delay = 0, className, style }) {
 // ─── Grain gradient background ───────────────────────────────────────────────
 function GrainBackground() {
   return (
-    <>
-      {/* SVG grain filter definition */}
-      <svg style={{ position: 'fixed', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
-        <defs>
-          <filter id="grain-filter" x="0%" y="0%" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" result="noise"/>
-            <feColorMatrix type="saturate" values="0" in="noise" result="greyNoise"/>
-            <feBlend in="SourceGraphic" in2="greyNoise" mode="overlay"/>
-          </filter>
-        </defs>
-      </svg>
-
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: C.bg }}>
-        {/* Blob 1 — large dark, top-right */}
-        <motion.div
-          animate={{ x: [0, 40, -20, 0], y: [0, -30, 20, 0], scale: [1, 1.08, 0.96, 1] }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute',
-            width: '70vw', height: '70vw',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 40% 40%, rgba(15,15,15,0.10) 0%, transparent 65%)',
-            top: '-20%', right: '-15%',
-          }}
-        />
-        {/* Blob 2 — medium dark, bottom-left */}
-        <motion.div
-          animate={{ x: [0, -30, 15, 0], y: [0, 25, -15, 0], scale: [1, 0.94, 1.06, 1] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-          style={{
-            position: 'absolute',
-            width: '55vw', height: '55vw',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 60% 50%, rgba(10,10,10,0.08) 0%, transparent 65%)',
-            bottom: '-15%', left: '-10%',
-          }}
-        />
-        {/* Blob 3 — small, warm centre drift */}
-        <motion.div
-          animate={{ x: [0, 20, -35, 0], y: [0, -10, 30, 0], scale: [1, 1.12, 0.92, 1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 7 }}
-          style={{
-            position: 'absolute',
-            width: '40vw', height: '40vw',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 50% 50%, rgba(30,25,20,0.06) 0%, transparent 60%)',
-            top: '25%', left: '30%',
-          }}
-        />
-        {/* Grain overlay */}
-        <div style={{
-          position: 'absolute', inset: '-50%',
-          width: '200%', height: '200%',
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          opacity: 0.18,
-          pointerEvents: 'none',
-          mixBlendMode: 'multiply',
-        }} />
-      </div>
-    </>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: '#F0D4D0' }}>
+      {/* Coral/salmon — top centre */}
+      <motion.div
+        animate={{ x: [0, 40, -25, 0], y: [0, -30, 20, 0], scale: [1, 1.06, 0.97, 1] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute',
+          width: '90vw', height: '70vh',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(220,105,95,0.82) 0%, transparent 65%)',
+          top: '-15%', left: '5%',
+        }}
+      />
+      {/* Peach/orange — top right */}
+      <motion.div
+        animate={{ x: [0, -30, 15, 0], y: [0, 20, -10, 0], scale: [1, 0.95, 1.08, 1] }}
+        transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+        style={{
+          position: 'absolute',
+          width: '55vw', height: '55vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(228,160,100,0.78) 0%, transparent 60%)',
+          top: '-10%', right: '-5%',
+        }}
+      />
+      {/* Lavender/purple — bottom */}
+      <motion.div
+        animate={{ x: [0, 25, -20, 0], y: [0, -20, 15, 0], scale: [1, 1.08, 0.94, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
+        style={{
+          position: 'absolute',
+          width: '100vw', height: '65vh',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(148,130,185,0.85) 0%, transparent 60%)',
+          bottom: '-15%', left: '-5%',
+        }}
+      />
+      {/* Pink centre bloom */}
+      <motion.div
+        animate={{ x: [0, -15, 30, 0], y: [0, 25, -20, 0], scale: [1, 1.12, 0.90, 1] }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        style={{
+          position: 'absolute',
+          width: '60vw', height: '60vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(210,120,140,0.70) 0%, transparent 65%)',
+          top: '15%', left: '20%',
+        }}
+      />
+      {/* Grain overlay — high opacity for the crisp ElevenLabs texture */}
+      <div style={{
+        position: 'absolute', inset: '-100px',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        backgroundSize: '256px 256px',
+        opacity: 0.28,
+        pointerEvents: 'none',
+        mixBlendMode: 'overlay',
+      }} />
+    </div>
   )
 }
 
