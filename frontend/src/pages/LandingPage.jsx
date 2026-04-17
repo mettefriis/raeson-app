@@ -3,13 +3,13 @@ import { motion, useScroll, useTransform } from 'motion/react'
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 const C = {
-  bg:      '#0D0D0D',
-  surface: '#161616',
-  card:    '#1C1C1C',
-  border:  '#252525',
-  text:    '#FAFAFA',
-  dim:     '#888888',
-  muted:   '#444444',
+  bg:      '#F8F6F2',
+  surface: '#F5F5F5',
+  card:    '#FFFFFF',
+  border:  '#E5E5E5',
+  text:    '#0F0F0F',
+  dim:     '#666666',
+  muted:   '#AAAAAA',
   accent:  '#009767',
 }
 
@@ -58,6 +58,72 @@ function FadeUp({ children, delay = 0, className, style }) {
     >
       {children}
     </motion.div>
+  )
+}
+
+// ─── Grain gradient background ───────────────────────────────────────────────
+function GrainBackground() {
+  return (
+    <>
+      {/* SVG grain filter definition */}
+      <svg style={{ position: 'fixed', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+        <defs>
+          <filter id="grain-filter" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" result="noise"/>
+            <feColorMatrix type="saturate" values="0" in="noise" result="greyNoise"/>
+            <feBlend in="SourceGraphic" in2="greyNoise" mode="overlay"/>
+          </filter>
+        </defs>
+      </svg>
+
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: C.bg }}>
+        {/* Blob 1 — large dark, top-right */}
+        <motion.div
+          animate={{ x: [0, 40, -20, 0], y: [0, -30, 20, 0], scale: [1, 1.08, 0.96, 1] }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute',
+            width: '70vw', height: '70vw',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 40% 40%, rgba(15,15,15,0.10) 0%, transparent 65%)',
+            top: '-20%', right: '-15%',
+          }}
+        />
+        {/* Blob 2 — medium dark, bottom-left */}
+        <motion.div
+          animate={{ x: [0, -30, 15, 0], y: [0, 25, -15, 0], scale: [1, 0.94, 1.06, 1] }}
+          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+          style={{
+            position: 'absolute',
+            width: '55vw', height: '55vw',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 60% 50%, rgba(10,10,10,0.08) 0%, transparent 65%)',
+            bottom: '-15%', left: '-10%',
+          }}
+        />
+        {/* Blob 3 — small, warm centre drift */}
+        <motion.div
+          animate={{ x: [0, 20, -35, 0], y: [0, -10, 30, 0], scale: [1, 1.12, 0.92, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 7 }}
+          style={{
+            position: 'absolute',
+            width: '40vw', height: '40vw',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 50% 50%, rgba(30,25,20,0.06) 0%, transparent 60%)',
+            top: '25%', left: '30%',
+          }}
+        />
+        {/* Grain overlay */}
+        <div style={{
+          position: 'absolute', inset: '-50%',
+          width: '200%', height: '200%',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          opacity: 0.18,
+          pointerEvents: 'none',
+          mixBlendMode: 'multiply',
+        }} />
+      </div>
+    </>
   )
 }
 
@@ -527,7 +593,9 @@ function Footer() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function LandingPage({ onEnter }) {
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', color: C.text }}>
+    <div style={{ background: 'transparent', minHeight: '100vh', color: C.text, position: 'relative' }}>
+      <GrainBackground />
+      <div style={{ position: 'relative', zIndex: 1 }}>
       <Nav onEnter={onEnter} />
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <Hero onEnter={onEnter} />
@@ -538,6 +606,7 @@ export default function LandingPage({ onEnter }) {
       <Journal />
       <CtaBand onEnter={onEnter} />
       <Footer />
+      </div>
     </div>
   )
 }

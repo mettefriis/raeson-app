@@ -5,14 +5,13 @@ import { motion } from 'motion/react'
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const C = {
-  bg:      '#0D0D0D',
-  surface: '#161616',
-  card:    '#1C1C1C',
-  border:  '#252525',
-  text:    '#FAFAFA',
-  dim:     '#888888',
-  muted:   '#444444',
+  border:  '#E5E5E5',
+  text:    '#0F0F0F',
+  dim:     '#666666',
+  muted:   '#AAAAAA',
 }
+
+const VERDICT_COLOR = { accepted: '#009767', conditional: '#ca8a04', fail: '#ef4444' }
 
 export default function ProjectList({ onSelectProject, onNewProject }) {
   const { getToken } = useAuth()
@@ -32,71 +31,62 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   }, [])
 
   if (loading) return (
-    <div style={{ padding: '40px 0', textAlign: 'center', fontSize: 13, color: C.dim }}>
-      Loading projects...
+    <div style={{ padding: '60px 0', textAlign: 'center', fontSize: 13, color: C.dim }}>
+      Loading...
     </div>
   )
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 48, paddingTop: 8 }}>
+      {/* Header — matches landing page index style */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '48px 0 40px' }}>
         <div>
-          <p style={{ fontSize: 10, fontWeight: 500, color: C.muted, marginBottom: 10,
-            textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <p style={{ fontSize: 10, color: C.muted, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>
             Studio directory — {new Date().getFullYear()}
           </p>
-          <h1 style={{ fontSize: 32, fontWeight: 600, color: C.text, letterSpacing: '-0.03em', margin: 0 }}>
+          <h1 style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', color: C.text, margin: 0 }}>
             Active Projects
           </h1>
         </div>
         <button
           onClick={onNewProject}
           style={{
-            padding: '10px 20px', background: C.text, color: C.bg,
-            fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em',
-            border: 'none', borderRadius: 6, cursor: 'pointer',
-            marginTop: 24,
+            padding: '10px 22px', background: C.text, color: '#FFFFFF',
+            fontSize: 12, fontWeight: 500, letterSpacing: '0.03em', textTransform: 'uppercase',
+            border: 'none', borderRadius: 4, cursor: 'pointer',
           }}
         >
-          + Create New Project
+          + New Project
         </button>
       </div>
 
       {/* Empty state */}
       {projects.length === 0 && (
-        <div style={{
-          padding: '64px 0', textAlign: 'center',
-          background: C.surface, borderRadius: 12,
-          border: `1px solid ${C.border}`,
-        }}>
-          <p style={{ fontSize: 13, color: C.dim, marginBottom: 20 }}>No projects yet.</p>
+        <div style={{ padding: '80px 0', textAlign: 'center', borderTop: `1px solid ${C.border}` }}>
+          <p style={{ fontSize: 13, color: C.dim, marginBottom: 24 }}>No projects yet.</p>
           <button onClick={onNewProject} style={{
-            padding: '10px 20px', background: C.text, color: C.bg,
-            fontSize: 13, fontWeight: 500, border: 'none', borderRadius: 6, cursor: 'pointer',
+            padding: '10px 22px', background: C.text, color: '#FFFFFF',
+            fontSize: 12, fontWeight: 500, letterSpacing: '0.03em', textTransform: 'uppercase',
+            border: 'none', borderRadius: 4, cursor: 'pointer',
           }}>
             Create your first project
           </button>
         </div>
       )}
 
-      {/* Table */}
+      {/* Index-style table — identical to landing page */}
       {projects.length > 0 && (
-        <div style={{ border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden' }}>
+        <div>
           {/* Column headers */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr 1fr 1fr',
-            padding: '10px 20px',
-            borderBottom: `1px solid ${C.border}`,
-            fontSize: 10, color: C.muted,
-            letterSpacing: '0.08em', textTransform: 'uppercase',
-            background: C.surface,
+            display: 'grid', gridTemplateColumns: '2fr 1.5fr 1fr 80px',
+            padding: '0 0 12px', borderBottom: `1px solid ${C.border}`,
+            fontSize: 10, color: C.muted, letterSpacing: '0.1em', textTransform: 'uppercase',
           }}>
-            <span>Name</span>
-            <span>Status</span>
-            <span>Assessments</span>
+            <span>Project</span>
             <span>Location</span>
+            <span>Assessments</span>
+            <span style={{ textAlign: 'right' }}>Status</span>
           </div>
 
           {projects.map((p, i) => (
@@ -104,52 +94,33 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
               key={p.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.04, duration: 0.2 }}
+              transition={{ delay: i * 0.05, duration: 0.25 }}
               onClick={() => onSelectProject(p)}
               style={{
-                display: 'grid',
-                gridTemplateColumns: '2fr 1fr 1fr 1fr',
-                padding: '16px 20px',
-                borderBottom: i < projects.length - 1 ? `1px solid ${C.border}` : 'none',
-                cursor: 'pointer',
-                background: 'transparent',
-                transition: 'background 0.12s',
-                alignItems: 'center',
+                display: 'grid', gridTemplateColumns: '2fr 1.5fr 1fr 80px',
+                padding: '18px 0',
+                borderBottom: `1px solid ${C.border}`,
+                cursor: 'pointer', alignItems: 'center',
+                transition: 'opacity 0.12s',
               }}
-              onMouseOver={e => e.currentTarget.style.background = C.surface}
-              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+              onMouseOver={e => e.currentTarget.style.opacity = '0.65'}
+              onMouseOut={e => e.currentTarget.style.opacity = '1'}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <rect x="0.5" y="3.5" width="13" height="10" rx="1" stroke={C.muted} strokeWidth="1"/>
-                  <path d="M0.5 5.5h13" stroke={C.muted} strokeWidth="1"/>
-                  <path d="M0.5 3.5l2-2h3.5l1 2" stroke={C.muted} strokeWidth="1" fill="none"/>
-                </svg>
-                <span style={{ fontSize: 13, color: C.text, letterSpacing: '-0.015em' }}>{p.name}</span>
-              </div>
-              <div>
-                {p.assessment_count > 0 ? (
-                  <span style={{
-                    fontSize: 10, padding: '3px 8px',
-                    background: 'rgba(0,151,103,0.1)',
-                    border: '1px solid rgba(0,151,103,0.25)',
-                    color: '#009767', borderRadius: 9999,
-                    letterSpacing: '0.06em', textTransform: 'uppercase',
-                  }}>Active</span>
-                ) : (
-                  <span style={{
-                    fontSize: 10, padding: '3px 8px',
-                    background: C.surface, border: `1px solid ${C.border}`,
-                    color: C.muted, borderRadius: 9999,
-                    letterSpacing: '0.06em', textTransform: 'uppercase',
-                  }}>New</span>
-                )}
-              </div>
-              <span style={{ fontSize: 13, color: C.dim, fontVariantNumeric: 'tabular-nums' }}>
-                {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
+              <span style={{ fontSize: 15, color: C.text, letterSpacing: '-0.02em' }}>
+                {p.name}
               </span>
               <span style={{ fontSize: 13, color: C.dim }}>
                 {[p.city, p.jurisdiction].filter(Boolean).join(', ') || '—'}
+              </span>
+              <span style={{ fontSize: 13, color: C.dim, fontVariantNumeric: 'tabular-nums' }}>
+                {p.assessment_count}
+              </span>
+              <span style={{
+                fontSize: 11, textAlign: 'right',
+                color: p.assessment_count > 0 ? '#009767' : C.muted,
+                letterSpacing: '0.04em', textTransform: 'uppercase',
+              }}>
+                {p.assessment_count > 0 ? 'Active' : 'New'}
               </span>
             </motion.div>
           ))}

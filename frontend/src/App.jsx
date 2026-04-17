@@ -10,13 +10,13 @@ import LandingPage from './pages/LandingPage.jsx'
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const C = {
-  bg:      '#0D0D0D',
-  surface: '#161616',
-  card:    '#1C1C1C',
-  border:  '#252525',
-  text:    '#FAFAFA',
-  dim:     '#888888',
-  muted:   '#444444',
+  bg:      '#FFFFFF',
+  surface: '#F5F5F5',
+  card:    '#FFFFFF',
+  border:  '#E5E5E5',
+  text:    '#0F0F0F',
+  dim:     '#666666',
+  muted:   '#AAAAAA',
 }
 
 const EXAMPLE_QUERIES = [
@@ -65,13 +65,11 @@ function AppNav({ activeProject, onGoProjects, onGoLanding }) {
           style={{
             scale: logoScale, transformOrigin: 'left center',
             background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 8,
           }}
         >
-          <RaesonMark size={13} color={C.text} />
           <span style={{
-            fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600,
-            color: C.text, letterSpacing: '-0.03em',
+            fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 600,
+            color: C.text, letterSpacing: '-0.04em',
           }}>ræson</span>
         </motion.button>
 
@@ -176,7 +174,7 @@ function AppShell({ onGoLanding }) {
       </SignedOut>
 
       <SignedIn>
-        <main style={{ maxWidth: 860, margin: '0 auto', padding: '88px 32px 80px' }}>
+        <main style={{ maxWidth: 1100, margin: '0 auto', padding: '72px 40px 80px' }}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={view + (activeProject?.id || '')}

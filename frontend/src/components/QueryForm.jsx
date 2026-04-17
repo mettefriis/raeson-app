@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react'
 
 const C = {
-  bg:      '#0D0D0D',
-  surface: '#161616',
-  card:    '#1C1C1C',
-  border:  '#252525',
-  borderFocus: '#555555',
-  text:    '#FAFAFA',
-  dim:     '#888888',
-  muted:   '#444444',
+  bg:      '#FFFFFF',
+  surface: '#F5F5F5',
+  card:    '#FFFFFF',
+  border:  '#E5E5E5',
+  borderFocus: '#0F0F0F',
+  text:    '#0F0F0F',
+  dim:     '#666666',
+  muted:   '#AAAAAA',
 }
 
 export default function QueryForm({ value, onChange, onSubmit, loading }) {
