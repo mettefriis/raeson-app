@@ -136,9 +136,7 @@ function Nav({ onEnter }) {
     <motion.header
       style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: 'rgba(13,13,13,0.85)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${C.border}`,
+        background: 'transparent',
         paddingTop: navPy, paddingBottom: navPy,
       }}
     >
