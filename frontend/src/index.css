@@ -39,6 +39,7 @@
 
   /* Typography */
   --font-sans: 'Geist', 'Geist Fallback', -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', 'Geist', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Named font sizes — matching Acquir's text-xs/sm/base scale */
@@ -70,8 +71,8 @@
   }
 
   body {
-    background-color: #F0D4D0;
-    color: #0F0F0F;
+    background-color: #141414;
+    color: #FFFFFF;
     font-weight: 400;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;

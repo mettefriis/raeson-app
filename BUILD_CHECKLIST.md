@@ -91,10 +91,10 @@
 
 | # | Task | Notes | Done |
 |---|------|-------|------|
-| 7.1 | Approve / Request info / Reject buttons on result | Shown after assessment completes | - [ ] |
-| 7.2 | Decision saves to DB with timestamp + user | Immutable record — cannot be edited after saving | - [ ] |
-| 7.3 | Optional decision note | Free text field before confirming decision | - [ ] |
-| 7.4 | Decision status shown on assessment | Badge: Approved / Under review / Rejected | - [ ] |
+| 7.1 | Approve / Request info / Reject buttons on result | Shown after assessment completes | - [x] |
+| 7.2 | Decision saves to DB with timestamp + user | POST /api/assess/{id}/decision | - [x] |
+| 7.3 | Optional decision note | Free text field alongside decision buttons | - [x] |
+| 7.4 | Decision status shown on assessment | Shown after saving | - [x] |
 | 7.5 | Decision reflected in exported PDF | Cover page shows decision status, architect name, date | - [ ] |
 
 ---
@@ -189,6 +189,64 @@
 
 ---
 
+## 15. UI Polish (Apple + Cursor hybrid)
+
+*References:*
+- *Apple HIG: https://github.com/VoltAgent/awesome-design-md/tree/main/design-md/apple/*
+- *Cursor: https://github.com/VoltAgent/awesome-design-md/tree/main/design-md/cursor/*
+
+*Approach: Cursor's warm minimalism (cream palette, atmospheric shadows, warm hover) + Apple's typography system (negative letter-spacing, tight headlines, generous body line-height) + Apple's frosted glass nav.*
+
+---
+
+### Updated design tokens (primary ref: Acquir)
+
+| Token | Current | New | Source |
+|---|---|---|---|
+| Page bg | `#f7f7f5` | `#ffffff` | Acquir pure white |
+| Secondary bg / cards | — | `#f5f5f5` | Acquir |
+| Primary text | `#111110` | `#171717` | Acquir |
+| Secondary text | `#6b6b69` | `rgba(23,23,23,0.55)` | Acquir |
+| Muted | `#9b9b99` | `rgba(23,23,23,0.38)` | Acquir |
+| Border | `#e5e5e3` | `#e5e5e5` | Acquir |
+| CTA / accent | `#111110` | `#009767` (green) | Acquir — single accent only |
+| Fail color | `#b91c1c` | `#ef4444` | Acquir |
+| Card shadow | none | `0 1px 3px rgba(0,0,0,0.1)` | Acquir minimal |
+| Border radius | 0px | 8px (buttons/cards), 9999px (pills) | All three refs agree |
+| Transition | none | `150ms ease` color, `200ms ease` shadow | Cursor |
+
+### Typography scale (Apple sizing, applied to Inter)
+
+| Role | Size | Weight | Line-height | Letter-spacing |
+|---|---|---|---|---|
+| Page title | 40px | 600 | 1.10 | -0.5px |
+| Section heading | 28px | 600 | 1.14 | -0.3px |
+| Card / row heading | 19px | 600 | 1.20 | -0.2px |
+| Body | 17px | 400 | 1.47 | -0.374px |
+| Label | 14px | 400 | 1.40 | 0 |
+| Small caps metadata | 12px | 400 | 1.40 | 0.06em + uppercase |
+
+---
+
+### Tasks
+
+| # | Task | Notes | Done |
+|---|------|-------|------|
+| 15.1 | Apply updated design tokens globally | CSS variables in App.jsx. Warm cream bg, warm near-black text, atmospheric card shadows, 8px radius. | - [ ] |
+| 15.2 | Header: frosted glass nav | 52px tall. `rgba(242,241,237,0.85)` + `backdrop-filter: saturate(180%) blur(20px)`. 1px warm border bottom. | - [ ] |
+| 15.3 | Typography: Apple scale on all text | 40px/-0.5px page title, 28px section heading, 17px/1.47/-0.374px body. Negative letter-spacing everywhere. | - [ ] |
+| 15.4 | Project list: editorial rows | 19px/600 project name. 12px small-caps metadata below. Hover: `rgba(38,37,30,0.04)` bg. 1px warm separator. | - [ ] |
+| 15.5 | Buttons: warm palette + 8px radius | Primary: `#26251e` bg, white, 8px radius. Secondary: `#e6e5e0` bg, `rgba(38,37,30,0.1)` border, 8px radius. 150ms transition. | - [ ] |
+| 15.6 | Assessment form: generous spacing | 680px max-width centered. 40px section gaps. Label above field 14px. Textarea 17px/1.47. Submit flush right. | - [ ] |
+| 15.7 | Result layout: editorial paragraph + clean table | Risk summary 17px body, no box. Verdict pill 8px radius. "COMPLIANCE DIMENSIONS" 12px small-caps header above table. | - [ ] |
+| 15.8 | Dimension rows: warm fail/conditional tints | FAIL: `rgba(185,28,28,0.06)` + 3px `#b91c1c` left border. CONDITIONAL: `rgba(161,98,7,0.06)` + 3px `#a16207` left. PASS: no fill. | - [ ] |
+| 15.9 | Decision panel: segmented control | Pill group, 9999px radius. Unselected: `#e6e5e0`. Selected: `#26251e` bg, white text. 150ms transition. | - [ ] |
+| 15.10 | Cards: atmospheric shadow, no borders | Remove card borders. `rgba(0,0,0,0.14) 0px 8px 32px, rgba(0,0,0,0.06) 0px 2px 8px`. 10px radius on panels. | - [ ] |
+| 15.11 | Empty states | 40px heading centered, one body sentence, one CTA. 160px top padding. No icons or illustrations. | - [ ] |
+| 15.12 | Loading: warm skeleton | Animated `#e6e5e0` lines matching content layout. Opacity 0.5→1 pulse. No spinner. | - [ ] |
+| 15.13 | iPad layout (768–1024px) | Two-column project grid. Full-width form. 48px section spacing. | - [ ] |
+---
+
 ## Summary
 
 | Category | Total tasks | Done |
@@ -207,8 +265,27 @@
 | German Requirements | 6 | 0 |
 | Enterprise Compliance | 6 | 0 |
 | Sales & Distribution | 7 | 0 |
-| **Total** | **85** | **0** |
+| UI Polish | 13 | 0 |
+| **Total** | **98** | **0** |
 
 ---
 
 *Updated: 2026-04-05*
+
+---
+
+## UI Reference Notes
+
+**Apple HIG** — what to steal:
+- Typography does all the work. Negative letter-spacing on all headings.
+- Frosted glass nav — the page shows through the header.
+- Interface is invisible; content is everything.
+
+**Cursor** — what to steal:
+- Warm cream palette, not cold white or gray.
+- Warm near-black text, not pure black.
+- Atmospheric shadows — large blur radius, low opacity.
+- Hover shifts text color, does not change background dramatically.
+- 150ms transitions — fast enough to feel instant, slow enough to feel polished.
+
+**Shared principle:** When in doubt, remove something. More whitespace. Fewer elements.

@@ -51,7 +51,7 @@ function AppNav({ activeProject, onGoProjects, onGoLanding }) {
   return (
     <motion.header style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-      background: 'rgba(13,13,13,0.9)',
+      background: 'rgba(250,248,244,0.92)',
       backdropFilter: 'blur(20px)',
       borderBottom: `1px solid ${C.border}`,
     }}>

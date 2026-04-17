@@ -1,59 +1,42 @@
 import React, { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'motion/react'
 
-// ─── Design tokens ───────────────────────────────────────────────────────────
 const C = {
-  bg:      '#F0D4D0',
-  surface: '#F5F5F5',
-  card:    '#FFFFFF',
-  border:  '#E5E5E5',
-  text:    '#0F0F0F',
-  dim:     '#666666',
-  muted:   '#AAAAAA',
-  accent:  '#009767',
+  bg:     '#141414',
+  text:   '#FFFFFF',
+  dim:    'rgba(255,255,255,0.5)',
+  muted:  'rgba(255,255,255,0.28)',
+  border: 'rgba(255,255,255,0.1)',
 }
 
-// ─── Scroll-reveal word component ────────────────────────────────────────────
+const VERDICT_COLOR = { Accepted: '#4ade80', Conditional: '#fbbf24', Fail: '#f87171' }
+
+// ─── Scroll-reveal word ───────────────────────────────────────────────────────
 function Word({ word, progress, start, end }) {
-  const opacity = useTransform(progress, [start, end], [0.08, 1])
-  return (
-    <motion.span style={{ opacity, display: 'inline' }}>
-      {word}{' '}
-    </motion.span>
-  )
+  const opacity = useTransform(progress, [start, end], [0.1, 1])
+  return <motion.span style={{ opacity, display: 'inline' }}>{word}{' '}</motion.span>
 }
 
-function ScrollRevealText({ text, className, style }) {
+function ScrollRevealText({ text, style }) {
   const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start 0.9', 'center 0.25'],
-  })
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'center 0.25'] })
   const words = text.split(' ')
   return (
-    <p ref={ref} className={className} style={style}>
+    <p ref={ref} style={style}>
       {words.map((word, i) => (
-        <Word
-          key={i}
-          word={word}
-          progress={scrollYProgress}
-          start={i / words.length}
-          end={(i + 1) / words.length}
-        />
+        <Word key={i} word={word} progress={scrollYProgress}
+          start={i / words.length} end={(i + 1) / words.length} />
       ))}
     </p>
   )
 }
 
-// ─── Fade-in-up on scroll ─────────────────────────────────────────────────────
-function FadeUp({ children, delay = 0, className, style }) {
+function FadeUp({ children, delay = 0, style }) {
   return (
-    <motion.div
-      className={className}
-      style={style}
-      initial={{ opacity: 0, y: 24 }}
+    <motion.div style={style}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
@@ -61,59 +44,28 @@ function FadeUp({ children, delay = 0, className, style }) {
   )
 }
 
-// ─── Grain gradient background ───────────────────────────────────────────────
+// ─── Grain background — dark whole page ──────────────────────────────────────
 function GrainBackground() {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: '#F0D4D0' }}>
-      {/* Coral/salmon — top centre */}
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: '#141414' }}>
       <motion.div
-        animate={{ x: [0, 40, -25, 0], y: [0, -30, 20, 0], scale: [1, 1.06, 0.97, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ x: [0, -18, 12, 0], y: [0, 20, -14, 0], scale: [1, 1.05, 0.96, 1] }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          position: 'absolute',
-          width: '90vw', height: '70vh',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(220,105,95,0.82) 0%, transparent 65%)',
-          top: '-15%', left: '5%',
+          position: 'absolute', width: '80vw', height: '80vh', borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 35% 45%, rgba(6,6,6,0.95) 0%, transparent 65%)',
+          top: 0, left: 0,
         }}
       />
-      {/* Peach/orange — top right */}
       <motion.div
-        animate={{ x: [0, -30, 15, 0], y: [0, 20, -10, 0], scale: [1, 0.95, 1.08, 1] }}
-        transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+        animate={{ x: [0, 16, -10, 0], y: [0, -12, 18, 0], scale: [1, 0.96, 1.07, 1] }}
+        transition={{ duration: 30, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
         style={{
-          position: 'absolute',
-          width: '55vw', height: '55vw',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(228,160,100,0.78) 0%, transparent 60%)',
-          top: '-10%', right: '-5%',
+          position: 'absolute', width: '65vw', height: '65vh', borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 65% 60%, rgba(28,28,28,0.88) 0%, transparent 60%)',
+          bottom: '-10%', right: '-10%',
         }}
       />
-      {/* Lavender/purple — bottom */}
-      <motion.div
-        animate={{ x: [0, 25, -20, 0], y: [0, -20, 15, 0], scale: [1, 1.08, 0.94, 1] }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
-        style={{
-          position: 'absolute',
-          width: '100vw', height: '65vh',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(148,130,185,0.85) 0%, transparent 60%)',
-          bottom: '-15%', left: '-5%',
-        }}
-      />
-      {/* Pink centre bloom */}
-      <motion.div
-        animate={{ x: [0, -15, 30, 0], y: [0, 25, -20, 0], scale: [1, 1.12, 0.90, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        style={{
-          position: 'absolute',
-          width: '60vw', height: '60vw',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(210,120,140,0.70) 0%, transparent 65%)',
-          top: '15%', left: '20%',
-        }}
-      />
-      {/* Grain overlay — high opacity for the crisp ElevenLabs texture */}
       <div style={{
         position: 'absolute', inset: '-100px',
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
@@ -129,74 +81,44 @@ function GrainBackground() {
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 function Nav({ onEnter }) {
   const { scrollY } = useScroll()
-  const logoScale = useTransform(scrollY, [0, 120], [1, 0.72])
-  const navPy     = useTransform(scrollY, [0, 120], [24, 14])
+  const logoScale = useTransform(scrollY, [0, 120], [1, 0.8])
 
   return (
-    <motion.header
-      style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: 'transparent',
-        paddingTop: navPy, paddingBottom: navPy,
-      }}
-    >
+    <motion.header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'transparent' }}>
       <nav style={{
-        maxWidth: 1200, margin: '0 auto',
-        padding: '0 40px',
+        maxWidth: 1200, margin: '0 auto', padding: '28px 40px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        {/* Logo */}
-        <motion.span
-          style={{
-            scale: logoScale,
-            transformOrigin: 'left center',
-            fontFamily: 'var(--font-sans)',
-            fontSize: 18,
-            fontWeight: 600,
-            color: C.text,
-            letterSpacing: '-0.04em',
-          }}
-        >
+        <motion.span style={{
+          scale: logoScale, transformOrigin: 'left center',
+          fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700,
+          color: C.text, letterSpacing: '-0.03em', display: 'block',
+        }}>
           ræson
         </motion.span>
 
-        {/* Links */}
-        <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
-          {['Platform', 'Process', 'Pricing', 'Technical'].map(link => (
-            <span
-              key={link}
-              style={{
-                fontSize: 13, color: C.dim, cursor: 'pointer',
-                letterSpacing: '-0.01em',
-                transition: 'color 0.15s',
-              }}
+        <div style={{ display: 'flex', gap: 36 }}>
+          {['Platform', 'Pricing', 'About'].map(link => (
+            <span key={link} style={{
+              fontSize: 13, color: C.dim, cursor: 'pointer', letterSpacing: '-0.01em',
+              transition: 'color 0.15s',
+            }}
               onMouseOver={e => e.target.style.color = C.text}
               onMouseOut={e => e.target.style.color = C.dim}
-            >
-              {link}
-            </span>
+            >{link}</span>
           ))}
         </div>
 
-        {/* CTA */}
-        <button
-          onClick={onEnter}
-          style={{
-            padding: '8px 20px',
-            background: C.text,
-            color: C.bg,
-            fontSize: 13,
-            fontWeight: 500,
-            letterSpacing: '-0.01em',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            transition: 'opacity 0.15s',
-          }}
-          onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
-          onMouseOut={e => e.currentTarget.style.opacity = '1'}
+        <button onClick={onEnter} style={{
+          padding: '7px 20px', background: 'transparent',
+          color: C.text, fontSize: 13, fontWeight: 400, letterSpacing: '-0.01em',
+          border: '1px solid rgba(255,255,255,0.28)', borderRadius: 4,
+          cursor: 'pointer', transition: 'border-color 0.15s',
+        }}
+          onMouseOver={e => e.currentTarget.style.borderColor = C.text}
+          onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.28)'}
         >
-          Get started
+          Contact
         </button>
       </nav>
     </motion.header>
@@ -207,84 +129,57 @@ function Nav({ onEnter }) {
 function Hero({ onEnter }) {
   return (
     <section style={{
-      minHeight: '100vh',
+      minHeight: '100vh', position: 'relative',
       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-      padding: '0 40px 100px',
+      padding: '0 40px 68px',
       maxWidth: 1200, margin: '0 auto',
-      paddingTop: 160,
     }}>
-      {/* Numbered tags */}
+      {/* Light gradient — right half, creates the dark/light split */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        style={{ display: 'flex', gap: 28, marginBottom: 56 }}
-      >
-        {[['1.', 'Carbon'], ['2.', 'Durability'], ['3.', 'Compatibility'], ['4.', 'Wellbeing']].map(([n, label]) => (
-          <span key={label} style={{ fontSize: 12, color: C.dim, letterSpacing: '0.02em' }}>
-            <span style={{ marginRight: 6, opacity: 0.4 }}>{n}</span>{label}
-          </span>
-        ))}
-      </motion.div>
-
-      {/* Headline */}
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        animate={{ x: [0, 22, -12, 0], y: [0, -18, 22, 0], scale: [1, 0.95, 1.08, 1] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
         style={{
-          fontSize: 'clamp(52px, 7vw, 96px)',
+          position: 'absolute', top: 0, right: '-15%', width: '70vw', height: '100%',
+          background: 'radial-gradient(ellipse at 70% 48%, rgba(185,185,185,0.4) 0%, rgba(130,130,130,0.15) 45%, transparent 70%)',
+          pointerEvents: 'none', zIndex: 0,
+        }}
+      />
+      {/* Bright focal glow at the meeting point */}
+      <motion.div
+        animate={{ x: [0, 16, -10, 0], y: [0, -10, 18, 0], scale: [1, 1.14, 0.90, 1] }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+        style={{
+          position: 'absolute', width: '20vw', height: '32vh',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.55) 25%, rgba(255,255,255,0.15) 55%, transparent 70%)',
+          top: '28%', left: '53%', transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none', zIndex: 0,
+        }}
+      />
+
+      {/* Scroll hint */}
+      <div style={{ position: 'absolute', bottom: 68, right: 40, zIndex: 1 }}>
+        <span style={{ fontSize: 12, color: C.muted, letterSpacing: '0.05em' }}>(Scroll)</span>
+      </div>
+
+      {/* Main statement */}
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(22px, 3.8vw, 52px)',
           fontWeight: 700,
-          lineHeight: 1.0,
-          letterSpacing: '-0.04em',
+          lineHeight: 1.1,
+          letterSpacing: '-0.025em',
           color: C.text,
+          maxWidth: 680,
           margin: 0,
-          marginBottom: 40,
-          maxWidth: 900,
+          position: 'relative', zIndex: 1,
         }}
       >
-        Know before you specify.
-      </motion.h1>
-
-      {/* Subtext + CTAs */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        style={{ display: 'flex', alignItems: 'flex-start', gap: 80, flexWrap: 'wrap' }}
-      >
-        <p style={{
-          fontSize: 16, lineHeight: 1.65, color: C.dim,
-          maxWidth: 340, margin: 0,
-          letterSpacing: '-0.01em',
-        }}>
-          Every substitution evaluated across carbon, durability,
-          and risk — before it reaches the client.
-        </p>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', paddingTop: 4 }}>
-          <button
-            onClick={onEnter}
-            style={{
-              padding: '12px 28px',
-              background: C.text, color: C.bg,
-              fontSize: 13, fontWeight: 500,
-              letterSpacing: '0.03em', textTransform: 'uppercase',
-              border: 'none', borderRadius: 4, cursor: 'pointer',
-            }}
-          >
-            Enter the studio
-          </button>
-          <button style={{
-            padding: '11px 28px',
-            background: 'transparent', color: C.text,
-            fontSize: 13, fontWeight: 400,
-            letterSpacing: '0.03em', textTransform: 'uppercase',
-            border: `1px solid ${C.border}`, borderRadius: 4, cursor: 'pointer',
-          }}>
-            Read the method
-          </button>
-        </div>
-      </motion.div>
+        ræson is a material intelligence platform built for architectural practices who need rigour, not instinct, when a substitution is on the table.
+      </motion.p>
     </section>
   )
 }
@@ -307,13 +202,13 @@ function AboutBand() {
           <ScrollRevealText
             text="ræson evaluates material substitutions across carbon, durability, compatibility, and wellbeing — giving architectural practices the evidence to specify with confidence."
             style={{
-              fontSize: 'clamp(22px, 2.8vw, 36px)',
-              lineHeight: 1.35,
-              letterSpacing: '-0.025em',
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(20px, 2.6vw, 34px)',
+              lineHeight: 1.3,
+              letterSpacing: '-0.02em',
               color: C.text,
-              margin: 0,
-              marginBottom: 32,
-              fontWeight: 400,
+              margin: '0 0 32px',
+              fontWeight: 600,
             }}
           />
           <FadeUp delay={0.1}>
@@ -334,25 +229,19 @@ function AboutBand() {
 
 // ─── Cases ────────────────────────────────────────────────────────────────────
 const CASES = [
-  { name: 'Nordic Museum',            detail: 'Timber facade substitution',      verdict: 'Accepted' },
-  { name: 'Project Stockholm_04',     detail: 'Acetylated wood proposal',         verdict: 'Conditional' },
-  { name: 'Copenhagen Port Pavilion', detail: 'Recycled aluminium cladding',      verdict: 'Accepted' },
-  { name: 'Aedile Bergen',            detail: 'Stone composite assessment',       verdict: 'Fail' },
-  { name: 'Urban KKLP',              detail: 'Structural glazing review',         verdict: 'Accepted' },
+  { name: 'Nordic Museum',            detail: 'Timber facade substitution',  verdict: 'Accepted' },
+  { name: 'Project Stockholm_04',     detail: 'Acetylated wood proposal',     verdict: 'Conditional' },
+  { name: 'Copenhagen Port Pavilion', detail: 'Recycled aluminium cladding',  verdict: 'Accepted' },
+  { name: 'Aedile Bergen',            detail: 'Stone composite assessment',   verdict: 'Fail' },
+  { name: 'Urban KKLP',               detail: 'Structural glazing review',    verdict: 'Accepted' },
 ]
-
-const VERDICT_COLOR = { Accepted: '#009767', Conditional: '#a16207', Fail: '#ef4444' }
 
 function Cases() {
   return (
-    <section style={{
-      padding: '0 40px 120px',
-      maxWidth: 1200, margin: '0 auto',
-      borderTop: `1px solid ${C.border}`,
-    }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 32px' }}>
-          <span style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', color: C.text }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
             Cases
           </span>
           <span style={{ fontSize: 13, color: C.muted }}>(5)</span>
@@ -367,15 +256,13 @@ function Cases() {
         {CASES.map((c, i) => (
           <motion.div
             key={c.name}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.45, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '20px 0',
-              borderBottom: `1px solid ${C.border}`,
-              cursor: 'pointer',
+              padding: '20px 0', borderBottom: `1px solid ${C.border}`, cursor: 'pointer',
             }}
           >
             <span style={{ fontSize: 15, color: C.text, letterSpacing: '-0.02em' }}>{c.name}</span>
@@ -392,32 +279,27 @@ function Cases() {
 
 // ─── Index ────────────────────────────────────────────────────────────────────
 const INDEX_ROWS = [
-  { project: 'Nordic Museum, Oslo',        material: 'Timber cladding',     verdict: 'Accepted' },
-  { project: 'Project Stockholm_04',       material: 'Acetylated wood',     verdict: 'Conditional' },
-  { project: 'Copenhagen Port Pavilion',   material: 'Recycled aluminium',  verdict: 'Accepted' },
-  { project: 'Aedile Bergen',              material: 'Stone composite',     verdict: 'Fail' },
-  { project: 'Urban KKLP',               material: 'Structural glazing',   verdict: 'Accepted' },
-  { project: 'Harbour Arts Centre',        material: 'Exposed concrete',    verdict: 'Conditional' },
-  { project: 'Marienplatz Offices',        material: 'Cork insulation',     verdict: 'Accepted' },
-  { project: 'East Bridge Cultural Hub',   material: 'Reclaimed brick',     verdict: 'Accepted' },
+  { project: 'Nordic Museum, Oslo',       material: 'Timber cladding',    verdict: 'Accepted' },
+  { project: 'Project Stockholm_04',      material: 'Acetylated wood',    verdict: 'Conditional' },
+  { project: 'Copenhagen Port Pavilion',  material: 'Recycled aluminium', verdict: 'Accepted' },
+  { project: 'Aedile Bergen',             material: 'Stone composite',    verdict: 'Fail' },
+  { project: 'Urban KKLP',               material: 'Structural glazing',  verdict: 'Accepted' },
+  { project: 'Harbour Arts Centre',       material: 'Exposed concrete',   verdict: 'Conditional' },
+  { project: 'Marienplatz Offices',       material: 'Cork insulation',    verdict: 'Accepted' },
+  { project: 'East Bridge Cultural Hub',  material: 'Reclaimed brick',    verdict: 'Accepted' },
 ]
 
 function IndexSection() {
   return (
-    <section style={{
-      padding: '0 40px 120px',
-      maxWidth: 1200, margin: '0 auto',
-      borderTop: `1px solid ${C.border}`,
-    }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 40px' }}>
-          <span style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', color: C.text }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
             index
           </span>
         </div>
       </FadeUp>
       <div>
-        {/* Header row */}
         <div style={{
           display: 'grid', gridTemplateColumns: '2fr 1.5fr 1fr 80px',
           padding: '0 0 12px', borderBottom: `1px solid ${C.border}`,
@@ -434,14 +316,13 @@ function IndexSection() {
             transition={{ duration: 0.3, delay: i * 0.04 }}
             style={{
               display: 'grid', gridTemplateColumns: '2fr 1.5fr 1fr 80px',
-              padding: '16px 0',
-              borderBottom: `1px solid ${C.border}`,
+              padding: '16px 0', borderBottom: `1px solid ${C.border}`,
               fontSize: 13, color: C.dim,
             }}
           >
             <span style={{ color: C.text, letterSpacing: '-0.01em' }}>{row.project}</span>
             <span>{row.material}</span>
-            <span style={{ color: VERDICT_COLOR[row.verdict] }}>{row.verdict}</span>
+            <span style={{ color: VERDICT_COLOR[row.verdict] || C.dim }}>{row.verdict}</span>
             <span style={{ textAlign: 'right', color: C.muted }}>2025</span>
           </motion.div>
         ))}
@@ -459,14 +340,10 @@ const ARTICLES = [
 
 function Journal() {
   return (
-    <section style={{
-      padding: '0 40px 120px',
-      maxWidth: 1200, margin: '0 auto',
-      borderTop: `1px solid ${C.border}`,
-    }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 32px' }}>
-          <span style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', color: C.text }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
             Journal
           </span>
           <span style={{ fontSize: 13, color: C.muted }}>(6)</span>
@@ -477,7 +354,7 @@ function Journal() {
           Perspectives on material specification and evidence-based design from the ræson team.
         </p>
       </FadeUp>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      <div>
         {ARTICLES.map((a, i) => (
           <motion.div
             key={a.title}
@@ -487,16 +364,11 @@ function Journal() {
             transition={{ duration: 0.4, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
             style={{
               display: 'flex', alignItems: 'baseline', gap: 40,
-              padding: '24px 0',
-              borderBottom: `1px solid ${C.border}`,
-              cursor: 'pointer',
+              padding: '24px 0', borderBottom: `1px solid ${C.border}`, cursor: 'pointer',
             }}
           >
             <span style={{ fontSize: 12, color: C.muted, minWidth: 100, letterSpacing: '0.01em' }}>{a.date}</span>
-            <span style={{
-              fontSize: 16, color: C.text, letterSpacing: '-0.02em', lineHeight: 1.4,
-              transition: 'color 0.15s',
-            }}
+            <span style={{ fontSize: 16, color: C.text, letterSpacing: '-0.02em', lineHeight: 1.4, transition: 'color 0.15s' }}
               onMouseOver={e => e.currentTarget.style.color = C.dim}
               onMouseOut={e => e.currentTarget.style.color = C.text}
             >{a.title}</span>
@@ -510,32 +382,24 @@ function Journal() {
 // ─── CTA Band ─────────────────────────────────────────────────────────────────
 function CtaBand({ onEnter }) {
   return (
-    <section style={{
-      borderTop: `1px solid ${C.border}`,
-      padding: '120px 40px',
-      textAlign: 'center',
-    }}>
+    <section style={{ borderTop: `1px solid ${C.border}`, padding: '120px 40px', textAlign: 'center' }}>
       <FadeUp>
         <h2 style={{
+          fontFamily: 'var(--font-display)',
           fontSize: 'clamp(32px, 5vw, 72px)',
-          fontWeight: 600,
-          letterSpacing: '-0.04em',
-          color: C.text,
-          margin: '0 0 40px',
-          lineHeight: 1.05,
+          fontWeight: 700, letterSpacing: '-0.035em',
+          color: C.text, margin: '0 0 40px', lineHeight: 1.05,
         }}>
           Ready to evaluate your<br />next substitution?
         </h2>
-        <button
-          onClick={onEnter}
-          style={{
-            padding: '14px 36px',
-            background: C.text, color: C.bg,
-            fontSize: 13, fontWeight: 500,
-            letterSpacing: '0.03em', textTransform: 'uppercase',
-            border: 'none', borderRadius: 4, cursor: 'pointer',
-          }}
-        >
+        <button onClick={onEnter} style={{
+          padding: '14px 36px',
+          background: C.text, color: C.bg,
+          fontSize: 13, fontWeight: 600,
+          letterSpacing: '0.03em', textTransform: 'uppercase',
+          border: 'none', borderRadius: 4, cursor: 'pointer',
+          fontFamily: 'var(--font-display)',
+        }}>
           Enter the studio
         </button>
       </FadeUp>
@@ -546,11 +410,7 @@ function CtaBand({ onEnter }) {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{
-      borderTop: `1px solid ${C.border}`,
-      padding: '60px 40px 40px',
-      maxWidth: 1200, margin: '0 auto',
-    }}>
+    <footer style={{ borderTop: `1px solid ${C.border}`, padding: '60px 40px 40px', maxWidth: 1200, margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 40, marginBottom: 60 }}>
         <div>
           <p style={{ fontSize: 11, color: C.muted, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Sitemap</p>
@@ -573,11 +433,10 @@ function Footer() {
       </div>
       <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <span style={{
+          fontFamily: 'var(--font-display)',
           fontSize: 'clamp(48px, 8vw, 100px)',
-          fontWeight: 700,
-          letterSpacing: '-0.04em',
-          color: C.text,
-          lineHeight: 1,
+          fontWeight: 700, letterSpacing: '-0.04em',
+          color: C.text, lineHeight: 1,
         }}>
           ræson
         </span>
@@ -593,16 +452,16 @@ export default function LandingPage({ onEnter }) {
     <div style={{ background: 'transparent', minHeight: '100vh', color: C.text, position: 'relative' }}>
       <GrainBackground />
       <div style={{ position: 'relative', zIndex: 1 }}>
-      <Nav onEnter={onEnter} />
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Hero onEnter={onEnter} />
-      </div>
-      <AboutBand />
-      <Cases />
-      <IndexSection />
-      <Journal />
-      <CtaBand onEnter={onEnter} />
-      <Footer />
+        <Nav onEnter={onEnter} />
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <Hero onEnter={onEnter} />
+        </div>
+        <AboutBand />
+        <Cases />
+        <IndexSection />
+        <Journal />
+        <CtaBand onEnter={onEnter} />
+        <Footer />
       </div>
     </div>
   )

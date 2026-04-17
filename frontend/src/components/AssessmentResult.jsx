@@ -238,9 +238,9 @@ function ScoreBar({ dimensions }) {
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const DECISIONS = [
-  { value: 'approved',       label: 'Approve',           color: '#009767', bg: '#f0fdf4', border: '#bbf7d0' },
-  { value: 'info_requested', label: 'Request more info', color: '#a16207', bg: 'rgba(161,98,7,0.06)', border: '#a16207' },
-  { value: 'rejected',       label: 'Reject',            color: '#ef4444', bg: 'rgba(239,68,68,0.06)', border: '#ef4444' },
+  { value: 'approved',       label: 'Approve',           color: '#0F0F0F', bg: '#0F0F0F', border: '#0F0F0F', textColor: '#FFFFFF' },
+  { value: 'info_requested', label: 'Request more info', color: '#0F0F0F', bg: 'transparent', border: '#E5E5E5', textColor: '#0F0F0F' },
+  { value: 'rejected',       label: 'Reject',            color: '#666666', bg: 'transparent', border: 'transparent', textColor: '#666666' },
 ]
 
 export default function AssessmentResult({ data, queryText }) {
@@ -363,14 +363,7 @@ export default function AssessmentResult({ data, queryText }) {
           </p>
 
           {decision ? (
-            <div
-              className="px-3.5 py-2.5 text-13"
-              style={{
-                background: DECISIONS.find(d => d.value === decision)?.bg,
-                border: `1px solid ${DECISIONS.find(d => d.value === decision)?.border}`,
-                color: DECISIONS.find(d => d.value === decision)?.color,
-              }}
-            >
+            <div className="text-13" style={{ color: '#0F0F0F' }}>
               {DECISIONS.find(d => d.value === decision)?.label} — saved
             </div>
           ) : (
@@ -385,7 +378,7 @@ export default function AssessmentResult({ data, queryText }) {
                     style={{
                       background: d.bg,
                       border: `1px solid ${d.border}`,
-                      color: d.color,
+                      color: d.textColor,
                       cursor: 'pointer',
                     }}
                   >
@@ -413,7 +406,7 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Recommendations ── */}
       {data.recommendations?.length > 0 && (
         <div
-          className="mb-3 rounded-2xl overflow-hidden" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', borderLeft: '3px solid #009767' }}
+          className="mb-3 rounded-2xl overflow-hidden" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', borderLeft: '3px solid #E5E5E5' }}
         >
           <button
             onClick={() => setShowRecs(r => !r)}
@@ -447,7 +440,7 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Alternatives ── */}
       {data.alternatives?.length > 0 && (
         <div
-          className="px-5 py-4 rounded-2xl mb-3 overflow-hidden" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', borderLeft: '3px solid #009767' }}
+          className="px-5 py-4 rounded-2xl mb-3 overflow-hidden" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', borderLeft: '3px solid #E5E5E5' }}
         >
           <div className="text-10 font-normal text-ink mb-3" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Alternative products
