@@ -54,15 +54,15 @@ function GrainBackground() {
       <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', background: '#3C3C3C' }} />
       {/* Light right panel */}
       <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', background: '#C8C8C8' }} />
-      {/* Focal glow at seam — tall narrow ellipse */}
+      {/* Focal glow at seam — tight narrow ellipse */}
       <motion.div
-        animate={{ scaleY: [1, 1.08, 0.94, 1], opacity: [0.92, 1, 0.86, 0.92] }}
+        animate={{ scaleY: [1, 1.06, 0.95, 1], opacity: [0.9, 1, 0.84, 0.9] }}
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
-          width: '140px', height: '55vh',
-          background: 'radial-gradient(ellipse at 50% 10%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.88) 12%, rgba(255,255,255,0.45) 38%, rgba(255,255,255,0.1) 62%, transparent 78%)',
-          top: '10%', left: 'calc(50% - 70px)',
+          width: '60px', height: '50vh',
+          background: 'radial-gradient(ellipse at 50% 8%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 20%, rgba(255,255,255,0.2) 50%, transparent 70%)',
+          top: '8%', left: 'calc(50% - 30px)',
           pointerEvents: 'none',
         }}
       />
@@ -144,7 +144,7 @@ function Hero({ onEnter }) {
         transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         style={{
           fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(22px, 3.8vw, 52px)',
+          fontSize: 'clamp(20px, 2.4vw, 36px)',
           fontWeight: 700,
           lineHeight: 1.1,
           letterSpacing: '-0.025em',
