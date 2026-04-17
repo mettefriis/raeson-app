@@ -5,9 +5,9 @@ import CodeProvisionModal from './CodeProvisionModal.jsx'
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const V = {
-  pass:        { label: 'Accepted',    color: '#166534', bg: 'rgba(22,101,52,0.06)',  border: 'rgba(22,101,52,0.2)'  },
-  conditional: { label: 'Conditional', color: '#92400e', bg: 'rgba(146,64,14,0.06)', border: 'rgba(146,64,14,0.2)' },
-  fail:        { label: 'Fail',        color: '#991b1b', bg: 'rgba(153,27,27,0.06)', border: 'rgba(153,27,27,0.2)'  },
+  pass:        { label: 'Accepted',    dot: '#16a34a', text: '#15803d' },
+  conditional: { label: 'Conditional', dot: '#d97706', text: '#b45309' },
+  fail:        { label: 'Fail',        dot: '#dc2626', text: '#b91c1c' },
 }
 
 const DIM_LABELS = {
@@ -19,39 +19,37 @@ const DIM_LABELS = {
   daylight_quality: 'Daylight quality',
 }
 
-function label(key) { return DIM_LABELS[key] || key.replace(/_/g, ' ') }
+function dimLabel(key) { return DIM_LABELS[key] || key.replace(/_/g, ' ') }
 
-function integrityScore(dims) {
+function computeScore(dims) {
   if (!dims?.length) return null
   const w = { pass: 100, conditional: 60, fail: 15 }
   return Math.round(dims.reduce((s, d) => s + (w[d.verdict] ?? 50), 0) / dims.length)
 }
 
-function firstSentences(text, n = 2) {
-  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]
-  return sentences.slice(0, n).join(' ').trim()
+function firstSentence(text) {
+  const m = text.match(/^[^.!?]+[.!?]/)
+  return m ? m[0] : text.slice(0, 140)
 }
 
-function Badge({ verdict }) {
+// ─── Verdict chip — dot + label only, no filled background ───────────────────
+function Chip({ verdict }) {
   const s = V[verdict] || V.conditional
   return (
-    <span style={{
-      padding: '2px 7px', fontSize: 10, fontWeight: 600,
-      letterSpacing: '0.04em', borderRadius: 3,
-      color: s.color, background: s.bg, border: `1px solid ${s.border}`,
-      whiteSpace: 'nowrap',
-    }}>
-      {s.label}
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.dot, flexShrink: 0 }} />
+      <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.03em', color: s.text }}>
+        {s.label}
+      </span>
     </span>
   )
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function AssessmentResult({ data, queryText }) {
   const [activeProvision, setActiveProvision] = useState(null)
   const [exportingPdf, setExportingPdf]       = useState(false)
 
-  const score   = integrityScore(data.dimensions)
+  const score   = computeScore(data.dimensions)
   const topAlt  = data.alternatives?.[0]
   const altScore = score != null && topAlt ? Math.min(97, score + 14) : null
 
@@ -67,95 +65,91 @@ export default function AssessmentResult({ data, queryText }) {
   }
 
   return (
-    <div style={{ fontFamily: 'var(--font-sans)', color: '#0F0F0F' }}>
+    <div style={{ fontFamily: 'var(--font-sans)', maxWidth: 900 }}>
       <AnimatePresence>
         {activeProvision && <CodeProvisionModal codeReference={activeProvision} onClose={() => setActiveProvision(null)} />}
       </AnimatePresence>
 
-      {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, paddingBottom: 20, borderBottom: '1px solid #EBEBEB' }}>
+      {/* ── Header ── */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32 }}>
         <div>
-          <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#AAAAAA', margin: '0 0 5px' }}>
+          <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#AAAAAA', margin: '0 0 6px' }}>
             Substitution Assessment
           </p>
-          <h1 style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em', color: '#0F0F0F', margin: 0, lineHeight: 1.2 }}>
+          <h1 style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.015em', color: '#111111', margin: 0, lineHeight: 1.3 }}>
             {data.specified_product}
-            <span style={{ color: '#CCCCCC', fontWeight: 300, margin: '0 10px', fontSize: 16 }}>→</span>
+            <span style={{ color: '#CCCCCC', fontWeight: 300, margin: '0 10px' }}>→</span>
             {data.proposed_product}
           </h1>
         </div>
         <button onClick={exportPdf} disabled={exportingPdf} style={{
-          padding: '6px 14px', background: 'transparent', border: '1px solid #E0E0E0',
-          borderRadius: 4, fontSize: 11, fontWeight: 500, letterSpacing: '0.04em',
-          color: '#888888', cursor: 'pointer', textTransform: 'uppercase',
+          marginTop: 2, padding: '6px 14px', background: 'transparent',
+          border: '1px solid #E0E0E0', borderRadius: 4,
+          fontSize: 10, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+          color: '#999', cursor: 'pointer', whiteSpace: 'nowrap',
         }}>
           {exportingPdf ? 'Generating…' : 'Export PDF'}
         </button>
       </div>
 
-      {/* ── Score + summary ─────────────────────────────────────────────── */}
+      {/* ── Score + verdict + summary ── */}
       <div style={{
-        display: 'grid', gridTemplateColumns: '140px 1fr', gap: 0,
-        background: '#F9F9F7', border: '1px solid #EBEBEB', borderRadius: 8,
-        marginBottom: 20, overflow: 'hidden',
+        display: 'grid', gridTemplateColumns: '120px 1fr',
+        border: '1px solid #EBEBEB', borderRadius: 6,
+        overflow: 'hidden', marginBottom: 16,
       }}>
-        {/* Score block */}
-        <div style={{ padding: '24px 20px', borderRight: '1px solid #EBEBEB' }}>
-          <div style={{ fontSize: 48, fontWeight: 700, letterSpacing: '-0.04em', lineHeight: 1, color: '#0F0F0F', marginBottom: 4 }}>
+        {/* Score cell */}
+        <div style={{ padding: '28px 20px', borderRight: '1px solid #EBEBEB', background: '#FAFAFA' }}>
+          <div style={{ fontSize: 52, fontWeight: 700, letterSpacing: '-0.05em', lineHeight: 1, color: '#111111', marginBottom: 6 }}>
             {score ?? '—'}
           </div>
-          <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#BBBBBB', marginBottom: 12 }}>
+          <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#BBBBBB', marginBottom: 14 }}>
             Index score
           </div>
-          <Badge verdict={data.overall_risk} />
+          <Chip verdict={data.overall_risk} />
         </div>
 
-        {/* Summary */}
-        <div style={{ padding: '24px 28px', display: 'flex', alignItems: 'center' }}>
-          <p style={{ fontSize: 14, fontWeight: 400, lineHeight: 1.65, color: '#444444', margin: 0, letterSpacing: '-0.005em' }}>
-            {firstSentences(data.risk_summary, 2)}
+        {/* Summary cell */}
+        <div style={{ padding: '28px 32px', background: '#FFFFFF', display: 'flex', alignItems: 'center' }}>
+          <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.5, letterSpacing: '-0.015em', color: '#222222', margin: 0 }}>
+            {firstSentence(data.risk_summary)}
           </p>
         </div>
       </div>
 
-      {/* ── Dimension grid ──────────────────────────────────────────────── */}
+      {/* ── Dimension cards ── */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${Math.min(data.dimensions.length, 4)}, 1fr)`,
-        gap: 10, marginBottom: 28,
+        gap: 8, marginBottom: 24,
       }}>
         {data.dimensions.map((dim, i) => (
           <motion.div key={dim.dimension}
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: i * 0.04, ease: 'easeOut' }}
+            transition={{ duration: 0.2, delay: i * 0.04, ease: 'easeOut' }}
             style={{
               background: '#FFFFFF', border: '1px solid #EBEBEB',
-              borderRadius: 8, padding: '16px', display: 'flex', flexDirection: 'column',
+              borderRadius: 6, padding: '16px',
+              display: 'flex', flexDirection: 'column',
             }}
           >
-            {/* Top: label + badge */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '-0.01em', color: '#0F0F0F' }}>
-                {label(dim.dimension)}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em', color: '#111111' }}>
+                {dimLabel(dim.dimension)}
               </span>
-              <Badge verdict={dim.verdict} />
+              <Chip verdict={dim.verdict} />
             </div>
-
-            {/* Body */}
-            <p style={{ fontSize: 12, color: '#777777', lineHeight: 1.55, margin: '0 0 14px', flex: 1 }}>
-              {(dim.delta || dim.requirement || '').slice(0, 110)}
+            <p style={{ fontSize: 12, color: '#777777', lineHeight: 1.5, margin: '0 0 14px', flex: 1 }}>
+              {(dim.delta || dim.requirement || '').slice(0, 100)}
             </p>
-
-            {/* Evidence */}
             {dim.code_reference && (
               <button onClick={() => setActiveProvision(dim.code_reference)} style={{
                 background: 'none', border: 'none', padding: 0,
-                fontSize: 10, fontWeight: 600, letterSpacing: '0.06em',
-                textTransform: 'uppercase', color: '#CCCCCC', cursor: 'pointer',
-                textAlign: 'left',
+                fontSize: 10, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+                color: '#CCCCCC', cursor: 'pointer', textAlign: 'left',
               }}
-                onMouseOver={e => e.currentTarget.style.color = '#333'}
+                onMouseOver={e => e.currentTarget.style.color = '#444'}
                 onMouseOut={e => e.currentTarget.style.color = '#CCCCCC'}
               >
                 Evidence →
@@ -165,65 +159,58 @@ export default function AssessmentResult({ data, queryText }) {
         ))}
       </div>
 
-      {/* ── Alternative ─────────────────────────────────────────────────── */}
+      {/* ── Alternative ── */}
       {topAlt && (
-        <div style={{ border: '1px solid #EBEBEB', borderRadius: 8, overflow: 'hidden' }}>
-          {/* Alt header */}
+        <div style={{ border: '1px solid #EBEBEB', borderRadius: 6, overflow: 'hidden' }}>
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '16px 20px', background: '#F9F9F7', borderBottom: '1px solid #EBEBEB',
+            padding: '16px 20px', background: '#FAFAFA', borderBottom: '1px solid #EBEBEB',
           }}>
             <div>
               <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#BBBBBB', margin: '0 0 3px' }}>
                 Proposed Optimization
               </p>
-              <p style={{ fontSize: 16, fontWeight: 600, letterSpacing: '-0.02em', color: '#0F0F0F', margin: 0 }}>
+              <p style={{ fontSize: 15, fontWeight: 600, letterSpacing: '-0.02em', color: '#111111', margin: 0 }}>
                 {topAlt.name}
               </p>
             </div>
-            {/* Score shift */}
-            {score != null && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ fontSize: 13, color: '#888888', letterSpacing: '-0.01em' }}>
-                  <span style={{ color: '#0F0F0F', fontWeight: 600 }}>{score}</span>
-                  <span style={{ margin: '0 6px', color: '#CCCCCC' }}>→</span>
-                  <span style={{ color: '#166534', fontWeight: 600 }}>{altScore}</span>
-                </div>
-                <button style={{
-                  padding: '8px 16px', background: '#0F0F0F', color: '#FFFFFF',
-                  border: 'none', borderRadius: 4,
-                  fontSize: 11, fontWeight: 600, letterSpacing: '0.04em',
-                  textTransform: 'uppercase', cursor: 'pointer',
-                }}>
-                  Apply
-                </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ fontSize: 13, letterSpacing: '-0.01em', color: '#555' }}>
+                <span style={{ color: '#111', fontWeight: 600 }}>{score}</span>
+                <span style={{ margin: '0 6px', color: '#CCC' }}>→</span>
+                <span style={{ color: '#15803d', fontWeight: 600 }}>{altScore}</span>
               </div>
-            )}
+              <button style={{
+                padding: '8px 16px', background: '#111111', color: '#FFFFFF',
+                border: 'none', borderRadius: 4, fontSize: 11, fontWeight: 600,
+                letterSpacing: '0.04em', textTransform: 'uppercase', cursor: 'pointer',
+              }}>
+                Apply
+              </button>
+            </div>
           </div>
-
-          {/* Alt why + dim row */}
-          <div style={{ padding: '16px 20px' }}>
+          <div style={{ padding: '14px 20px' }}>
             {topAlt.why && (
-              <p style={{ fontSize: 13, color: '#555555', lineHeight: 1.6, margin: '0 0 16px', maxWidth: 600 }}>
+              <p style={{ fontSize: 13, color: '#555555', lineHeight: 1.6, margin: '0 0 14px' }}>
                 {topAlt.why}
               </p>
             )}
             <div style={{
               display: 'grid',
               gridTemplateColumns: `repeat(${Math.min(data.dimensions.length, 4)}, 1fr)`,
-              gap: 8,
+              gap: 6,
             }}>
               {data.dimensions.map(dim => {
                 const improved = dim.verdict === 'fail' ? 'conditional' : dim.verdict === 'conditional' ? 'pass' : dim.verdict
                 return (
                   <div key={dim.dimension} style={{
                     background: '#F9F9F7', border: '1px solid #EBEBEB',
-                    borderRadius: 6, padding: '10px 12px',
+                    borderRadius: 4, padding: '10px 12px',
                   }}>
-                    <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#AAAAAA', margin: '0 0 5px' }}>
-                      {label(dim.dimension)}
+                    <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#AAAAAA', margin: '0 0 6px' }}>
+                      {dimLabel(dim.dimension)}
                     </p>
-                    <Badge verdict={improved} />
+                    <Chip verdict={improved} />
                   </div>
                 )
               })}
@@ -232,17 +219,10 @@ export default function AssessmentResult({ data, queryText }) {
         </div>
       )}
 
-      {/* ── Data gaps ───────────────────────────────────────────────────── */}
-      {data.missing_data?.length > 0 && (
-        <div style={{ marginTop: 14, padding: '9px 14px', fontSize: 12, background: '#FFFBEB', border: '1px solid #FDE68A', color: '#92400E', borderRadius: 6 }}>
-          <strong style={{ fontWeight: 600 }}>Data gaps: </strong>{data.missing_data.join(' · ')}
-        </div>
-      )}
-
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
+      {/* ── Footer meta ── */}
       {data.code_documents_referenced?.length > 0 && (
-        <p style={{ marginTop: 20, fontSize: 10, color: '#CCCCCC', letterSpacing: '0.04em' }}>
-          Referenced: {data.code_documents_referenced.join(', ')}
+        <p style={{ marginTop: 18, fontSize: 10, color: '#CCCCCC', letterSpacing: '0.03em' }}>
+          Referenced: {data.code_documents_referenced.join(' / ')}
         </p>
       )}
     </div>
