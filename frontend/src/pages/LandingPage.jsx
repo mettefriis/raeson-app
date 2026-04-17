@@ -125,32 +125,10 @@ function Nav({ onEnter }) {
   )
 }
 
-// ─── Hero — full-viewport geometric split ─────────────────────────────────────
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
   return (
     <section style={{ minHeight: '100vh', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-      {/* Geometric split — full viewport width */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', background: '#3C3C3C' }} />
-        <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', background: '#C8C8C8' }} />
-        {/* Focal glow at seam */}
-        <motion.div
-          animate={{ scaleY: [1, 1.06, 0.95, 1], opacity: [0.9, 1, 0.84, 0.9] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute', width: '60px', height: '52vh',
-            background: 'radial-gradient(ellipse at 50% 8%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.65) 22%, rgba(255,255,255,0.18) 52%, transparent 70%)',
-            top: '8%', left: 'calc(50% - 30px)', pointerEvents: 'none',
-          }}
-        />
-        {/* Grain on hero */}
-        <div style={{
-          position: 'absolute', inset: '-100px',
-          backgroundImage: GRAIN, backgroundSize: '256px 256px',
-          opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'overlay',
-        }} />
-      </div>
-
       {/* Content — constrained width */}
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', width: '100%', padding: '0 48px 72px' }}>
         <div style={{ position: 'absolute', bottom: 72, right: 48 }}>
