@@ -144,12 +144,12 @@ function Hero({ onEnter }) {
         transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         style={{
           fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(20px, 2.4vw, 36px)',
+          fontSize: 28,
           fontWeight: 700,
-          lineHeight: 1.1,
-          letterSpacing: '-0.025em',
+          lineHeight: 1.15,
+          letterSpacing: '-0.02em',
           color: C.text,
-          maxWidth: 680,
+          maxWidth: 520,
           margin: 0,
           position: 'relative', zIndex: 1,
         }}
