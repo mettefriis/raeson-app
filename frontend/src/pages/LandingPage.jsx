@@ -44,33 +44,47 @@ function FadeUp({ children, delay = 0, style }) {
   )
 }
 
-// ─── Background — geometric split: dark left / light right ───────────────────
+// ─── Grain background — dark monochrome with slow bubble movement ─────────────
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
 
 function GrainBackground() {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden' }}>
-      {/* Dark left panel */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', background: '#3C3C3C' }} />
-      {/* Light right panel */}
-      <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', background: '#C8C8C8' }} />
-      {/* Focal glow at seam — tight narrow ellipse */}
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: '#181818' }}>
+      {/* Bubble 1 — top right, lighter gray */}
       <motion.div
-        animate={{ scaleY: [1, 1.06, 0.95, 1], opacity: [0.9, 1, 0.84, 0.9] }}
-        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ x: [0, 28, -18, 0], y: [0, -22, 16, 0], scale: [1, 1.07, 0.95, 1] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          position: 'absolute',
-          width: '60px', height: '50vh',
-          background: 'radial-gradient(ellipse at 50% 8%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 20%, rgba(255,255,255,0.2) 50%, transparent 70%)',
-          top: '8%', left: 'calc(50% - 30px)',
-          pointerEvents: 'none',
+          position: 'absolute', width: '65vw', height: '65vw', borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(72,72,72,0.55) 0%, transparent 65%)',
+          top: '-20%', right: '-10%',
+        }}
+      />
+      {/* Bubble 2 — bottom left */}
+      <motion.div
+        animate={{ x: [0, -22, 18, 0], y: [0, 18, -14, 0], scale: [1, 0.93, 1.06, 1] }}
+        transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+        style={{
+          position: 'absolute', width: '60vw', height: '60vw', borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(56,56,56,0.6) 0%, transparent 60%)',
+          bottom: '-18%', left: '-12%',
+        }}
+      />
+      {/* Bubble 3 — centre drift */}
+      <motion.div
+        animate={{ x: [0, 18, -28, 0], y: [0, -28, 18, 0], scale: [1, 1.1, 0.91, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 9 }}
+        style={{
+          position: 'absolute', width: '50vw', height: '50vw', borderRadius: '50%',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(48,48,48,0.5) 0%, transparent 60%)',
+          top: '20%', left: '20%',
         }}
       />
       {/* Grain overlay */}
       <div style={{
         position: 'absolute', inset: '-100px',
         backgroundImage: GRAIN, backgroundSize: '256px 256px',
-        opacity: 0.25, pointerEvents: 'none', mixBlendMode: 'overlay',
+        opacity: 0.38, pointerEvents: 'none', mixBlendMode: 'overlay',
       }} />
     </div>
   )
@@ -167,7 +181,7 @@ function AboutBand() {
       padding: '120px 40px',
       maxWidth: 1200, margin: '0 auto',
       borderTop: `1px solid ${C.border}`,
-      background: '#141414',
+      
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 80, alignItems: 'start' }}>
         <FadeUp>
@@ -215,7 +229,7 @@ const CASES = [
 
 function Cases() {
   return (
-    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}`, background: '#141414' }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 32px' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
@@ -268,7 +282,7 @@ const INDEX_ROWS = [
 
 function IndexSection() {
   return (
-    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}`, background: '#141414' }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 40px' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
@@ -317,7 +331,7 @@ const ARTICLES = [
 
 function Journal() {
   return (
-    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}`, background: '#141414' }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 32px' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
@@ -359,7 +373,7 @@ function Journal() {
 // ─── CTA Band ─────────────────────────────────────────────────────────────────
 function CtaBand({ onEnter }) {
   return (
-    <section style={{ borderTop: `1px solid ${C.border}`, padding: '120px 40px', textAlign: 'center', background: '#141414' }}>
+    <section style={{ borderTop: `1px solid ${C.border}`, padding: '120px 40px', textAlign: 'center' }}>
       <FadeUp>
         <h2 style={{
           fontFamily: 'var(--font-display)',
@@ -387,7 +401,7 @@ function CtaBand({ onEnter }) {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ borderTop: `1px solid ${C.border}`, padding: '60px 40px 40px', maxWidth: 1200, margin: '0 auto', background: '#141414' }}>
+    <footer style={{ borderTop: `1px solid ${C.border}`, padding: '60px 40px 40px', maxWidth: 1200, margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 40, marginBottom: 60 }}>
         <div>
           <p style={{ fontSize: 11, color: C.muted, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Sitemap</p>
