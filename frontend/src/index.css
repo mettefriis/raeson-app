@@ -38,7 +38,7 @@
   --color-fail-dot: #ef4444;
 
   /* Typography */
-  --font-sans: 'Geist', 'Geist Fallback', -apple-system, sans-serif;
+  --font-sans: 'Space Grotesk', 'Geist', 'Geist Fallback', -apple-system, sans-serif;
   --font-display: 'Space Grotesk', 'Geist', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 

@@ -51,9 +51,7 @@ function AppNav({ activeProject, onGoProjects, onGoLanding }) {
   return (
     <motion.header style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-      background: 'rgba(250,248,244,0.92)',
-      backdropFilter: 'blur(20px)',
-      borderBottom: `1px solid ${C.border}`,
+      background: 'transparent',
     }}>
       <nav style={{
         maxWidth: 1100, margin: '0 auto', padding: '0 32px',
@@ -85,7 +83,6 @@ function AppNav({ activeProject, onGoProjects, onGoLanding }) {
                 fontSize: 13, cursor: 'pointer',
                 color: tab === 'Projects' ? C.text : C.dim,
                 letterSpacing: '-0.01em',
-                borderBottom: tab === 'Projects' ? `1px solid ${C.text}` : '1px solid transparent',
                 transition: 'color 0.15s',
               }}
             >
