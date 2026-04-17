@@ -2,11 +2,21 @@ import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import CodeProvisionModal from './CodeProvisionModal.jsx'
 
-// Verdict config
+const C = {
+  bg:      '#0D0D0D',
+  surface: '#161616',
+  card:    '#1C1C1C',
+  border:  '#252525',
+  text:    '#FAFAFA',
+  dim:     '#888888',
+  muted:   '#444444',
+}
+
+// Verdict config — dark theme
 const V = {
-  pass:        { bg: '#f0fdf4', border: '#bbf7d0', color: '#009767', dot: '#009767', label: 'PASS' },
-  conditional: { bg: 'rgba(161,98,7,0.06)', border: '#a16207', color: '#a16207', dot: '#ca8a04', label: 'CONDITIONAL' },
-  fail:        { bg: 'rgba(239,68,68,0.06)', border: '#ef4444', color: '#ef4444', dot: '#ef4444', label: 'FAIL' },
+  pass:        { bg: 'rgba(0,151,103,0.08)',  border: 'rgba(0,151,103,0.25)',  color: '#009767', dot: '#009767', label: 'PASS' },
+  conditional: { bg: 'rgba(161,98,7,0.08)',   border: 'rgba(161,98,7,0.3)',    color: '#ca8a04', dot: '#ca8a04', label: 'CONDITIONAL' },
+  fail:        { bg: 'rgba(239,68,68,0.08)',  border: 'rgba(239,68,68,0.25)', color: '#ef4444', dot: '#ef4444', label: 'FAIL' },
 }
 
 const DIM_META = {
@@ -95,10 +105,11 @@ function MatrixRow({ dim, onCodeClick }) {
         className="w-full flex items-center gap-0 px-4 py-2.5 border-none text-left transition-colors duration-150"
         style={{
           background: open ? s.bg : 'transparent',
-          borderBottom: '1px solid #e5e5e5',
+          borderBottom: '1px solid #252525',
           cursor: 'pointer',
+          color: '#FAFAFA',
         }}
-        onMouseOver={e => { if (!open) e.currentTarget.style.background = '#f5f5f5' }}
+        onMouseOver={e => { if (!open) e.currentTarget.style.background = '#161616' }}
         onMouseOut={e => { if (!open) e.currentTarget.style.background = 'transparent' }}
       >
         <span className="flex-1 min-w-0">
@@ -128,7 +139,8 @@ function MatrixRow({ dim, onCodeClick }) {
               className="px-4 pb-4 text-13"
               style={{
                 background: s.bg,
-                borderBottom: '1px solid #e5e5e5',
+                borderBottom: '1px solid #252525',
+                color: '#FAFAFA',
               }}
             >
               <div className="text-muted mb-2 text-12 pt-3">{dim.requirement}</div>
@@ -148,7 +160,7 @@ function MatrixRow({ dim, onCodeClick }) {
               </div>
               {dim.delta && (
                 <div
-                  className="text-12 leading-relaxed px-2.5 py-1.5 bg-white rounded mb-2"
+                  className="text-12 leading-relaxed px-2.5 py-1.5 rounded mb-2" style={{ background: 'rgba(255,255,255,0.05)' }}
                   style={{ color: s.color, border: `1px solid ${s.border}` }}
                 >
                   {dim.delta}
@@ -178,9 +190,9 @@ function DimensionMatrix({ dimensions, onCodeClick }) {
       <div className="text-10 text-muted px-3 pb-1.5 font-normal" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {title}
       </div>
-      <div className="border border-rule bg-white rounded-2xl overflow-hidden">
+      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #252525', background: '#1C1C1C' }}>
         {dims.length === 0
-          ? <div className="px-3 py-2.5 text-12 text-dim">No data</div>
+          ? <div className="px-3 py-2.5 text-12" style={{ color: '#444444' }}>No data</div>
           : dims.map((d, i) => <MatrixRow key={i} dim={d} onCodeClick={onCodeClick} />)
         }
       </div>
@@ -292,7 +304,7 @@ export default function AssessmentResult({ data, queryText }) {
       </AnimatePresence>
 
       {/* ── Header card ── */}
-      <div className="px-6 py-5 bg-white border border-rule rounded-2xl mb-3">
+      <div className="px-6 py-5 rounded-2xl mb-3" style={{ background: '#1C1C1C', border: '1px solid #252525', color: '#FAFAFA' }}>
         {/* Title + overall verdict */}
         <div className="flex justify-between items-start mb-3">
           <div>
@@ -309,7 +321,7 @@ export default function AssessmentResult({ data, queryText }) {
         </div>
 
         {/* Context strip */}
-        <div className="flex gap-3.5 text-11 text-muted py-2 border-y border-row mb-3 flex-wrap">
+        <div className="flex gap-3.5 text-11 py-2 mb-3 flex-wrap" style={{ borderTop: '1px solid #252525', borderBottom: '1px solid #252525', color: '#888888' }}>
           <span><span className="text-dim">Function </span>{data.building_function}</span>
           <span><span className="text-dim">Class </span>{data.building_class}</span>
           <span><span className="text-dim">Element </span>{data.building_element.replace(/_/g, ' ')}</span>
@@ -324,12 +336,14 @@ export default function AssessmentResult({ data, queryText }) {
         <p className="text-14 leading-7 text-subtle m-0">{data.risk_summary}</p>
 
         {/* Actions */}
-        <div className="flex gap-2 mt-3.5 pt-3 border-t border-row">
+        <div className="flex gap-2 mt-3.5 pt-3" style={{ borderTop: '1px solid #252525' }}>
           <button
             onClick={handleExportPdf}
             disabled={exportingPdf}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-12 font-normal bg-surface border border-rule rounded-lg text-subtle hover:border-ink hover:text-ink transition-colors duration-150"
-            style={{ cursor: exportingPdf ? 'wait' : 'pointer' }}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-12 font-normal rounded-lg transition-colors duration-150"
+            style={{ background: '#161616', border: '1px solid #252525', color: '#888888', cursor: exportingPdf ? 'wait' : 'pointer' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#FAFAFA' }}
+            onMouseOut={e => { e.currentTarget.style.borderColor = '#252525'; e.currentTarget.style.color = '#888888' }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -343,7 +357,7 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Decision record ── */}
       {data.assessment_id && (
-        <div className="mb-6 px-5 py-4 border border-rule bg-white rounded-2xl">
+        <div className="mb-6 px-5 py-4 rounded-2xl" style={{ border: '1px solid #252525', background: '#1C1C1C' }}>
           <p className="text-11 text-muted font-normal mb-3" style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Decision
           </p>
@@ -383,9 +397,10 @@ export default function AssessmentResult({ data, queryText }) {
                 placeholder="Optional note..."
                 value={decisionNote}
                 onChange={e => setDecisionNote(e.target.value)}
-                className="px-3 py-1.5 border border-rule text-12 text-ink bg-white rounded-lg"
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                className="px-3 py-1.5 text-12 rounded-lg"
+                style={{ background: '#161616', border: '1px solid #252525', color: '#FAFAFA' }}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               />
             </div>
           )}
@@ -398,8 +413,7 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Recommendations ── */}
       {data.recommendations?.length > 0 && (
         <div
-          className="mb-3 bg-white border border-rule rounded-2xl overflow-hidden"
-          style={{ borderLeft: '3px solid #009767' }}
+          className="mb-3 rounded-2xl overflow-hidden" style={{ background: '#1C1C1C', border: '1px solid #252525', borderLeft: '3px solid #009767' }}
         >
           <button
             onClick={() => setShowRecs(r => !r)}
@@ -433,8 +447,7 @@ export default function AssessmentResult({ data, queryText }) {
       {/* ── Alternatives ── */}
       {data.alternatives?.length > 0 && (
         <div
-          className="px-5 py-4 bg-white border border-rule rounded-2xl mb-3 overflow-hidden"
-          style={{ borderLeft: '3px solid #009767' }}
+          className="px-5 py-4 rounded-2xl mb-3 overflow-hidden" style={{ background: '#1C1C1C', border: '1px solid #252525', borderLeft: '3px solid #009767' }}
         >
           <div className="text-10 font-normal text-ink mb-3" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Alternative products
@@ -465,7 +478,7 @@ export default function AssessmentResult({ data, queryText }) {
                   <div className="text-11 text-muted mb-1">
                     {alt.manufacturer} · {alt.product_type}
                   </div>
-                  <div className="text-11 text-subtle bg-surface px-2 py-0.5 inline-block rounded">{alt.why}</div>
+                  <div className="text-11 px-2 py-0.5 inline-block rounded" style={{ background: '#161616', color: '#888888' }}>{alt.why}</div>
                 </div>
                 <div className="text-right shrink-0">
                   {alt.fire_euroclass && (
@@ -487,7 +500,7 @@ export default function AssessmentResult({ data, queryText }) {
 
       {/* ── Data gaps ── */}
       {data.missing_data?.length > 0 && (
-        <div className="px-3.5 py-2.5 bg-warn-light border border-warn-edge text-12 text-warn rounded-lg mb-3">
+        <div className="px-3.5 py-2.5 text-12 rounded-lg mb-3" style={{ background: 'rgba(161,98,7,0.08)', border: '1px solid rgba(161,98,7,0.3)', color: '#ca8a04' }}>
           <strong className="font-medium">Data gaps: </strong>
           {data.missing_data.join(' | ')}
         </div>

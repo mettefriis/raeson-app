@@ -4,6 +4,16 @@ import { motion } from 'motion/react'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
+const C = {
+  bg:      '#0D0D0D',
+  surface: '#161616',
+  card:    '#1C1C1C',
+  border:  '#252525',
+  text:    '#FAFAFA',
+  dim:     '#888888',
+  muted:   '#444444',
+}
+
 export default function ProjectList({ onSelectProject, onNewProject }) {
   const { getToken } = useAuth()
   const [projects, setProjects] = useState([])
@@ -22,7 +32,7 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   }, [])
 
   if (loading) return (
-    <div className="py-10 text-center text-muted text-13">
+    <div style={{ padding: '40px 0', textAlign: 'center', fontSize: 13, color: C.dim }}>
       Loading projects...
     </div>
   )
@@ -30,73 +40,117 @@ export default function ProjectList({ onSelectProject, onNewProject }) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start justify-between mb-10 pt-4">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 48, paddingTop: 8 }}>
         <div>
-          <p className="text-[11px] font-medium text-muted mb-1.5 uppercase tracking-widest">
-            Projects
+          <p style={{ fontSize: 10, fontWeight: 500, color: C.muted, marginBottom: 10,
+            textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            Studio directory — {new Date().getFullYear()}
           </p>
-          <p className="text-sm text-subtle tracking-tight">
-            Select a project to run an assessment.
-          </p>
+          <h1 style={{ fontSize: 32, fontWeight: 600, color: C.text, letterSpacing: '-0.03em', margin: 0 }}>
+            Active Projects
+          </h1>
         </div>
         <button
           onClick={onNewProject}
-          className="px-4 py-2 text-white text-12 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
-          style={{ background: '#009767', letterSpacing: '-0.01em' }}
+          style={{
+            padding: '10px 20px', background: C.text, color: C.bg,
+            fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em',
+            border: 'none', borderRadius: 6, cursor: 'pointer',
+            marginTop: 24,
+          }}
         >
-          + New project
+          + Create New Project
         </button>
       </div>
 
       {/* Empty state */}
       {projects.length === 0 && (
-        <div className="py-16 text-center bg-surface rounded-2xl">
-          <p className="text-sm text-muted mb-5">No projects yet.</p>
-          <button
-            onClick={onNewProject}
-            className="px-4 py-2 text-white text-12 font-medium rounded-lg transition-opacity duration-150 hover:opacity-85"
-            style={{ background: '#009767' }}
-          >
+        <div style={{
+          padding: '64px 0', textAlign: 'center',
+          background: C.surface, borderRadius: 12,
+          border: `1px solid ${C.border}`,
+        }}>
+          <p style={{ fontSize: 13, color: C.dim, marginBottom: 20 }}>No projects yet.</p>
+          <button onClick={onNewProject} style={{
+            padding: '10px 20px', background: C.text, color: C.bg,
+            fontSize: 13, fontWeight: 500, border: 'none', borderRadius: 6, cursor: 'pointer',
+          }}>
             Create your first project
           </button>
         </div>
       )}
 
-      {/* Project list */}
+      {/* Table */}
       {projects.length > 0 && (
-        <div className="flex flex-col gap-3">
+        <div style={{ border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden' }}>
+          {/* Column headers */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr 1fr 1fr',
+            padding: '10px 20px',
+            borderBottom: `1px solid ${C.border}`,
+            fontSize: 10, color: C.muted,
+            letterSpacing: '0.08em', textTransform: 'uppercase',
+            background: C.surface,
+          }}>
+            <span>Name</span>
+            <span>Status</span>
+            <span>Assessments</span>
+            <span>Location</span>
+          </div>
+
           {projects.map((p, i) => (
             <motion.div
               key={p.id}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.04, duration: 0.15, ease: 'easeOut' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: i * 0.04, duration: 0.2 }}
               onClick={() => onSelectProject(p)}
-              className="px-6 py-5 bg-surface rounded-2xl cursor-pointer flex items-center justify-between transition-colors duration-150"
-              style={{ background: '#f5f5f5' }}
-              onMouseOver={e => e.currentTarget.style.background = '#ebebeb'}
-              onMouseOut={e => e.currentTarget.style.background = '#f5f5f5'}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '2fr 1fr 1fr 1fr',
+                padding: '16px 20px',
+                borderBottom: i < projects.length - 1 ? `1px solid ${C.border}` : 'none',
+                cursor: 'pointer',
+                background: 'transparent',
+                transition: 'background 0.12s',
+                alignItems: 'center',
+              }}
+              onMouseOver={e => e.currentTarget.style.background = C.surface}
+              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
             >
-              <div className="min-w-0">
-                <div className="text-sm font-medium text-ink mb-1.5 tracking-tight">
-                  {p.name}
-                </div>
-                <div className="text-xs text-muted flex gap-4 flex-wrap">
-                  {p.project_number && <span>{p.project_number}</span>}
-                  {p.city && <span>{p.city}</span>}
-                  {p.building_type && <span>{p.building_type}</span>}
-                  {p.jurisdiction && (
-                    <span className="font-mono text-[10px]" style={{ letterSpacing: '0.02em' }}>
-                      {p.jurisdiction}
-                    </span>
-                  )}
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <rect x="0.5" y="3.5" width="13" height="10" rx="1" stroke={C.muted} strokeWidth="1"/>
+                  <path d="M0.5 5.5h13" stroke={C.muted} strokeWidth="1"/>
+                  <path d="M0.5 3.5l2-2h3.5l1 2" stroke={C.muted} strokeWidth="1" fill="none"/>
+                </svg>
+                <span style={{ fontSize: 13, color: C.text, letterSpacing: '-0.015em' }}>{p.name}</span>
               </div>
-              <div className="text-right ml-8 shrink-0">
-                <div className="text-xs text-muted tabular-nums">
-                  {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
-                </div>
+              <div>
+                {p.assessment_count > 0 ? (
+                  <span style={{
+                    fontSize: 10, padding: '3px 8px',
+                    background: 'rgba(0,151,103,0.1)',
+                    border: '1px solid rgba(0,151,103,0.25)',
+                    color: '#009767', borderRadius: 9999,
+                    letterSpacing: '0.06em', textTransform: 'uppercase',
+                  }}>Active</span>
+                ) : (
+                  <span style={{
+                    fontSize: 10, padding: '3px 8px',
+                    background: C.surface, border: `1px solid ${C.border}`,
+                    color: C.muted, borderRadius: 9999,
+                    letterSpacing: '0.06em', textTransform: 'uppercase',
+                  }}>New</span>
+                )}
               </div>
+              <span style={{ fontSize: 13, color: C.dim, fontVariantNumeric: 'tabular-nums' }}>
+                {p.assessment_count} assessment{p.assessment_count !== 1 ? 's' : ''}
+              </span>
+              <span style={{ fontSize: 13, color: C.dim }}>
+                {[p.city, p.jurisdiction].filter(Boolean).join(', ') || '—'}
+              </span>
             </motion.div>
           ))}
         </div>

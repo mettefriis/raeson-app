@@ -38,8 +38,17 @@ const JURISDICTIONS = [
   { value: 'DE', label: 'Germany (GEG)' },
 ]
 
-const fieldClass = "w-full px-0 py-2 border-0 border-b border-rule bg-transparent text-sm text-ink outline-none transition-colors duration-150 rounded-none"
-const labelClass = "text-[11px] text-muted font-medium block mb-1.5 uppercase tracking-widest"
+const fieldStyle = {
+  width: '100%', padding: '8px 0',
+  borderBottom: '1px solid #252525',
+  background: 'transparent',
+  color: '#FAFAFA',
+  fontSize: 14, outline: 'none',
+  borderTop: 'none', borderLeft: 'none', borderRight: 'none',
+  borderRadius: 0, transition: 'border-color 0.15s',
+}
+const fieldClass = "w-full"
+const labelClass = "text-[11px] font-medium block mb-1.5 uppercase tracking-widest"
 
 export default function ProjectForm({ onCreated, onCancel }) {
   const { getToken } = useAuth()
@@ -92,10 +101,13 @@ export default function ProjectForm({ onCreated, onCancel }) {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-[11px] font-medium text-muted mb-1.5 uppercase tracking-widest">
+        <p style={{ fontSize: 10, fontWeight: 500, color: '#444444', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
           New Project
         </p>
-        <p className="text-sm text-subtle tracking-tight">
+        <h1 style={{ fontSize: 28, fontWeight: 600, color: '#FAFAFA', letterSpacing: '-0.03em', margin: '0 0 6px' }}>
+          Create a project
+        </h1>
+        <p style={{ fontSize: 14, color: '#888888', letterSpacing: '-0.01em' }}>
           Set the project context once — all assessments inherit it.
         </p>
       </div>
@@ -106,20 +118,20 @@ export default function ProjectForm({ onCreated, onCancel }) {
           {/* Name + number */}
           <div className="grid gap-4" style={{ gridTemplateColumns: '2fr 1fr' }}>
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Project name *
               </label>
               <input
-                className={fieldClass}
+                className={fieldClass} style={fieldStyle}
                 placeholder="e.g. Ørestad Housing Block 4B"
                 value={form.name}
                 onChange={e => set('name', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               />
             </div>
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Project number
               </label>
               <input
@@ -127,8 +139,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. 2024-087"
                 value={form.project_number}
                 onChange={e => set('project_number', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               />
             </div>
           </div>
@@ -136,7 +148,7 @@ export default function ProjectForm({ onCreated, onCancel }) {
           {/* Address + city */}
           <div className="grid gap-4" style={{ gridTemplateColumns: '2fr 1fr' }}>
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Address
               </label>
               <input
@@ -144,12 +156,12 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Ørestads Boulevard 55"
                 value={form.address}
                 onChange={e => set('address', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               />
             </div>
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 City
               </label>
               <input
@@ -157,8 +169,8 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Copenhagen"
                 value={form.city}
                 onChange={e => set('city', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               />
             </div>
           </div>
@@ -184,15 +196,15 @@ export default function ProjectForm({ onCreated, onCancel }) {
           {/* Building type + class */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Building type
               </label>
               <select
                 className={fieldClass}
                 value={form.building_type}
                 onChange={e => set('building_type', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               >
                 {BUILDING_TYPES.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
@@ -200,15 +212,15 @@ export default function ProjectForm({ onCreated, onCancel }) {
               </select>
             </div>
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Building class
               </label>
               <select
                 className={fieldClass}
                 value={form.building_class}
                 onChange={e => set('building_class', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               >
                 {BUILDING_CLASSES.map(c => (
                   <option key={c.value} value={c.value}>{c.label}</option>
@@ -220,15 +232,15 @@ export default function ProjectForm({ onCreated, onCancel }) {
           {/* Climate zone + architect */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Climate zone
               </label>
               <select
                 className={fieldClass}
                 value={form.climate_zone}
                 onChange={e => set('climate_zone', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               >
                 {CLIMATE_ZONES.map(z => (
                   <option key={z.value} value={z.value}>{z.label}</option>
@@ -236,7 +248,7 @@ export default function ProjectForm({ onCreated, onCancel }) {
               </select>
             </div>
             <div>
-              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              <label className={labelClass} style={{ letterSpacing: '0.04em', textTransform: 'uppercase', color: '#444444' }}>
                 Architect name
               </label>
               <input
@@ -244,14 +256,14 @@ export default function ProjectForm({ onCreated, onCancel }) {
                 placeholder="e.g. Anna Møller"
                 value={form.architect_name}
                 onChange={e => set('architect_name', e.target.value)}
-                onFocus={e => e.target.style.borderColor = '#171717'}
-                onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                onFocus={e => e.target.style.borderColor = '#555555'}
+                onBlur={e => e.target.style.borderColor = '#252525'}
               />
             </div>
           </div>
 
           {error && (
-            <div className="px-3.5 py-2.5 bg-fail-light border border-fail-edge text-fail text-sm rounded-2xl">
+            <div className="px-3.5 py-2.5 text-sm rounded-2xl" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#ef4444' }}>
               {error}
             </div>
           )}
@@ -269,7 +281,10 @@ export default function ProjectForm({ onCreated, onCancel }) {
             <button
               type="button"
               onClick={onCancel}
-              className="px-5 py-2.5 bg-surface text-subtle text-12 border border-rule rounded-lg hover:border-ink hover:text-ink transition-colors duration-150"
+              className="px-5 py-2.5 text-12 rounded-lg transition-colors duration-150"
+              style={{ background: '#161616', border: '1px solid #252525', color: '#888888' }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#FAFAFA' }}
+              onMouseOut={e => { e.currentTarget.style.borderColor = '#252525'; e.currentTarget.style.color = '#888888' }}
             >
               Cancel
             </button>
