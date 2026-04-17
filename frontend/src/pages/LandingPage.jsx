@@ -44,35 +44,33 @@ function FadeUp({ children, delay = 0, style }) {
   )
 }
 
-// ─── Grain background — dark whole page ──────────────────────────────────────
+// ─── Background — geometric split: dark left / light right ───────────────────
+const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
+
 function GrainBackground() {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', background: '#141414' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+      {/* Dark left panel */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', background: '#3C3C3C' }} />
+      {/* Light right panel */}
+      <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', background: '#C8C8C8' }} />
+      {/* Focal glow at seam — tall narrow ellipse */}
       <motion.div
-        animate={{ x: [0, -18, 12, 0], y: [0, 20, -14, 0], scale: [1, 1.05, 0.96, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ scaleY: [1, 1.08, 0.94, 1], opacity: [0.92, 1, 0.86, 0.92] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          position: 'absolute', width: '80vw', height: '80vh', borderRadius: '50%',
-          background: 'radial-gradient(ellipse at 35% 45%, rgba(6,6,6,0.95) 0%, transparent 65%)',
-          top: 0, left: 0,
+          position: 'absolute',
+          width: '140px', height: '55vh',
+          background: 'radial-gradient(ellipse at 50% 10%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.88) 12%, rgba(255,255,255,0.45) 38%, rgba(255,255,255,0.1) 62%, transparent 78%)',
+          top: '10%', left: 'calc(50% - 70px)',
+          pointerEvents: 'none',
         }}
       />
-      <motion.div
-        animate={{ x: [0, 16, -10, 0], y: [0, -12, 18, 0], scale: [1, 0.96, 1.07, 1] }}
-        transition={{ duration: 30, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
-        style={{
-          position: 'absolute', width: '65vw', height: '65vh', borderRadius: '50%',
-          background: 'radial-gradient(ellipse at 65% 60%, rgba(28,28,28,0.88) 0%, transparent 60%)',
-          bottom: '-10%', right: '-10%',
-        }}
-      />
+      {/* Grain overlay */}
       <div style={{
         position: 'absolute', inset: '-100px',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-        backgroundSize: '256px 256px',
-        opacity: 0.28,
-        pointerEvents: 'none',
-        mixBlendMode: 'overlay',
+        backgroundImage: GRAIN, backgroundSize: '256px 256px',
+        opacity: 0.25, pointerEvents: 'none', mixBlendMode: 'overlay',
       }} />
     </div>
   )
@@ -134,28 +132,6 @@ function Hero({ onEnter }) {
       padding: '0 40px 68px',
       maxWidth: 1200, margin: '0 auto',
     }}>
-      {/* Light gradient — right half, creates the dark/light split */}
-      <motion.div
-        animate={{ x: [0, 22, -12, 0], y: [0, -18, 22, 0], scale: [1, 0.95, 1.08, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-        style={{
-          position: 'absolute', top: 0, right: '-15%', width: '70vw', height: '100%',
-          background: 'radial-gradient(ellipse at 70% 48%, rgba(185,185,185,0.4) 0%, rgba(130,130,130,0.15) 45%, transparent 70%)',
-          pointerEvents: 'none', zIndex: 0,
-        }}
-      />
-      {/* Bright focal glow at the meeting point */}
-      <motion.div
-        animate={{ x: [0, 16, -10, 0], y: [0, -10, 18, 0], scale: [1, 1.14, 0.90, 1] }}
-        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-        style={{
-          position: 'absolute', width: '20vw', height: '32vh',
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.55) 25%, rgba(255,255,255,0.15) 55%, transparent 70%)',
-          top: '28%', left: '53%', transform: 'translate(-50%, -50%)',
-          pointerEvents: 'none', zIndex: 0,
-        }}
-      />
-
       {/* Scroll hint */}
       <div style={{ position: 'absolute', bottom: 68, right: 40, zIndex: 1 }}>
         <span style={{ fontSize: 12, color: C.muted, letterSpacing: '0.05em' }}>(Scroll)</span>
@@ -191,6 +167,7 @@ function AboutBand() {
       padding: '120px 40px',
       maxWidth: 1200, margin: '0 auto',
       borderTop: `1px solid ${C.border}`,
+      background: '#141414',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 80, alignItems: 'start' }}>
         <FadeUp>
@@ -238,7 +215,7 @@ const CASES = [
 
 function Cases() {
   return (
-    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}`, background: '#141414' }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 32px' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
@@ -291,7 +268,7 @@ const INDEX_ROWS = [
 
 function IndexSection() {
   return (
-    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}`, background: '#141414' }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 40px' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
@@ -340,7 +317,7 @@ const ARTICLES = [
 
 function Journal() {
   return (
-    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}` }}>
+    <section style={{ padding: '0 40px 120px', maxWidth: 1200, margin: '0 auto', borderTop: `1px solid ${C.border}`, background: '#141414' }}>
       <FadeUp>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '48px 0 32px' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', color: C.text }}>
@@ -382,7 +359,7 @@ function Journal() {
 // ─── CTA Band ─────────────────────────────────────────────────────────────────
 function CtaBand({ onEnter }) {
   return (
-    <section style={{ borderTop: `1px solid ${C.border}`, padding: '120px 40px', textAlign: 'center' }}>
+    <section style={{ borderTop: `1px solid ${C.border}`, padding: '120px 40px', textAlign: 'center', background: '#141414' }}>
       <FadeUp>
         <h2 style={{
           fontFamily: 'var(--font-display)',
@@ -410,7 +387,7 @@ function CtaBand({ onEnter }) {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ borderTop: `1px solid ${C.border}`, padding: '60px 40px 40px', maxWidth: 1200, margin: '0 auto' }}>
+    <footer style={{ borderTop: `1px solid ${C.border}`, padding: '60px 40px 40px', maxWidth: 1200, margin: '0 auto', background: '#141414' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 40, marginBottom: 60 }}>
         <div>
           <p style={{ fontSize: 11, color: C.muted, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Sitemap</p>
