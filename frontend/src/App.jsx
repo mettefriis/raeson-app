@@ -1,6 +1,6 @@
 // ─── Root app — Clerk auth gate + marketing / product shell ──────────────────
 import React, { useState } from 'react';
-import { SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-react';
+import { SignIn, SignedIn, SignedOut, useUser, useClerk } from '@clerk/clerk-react';
 import { AnimatePresence, motion } from 'motion/react';
 import MarketingApp from './marketing/MarketingApp.jsx';
 import { ProjectsPage, PROJECTS_SEED } from './pages/ProjectsPage.jsx';
@@ -155,30 +155,33 @@ function AppShell({ onGoMarketing }) {
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [showApp, setShowApp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   return (
     <>
       <SignedOut>
-        <MarketingApp onEnterApp={() => setShowApp(true)} />
-      </SignedOut>
-
-      <SignedIn>
         <AnimatePresence mode="wait">
-          {showApp ? (
-            <motion.div key="app"
+          {showSignIn ? (
+            <motion.div key="signin"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}>
-              <AppShell onGoMarketing={() => setShowApp(false)} />
+              transition={{ duration: 0.2 }}
+              style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.bg }}>
+              <SignIn routing="hash" appearance={{
+                variables: { colorBackground: '#FFFFFF', colorText: C.text },
+              }} />
             </motion.div>
           ) : (
             <motion.div key="marketing"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}>
-              <MarketingApp onEnterApp={() => setShowApp(true)} />
+              transition={{ duration: 0.2 }}>
+              <MarketingApp onEnterApp={() => setShowSignIn(true)} />
             </motion.div>
           )}
         </AnimatePresence>
+      </SignedOut>
+
+      <SignedIn>
+        <AppShell onGoMarketing={() => {}} />
       </SignedIn>
     </>
   );
