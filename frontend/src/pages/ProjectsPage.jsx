@@ -299,10 +299,6 @@ function ProjectCard({ p, onOpen, delay = 0 }) {
         minHeight: 140,
       }}>
         <ProjectThumbPattern kind={p.thumb} />
-        <div aria-hidden style={{
-          position: 'absolute', inset: 0, backgroundImage: GRAIN_URL,
-          backgroundSize: 180, opacity: 0.35, mixBlendMode: 'multiply',
-        }} />
         {p.pending > 0 && (
           <div style={{
             position: 'absolute', top: 12, right: 12,

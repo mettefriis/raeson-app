@@ -399,7 +399,6 @@ function Footer() {
 export default function LandingPage({ onEnter }) {
   return (
     <div style={{ background: 'transparent', minHeight: '100vh', color: C.text, position: 'relative' }}>
-      <GrainBackground />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <Nav onEnter={onEnter} />
         <Hero onEnter={onEnter} />

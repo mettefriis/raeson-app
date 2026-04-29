@@ -41,15 +41,7 @@ function RaesonMark({ size = 18, color = 'currentColor', style }) {
 }
 
 // ── Grain ────────────────────────────────────────────────────────────────
-function Grain({ opacity = 0.16 }) {
-  return (
-    <div aria-hidden style={{
-      position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1,
-      backgroundImage: GRAIN_URL, backgroundSize: '280px 280px',
-      opacity, mixBlendMode: 'multiply',
-    }} />
-  );
-}
+function Grain() { return null; }
 
 // ── Label / Eyebrow (mono, uppercase) ────────────────────────────────────
 function Mono({ children, style, dim = false }) {
@@ -124,19 +116,6 @@ function Sidebar({ route, onNavigate, onLogout, user }) {
       position: 'sticky', top: 0, zIndex: 20,
       overflow: 'hidden',
     }}>
-      {/* Grain texture — only the sidebar gets paper grain */}
-      <div aria-hidden style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: GRAIN_URL, backgroundSize: '280px 280px',
-        opacity: 0.32, mixBlendMode: 'multiply', zIndex: 0,
-      }} />
-      {/* Subtle warm-paper tint */}
-      <div aria-hidden style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(120% 80% at 50% 0%, rgba(255,248,230,0.4), transparent 60%), radial-gradient(120% 80% at 50% 100%, rgba(20,20,20,0.04), transparent 60%)',
-        mixBlendMode: 'multiply',
-        zIndex: 0,
-      }} />
       <div style={{ display: 'flex', alignItems: 'center', padding: '0 8px 22px',
         borderBottom: `1px solid ${D.border}`, position: 'relative', zIndex: 1 }}>
         <span style={{ fontFamily: 'var(--font-display)', fontSize: 19, fontWeight: 500, letterSpacing: '-0.035em', color: D.text }}>ræson</span>

@@ -171,10 +171,6 @@ function ProjectDetail({ project, onBack, onOpenSubstitution, onNewSubstitution 
             border: `1px solid ${C.border}`,
           }}>
             <ProjectThumbPattern kind={project.thumb} />
-            <div aria-hidden style={{
-              position: 'absolute', inset: 0, backgroundImage: GRAIN_URL,
-              backgroundSize: 180, opacity: 0.35, mixBlendMode: 'multiply',
-            }} />
           </div>
 
           {/* Title + meta */}

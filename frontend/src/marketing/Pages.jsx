@@ -337,11 +337,6 @@ function AboutPage({ C, onNavigate }) {
                     marginBottom: 16, position: 'relative', overflow: 'hidden',
                   }}>
                     <div style={{
-                      position: 'absolute', inset: 0,
-                      backgroundImage: GRAIN_URL, backgroundSize: 180,
-                      opacity: 0.25, mixBlendMode: 'overlay',
-                    }} />
-                    <div style={{
                       position: 'absolute', bottom: 16, left: 16,
                       fontSize: 10, color: C.muted, fontFamily: 'var(--font-mono)', letterSpacing: '0.12em',
                     }}>PORTRAIT · {p.n.split(' ')[0].toUpperCase()}</div>
@@ -402,7 +397,6 @@ function JournalPage({ C }) {
               position: 'relative', overflow: 'hidden',
               border: `1px solid ${C.border}`,
             }}>
-              <div style={{ position: 'absolute', inset: 0, backgroundImage: GRAIN_URL, backgroundSize: 220, opacity: 0.35, mixBlendMode: 'overlay' }} />
               <div style={{ position: 'absolute', bottom: 20, left: 20, fontSize: 10, color: C.muted, fontFamily: 'var(--font-mono)', letterSpacing: '0.12em' }}>COVER · BRIEFING APR 2026</div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
