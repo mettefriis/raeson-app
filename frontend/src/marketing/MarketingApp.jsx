@@ -1,6 +1,6 @@
 // ─── Marketing app — home + sub-pages ────────────────────────────────────
 import React, { useState, useEffect } from 'react';
-import { useTweaks, Grain, Nav, Footer, TweaksPanel } from './Shared.jsx';
+import { useTweaks, Nav, Footer, TweaksPanel } from './Shared.jsx';
 import { CinematicHero, ProblemSection, HowItWorks, CtaBand } from './HomeSections.jsx';
 import { DemoStage } from './DemoStage.jsx';
 import { PlatformPage, PricingPage, AboutPage, JournalPage, ContactPage } from './Pages.jsx';
@@ -8,7 +8,6 @@ import { PlatformPage, PricingPage, AboutPage, JournalPage, ContactPage } from '
 function Home({ C, tweaks, onNavigate }) {
   return (
     <div style={{ color: C.text, minHeight: '100vh', position: 'relative' }}>
-      <Grain enabled={tweaks.grain} isDark={C.isDark} />
       <Nav C={C} current="home" onNavigate={onNavigate} />
       <CinematicHero C={C} onNavigate={onNavigate} />
       <ProblemSection C={C} />
@@ -43,10 +42,7 @@ function MarketingApp({ onEnterApp }) {
   return (
     <div style={{ color: C.text, minHeight: '100vh', position: 'relative' }}>
       {page !== 'home' && (
-        <>
-          <Grain enabled={tweaks.grain} isDark={C.isDark} />
-          <Nav C={C} current={page} onNavigate={navigate} />
-        </>
+        <Nav C={C} current={page} onNavigate={navigate} />
       )}
 
       {page === 'home'     && <Home C={C} tweaks={tweaks} onNavigate={navigate} />}
