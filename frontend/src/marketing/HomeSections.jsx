@@ -39,7 +39,7 @@ function CinematicHero({ C, onNavigate }) {
             Ræson assesses contractor substitution requests against Danish and Dutch building regulations. Signed verdict in fifteen seconds.
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-            <PrimaryBtn C={C} onClick={() => onNavigate && onNavigate('app')}>Run the demo</PrimaryBtn>
+            <PrimaryBtn C={C} onClick={() => onNavigate && onNavigate('demo')}>Run the demo</PrimaryBtn>
             <GhostBtn C={C} onClick={() => onNavigate && onNavigate('platform')}>How it works</GhostBtn>
           </div>
         </motion.div>
@@ -224,7 +224,7 @@ function CtaBand({ C, onNavigate }) {
         </FadeUp>
         <FadeUp delay={0.08}>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-            <PrimaryBtn C={C} onClick={() => onNavigate && onNavigate('app')}>Run the demo</PrimaryBtn>
+            <PrimaryBtn C={C} onClick={() => onNavigate && onNavigate('demo')}>Run the demo</PrimaryBtn>
             <GhostBtn C={C} onClick={() => onNavigate && onNavigate('contact')}>Book a walkthrough</GhostBtn>
           </div>
         </FadeUp>
