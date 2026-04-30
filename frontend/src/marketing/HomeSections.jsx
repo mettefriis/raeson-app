@@ -23,7 +23,7 @@ function CinematicHero({ C, onNavigate }) {
             color: C.text, margin: '0 auto 40px',
             textWrap: 'balance', maxWidth: 1080,
           }}>
-          When a contractor wants to change a material — know if it's safe to approve.
+          A contractor wants to change a material — know if it's safe to approve.
         </motion.h1>
 
         <motion.div key="sub"
