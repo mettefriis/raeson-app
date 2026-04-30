@@ -233,6 +233,114 @@ function CtaBand({ C, onNavigate }) {
   );
 }
 
+function Positioning({ C }) {
+  return (
+    <section style={{ position: 'relative', zIndex: 2, padding: '160px 48px', borderTop: `1px solid ${C.border}`, background: C.bg }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <FadeUp>
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(28px, 3.2vw, 52px)',
+            fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.2,
+            margin: 0, textWrap: 'balance', maxWidth: 900,
+          }}>
+            <span style={{ color: C.dim }}>LCA tools tell you the carbon cost after you've decided.</span>
+            {' '}
+            <span style={{ color: C.text }}>Ræson tells you what to decide.</span>
+          </p>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
 function Practices() { return null; }
 
-export { CinematicHero, ProblemSection, ProductTease, HowItWorks, Practices, CtaBand, PreviewFrame, PrimaryBtn, GhostBtn };
+// ── Minimal home — single column, ~75 words ──────────────────────────────
+function MinimalHome({ C, onNavigate }) {
+  return (
+    <main style={{ padding: '0 48px' }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', paddingTop: 200, paddingBottom: 240 }}>
+        <FadeUp>
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(36px, 4.5vw, 64px)',
+            fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 1.08,
+            color: C.text, margin: '0 0 48px',
+          }}>
+            Substitution decisions, defended.
+          </h1>
+        </FadeUp>
+
+        <FadeUp delay={0.06}>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'clamp(17px, 1.35vw, 19px)',
+            fontWeight: 400, color: C.dim, lineHeight: 1.65,
+            margin: '0 0 24px', textWrap: 'pretty',
+          }}>
+            Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
+          </p>
+        </FadeUp>
+
+        <FadeUp delay={0.1}>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'clamp(17px, 1.35vw, 19px)',
+            fontWeight: 400, color: C.dim, lineHeight: 1.65,
+            margin: '0 0 32px', textWrap: 'pretty',
+          }}>
+            LCA tools measure decisions you've already made. Ræson works one step earlier, at the moment of substitution: researching alternatives, cross-referencing performance and impact data, and returning a structured rationale your team reviews and signs off. Sources cited. Assembly intact.
+          </p>
+        </FadeUp>
+
+        <FadeUp delay={0.13}>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'clamp(17px, 1.35vw, 19px)',
+            fontWeight: 400, color: C.dim, lineHeight: 1.65,
+            margin: '0 0 48px', textWrap: 'pretty',
+          }}>
+            It reads from your BIM and LCA stack. You keep working the way you work.
+          </p>
+        </FadeUp>
+
+        <FadeUp delay={0.16}>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 14, color: C.muted, lineHeight: 1.55,
+            margin: '0 0 40px',
+          }}>
+            Launching June 2026 with a small group of Dutch and Nordic practices.
+          </p>
+        </FadeUp>
+
+        <FadeUp delay={0.19}>
+          <button
+            onClick={() => onNavigate && onNavigate('contact')}
+            style={{
+              padding: '14px 28px', background: C.text, color: C.bg,
+              border: 'none', fontFamily: 'var(--font-sans)', fontSize: 15,
+              fontWeight: 400, letterSpacing: '-0.01em', cursor: 'pointer',
+            }}
+          >
+            Request access
+          </button>
+        </FadeUp>
+      </div>
+
+      <div style={{ borderTop: `1px solid ${C.border}`, padding: '120px 0 160px', textAlign: 'left', maxWidth: 640, margin: '0 auto' }}>
+        <FadeUp>
+          <span style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'clamp(80px, 14vw, 200px)',
+            fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1,
+            color: C.border, userSelect: 'none',
+          }}>ræson</span>
+        </FadeUp>
+      </div>
+    </main>
+  );
+}
+
+export { CinematicHero, ProblemSection, Positioning, MinimalHome, ProductTease, HowItWorks, Practices, CtaBand, PreviewFrame, PrimaryBtn, GhostBtn };

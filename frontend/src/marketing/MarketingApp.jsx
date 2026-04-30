@@ -1,7 +1,7 @@
 // ─── Marketing app — home + sub-pages ────────────────────────────────────
 import React, { useState, useEffect } from 'react';
 import { useTweaks, Nav, Footer, TweaksPanel } from './Shared.jsx';
-import { CinematicHero, ProblemSection, HowItWorks, CtaBand } from './HomeSections.jsx';
+import { MinimalHome } from './HomeSections.jsx';
 import { DemoStage } from './DemoStage.jsx';
 import { PlatformPage, PricingPage, AboutPage, JournalPage, ContactPage } from './Pages.jsx';
 
@@ -9,10 +9,7 @@ function Home({ C, tweaks, onNavigate }) {
   return (
     <div style={{ color: C.text, minHeight: '100vh', position: 'relative' }}>
       <Nav C={C} current="home" onNavigate={onNavigate} />
-      <CinematicHero C={C} onNavigate={onNavigate} />
-      <ProblemSection C={C} />
-      <HowItWorks C={C} />
-      <CtaBand C={C} onNavigate={onNavigate} />
+      <MinimalHome C={C} onNavigate={onNavigate} />
       <Footer C={C} onNavigate={onNavigate} />
     </div>
   );
