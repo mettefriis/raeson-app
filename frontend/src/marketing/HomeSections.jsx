@@ -286,7 +286,7 @@ function MinimalHome({ C, onNavigate }) {
               fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.92,
               color: C.text, margin: 0,
             }}>
-              Substitution<br />decisions,<br />defended.
+              Substitution decisions,<br />defended.
             </h1>
           </FadeUp>
         </div>
