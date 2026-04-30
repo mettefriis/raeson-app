@@ -256,67 +256,26 @@ function Positioning({ C }) {
 
 function Practices() { return null; }
 
-// ── Minimal home — journal pacing ────────────────────────────────────────
-function MinimalHome({ C, onNavigate }) {
+// ── Hero — journal pacing, sits above the restored sections ──────────────
+function MinimalHome({ C }) {
   return (
-    <main>
-      <div style={{ paddingTop: 140 }}>
-
-        <Section C={C} style={{ paddingBottom: 80 }}>
-          <FadeUp>
-            <SectionLabel C={C}>ræson</SectionLabel>
-          </FadeUp>
-          <FadeUp delay={0.05}>
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(56px, 8vw, 130px)',
-              fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.95,
-              color: C.text, margin: '20px 0 0', maxWidth: 1000,
-            }}>
-              Substitution decisions,<br /><em style={{ fontStyle: 'italic' }}>defended.</em>
-            </h1>
-          </FadeUp>
-        </Section>
-
-        <Section C={C} style={{ paddingTop: 0, paddingBottom: 160 }}>
-          <div style={{ maxWidth: 680 }}>
-            <FadeUp>
-              <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
-                Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
-              </p>
-            </FadeUp>
-            <FadeUp delay={0.04}>
-              <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
-                LCA tools measure decisions you've already made. Ræson works one step earlier, at the moment of substitution: researching alternatives, cross-referencing performance and impact data, and returning a structured rationale your team reviews and signs off. Sources cited. Assembly intact.
-              </p>
-            </FadeUp>
-            <FadeUp delay={0.07}>
-              <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 48px', textWrap: 'pretty' }}>
-                It reads from your BIM and LCA stack. You keep working the way you work.
-              </p>
-            </FadeUp>
-            <FadeUp delay={0.1}>
-              <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.55, margin: '0 0 36px' }}>
-                Launching June 2026 with a small group of Dutch and Nordic practices.
-              </p>
-            </FadeUp>
-            <FadeUp delay={0.13}>
-              <button
-                onClick={() => onNavigate && onNavigate('contact')}
-                style={{
-                  padding: '14px 28px', background: C.text, color: C.bg,
-                  border: 'none', fontFamily: 'var(--font-sans)', fontSize: 15,
-                  fontWeight: 400, letterSpacing: '-0.01em', cursor: 'pointer',
-                }}
-              >
-                Request access
-              </button>
-            </FadeUp>
-          </div>
-        </Section>
-
-      </div>
-    </main>
+    <div style={{ paddingTop: 140 }}>
+      <Section C={C} style={{ paddingBottom: 100 }}>
+        <FadeUp>
+          <SectionLabel C={C}>ræson</SectionLabel>
+        </FadeUp>
+        <FadeUp delay={0.05}>
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(56px, 8vw, 130px)',
+            fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.95,
+            color: C.text, margin: '20px 0 0', maxWidth: 1000,
+          }}>
+            Substitution decisions,<br /><em style={{ fontStyle: 'italic' }}>defended.</em>
+          </h1>
+        </FadeUp>
+      </Section>
+    </div>
   );
 }
 
