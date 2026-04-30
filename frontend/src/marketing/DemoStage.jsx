@@ -108,13 +108,17 @@ const SCRIPT = [
     role: 'system',
     kind: 'verdict',
     headline: 'Conditionally viable.',
-    rationale: `Improves embodied carbon and end-of-life recoverability, but functional equivalence holds only if the vapour-control strategy is revised for the new permeability profile.`,
+    rationale: `Carbon drops 38%. One condition: wood fibre is vapour-open — the existing membrane Sd-value needs checking before you approve.`,
     confidenceLine: `Confidence: moderate overall · 6 dimensions assessed · 2 flagged low-confidence.`,
     drivers: [
-      { t: 'Embodied carbon',   d: 'A1–A3 reduces by ~38% vs incumbent (manufacturer EPDs, both products).' },
-      { t: 'Vapour management', d: 'Wood fibre is vapour-open; existing Sd-value of internal membrane needs re-checking.' },
-      { t: 'Fire reaction',     d: 'Drops from A1 to E (treated). Compliant for typology + height, but loses the non-combustible margin.' },
+      { t: 'Embodied carbon',   d: 'A1–A3 reduces by ~38% vs incumbent (manufacturer EPDs, both products). This is what made the verdict positive.' },
+      { t: 'Vapour management', d: 'Wood fibre is vapour-open; existing Sd-value of internal membrane needs re-checking. This is what made it conditional.' },
+      { t: 'Fire reaction',     d: 'Drops from A1 to E (treated). Compliant for this building height, but loses the non-combustible margin.' },
     ],
+    alternative: {
+      product: 'Gutex Multitherm',
+      reason: 'Same ~38% carbon reduction, but comes with a factory-laminated vapour check — no membrane redesign needed. Removes the only condition on this substitution.',
+    },
     dimensions: [
       { t: 'Functional equivalence',     verdict: 'maintains',  magnitude: 'conditional · vapour',          grade: 'high',     rationale: 'Lambda 0.038 vs 0.035 — within tolerance. Fire E vs A1 acceptable for this height. Vapour profile requires assembly review.' },
       { t: 'Regulatory & certification', verdict: 'maintains',  magnitude: '—',                              grade: 'high',     rationale: 'Bouwbesluit, NTA 8800, MPG cap all satisfied. No SVHC concerns. No certification target set.' },
@@ -604,7 +608,7 @@ function VerdictPayload({ turn, C }) {
       </div>
 
       <div style={{ padding: '24px 28px', borderBottom: `1px solid ${C.border}` }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: C.muted, letterSpacing: '0.12em', marginBottom: 14 }}>DECISION DRIVERS</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: C.muted, letterSpacing: '0.12em', marginBottom: 14 }}>WHAT DECIDED THIS</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: C.border, border: `1px solid ${C.border}` }}>
           {turn.drivers.map((d, i) => (
             <div key={i} style={{ background: C.isDark ? '#111' : '#FFF', padding: '16px 18px', minHeight: 120 }}>
@@ -673,6 +677,16 @@ function VerdictPayload({ turn, C }) {
           </div>
         ))}
       </div>
+
+      {turn.alternative && (
+        <div style={{ padding: '24px 28px', borderBottom: `1px solid ${C.border}`, background: C.isDark ? '#12100A' : '#FFFBF0' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#A16207', letterSpacing: '0.12em', marginBottom: 12 }}>BETTER ALTERNATIVE</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: C.text, letterSpacing: '-0.015em' }}>{turn.alternative.product}</span>
+          </div>
+          <p style={{ margin: 0, fontSize: 14, color: C.dim, lineHeight: 1.55, textWrap: 'pretty' }}>{turn.alternative.reason}</p>
+        </div>
+      )}
 
       <div style={{ padding: '24px 28px', borderBottom: `1px solid ${C.border}`, background: C.isDark ? '#0A1612' : '#F1F8F4' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#009767', letterSpacing: '0.12em', marginBottom: 12 }}>HOW TO EXPLAIN THIS</div>
