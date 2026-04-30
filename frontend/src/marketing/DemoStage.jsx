@@ -47,7 +47,7 @@ const SCRIPT = [
     id: 's-typology',
     role: 'system',
     kind: 'message',
-    body: `Got it — Netherlands. Next: building typology. It shapes the regulatory regime and IEQ relevance.`,
+    body: `Got it — Netherlands. Next: building typology. It determines which regulations apply and what needs checking.`,
     question: {
       prompt: `Which typology fits?`,
       chips: ['Multi-family residential', 'Office', 'Education', 'Healthcare', 'Other'],
@@ -70,7 +70,7 @@ const SCRIPT = [
       {
         id: 'lifespan',
         prompt: 'Building lifespan assumption?',
-        why: '60 years is the residential default. Affects amortisation of embodied impacts.',
+        why: '60 years is the residential default. Affects how embodied carbon is spread over the building\'s life.',
         chips: ['60 years (default)', '50 years', '80 years', 'Skip'],
       },
       {
@@ -675,7 +675,7 @@ function VerdictPayload({ turn, C }) {
       </div>
 
       <div style={{ padding: '24px 28px', borderBottom: `1px solid ${C.border}`, background: C.isDark ? '#0A1612' : '#F1F8F4' }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#009767', letterSpacing: '0.12em', marginBottom: 12 }}>STRONGER FRAMING</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#009767', letterSpacing: '0.12em', marginBottom: 12 }}>HOW TO EXPLAIN THIS</div>
         <p style={{ margin: 0, fontSize: 15, color: C.text, lineHeight: 1.55, textWrap: 'pretty', fontFamily: 'var(--font-display)', fontWeight: 300, letterSpacing: '-0.005em' }}>
           {turn.framing}
         </p>

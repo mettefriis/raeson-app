@@ -23,7 +23,7 @@ function CinematicHero({ C, onNavigate }) {
             color: C.text, margin: '0 auto 40px',
             textWrap: 'balance', maxWidth: 1080,
           }}>
-          Material substitution, assessed against the code.
+          When a contractor wants to change a material — know if it's safe to approve.
         </motion.h1>
 
         <motion.div key="sub"
@@ -36,7 +36,7 @@ function CinematicHero({ C, onNavigate }) {
             fontWeight: 400, color: C.dim, lineHeight: 1.55, letterSpacing: '-0.005em',
             margin: 0, textWrap: 'pretty',
           }}>
-            Ræson assesses contractor substitution requests against Danish and Dutch building regulations. Signed verdict in fifteen seconds.
+            ræson checks fire safety, insulation, carbon, and durability against Danish and Dutch requirements. Signed verdict in fifteen seconds.
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
             <PrimaryBtn C={C} onClick={() => onNavigate && onNavigate('demo')}>Run the demo</PrimaryBtn>
@@ -116,10 +116,10 @@ function PreviewFrame({ C }) {
               borderRadius: 999, border: `1px solid ${C.warn}` }}>Conditional</span>
           </div>
           {[
-            ['Fire reaction', 'pass', 'BR §5-1 met'],
-            ['Thermal λ', 'pass', 'Δ −18% U-value'],
-            ['Carbon A1-A3', 'warn', '+42% kgCO₂e / m²'],
-            ['Vapour junction', 'warn', 'verify at jambs'],
+            ['Fire safety', 'pass', 'BR §5-1 met'],
+            ['Insulation', 'pass', 'Δ −18% U-value'],
+            ['Carbon footprint', 'warn', '+42% kgCO₂e / m²'],
+            ['Moisture seal', 'warn', 'check at window edges'],
             ['Durability', 'pass', 'class 2 · 50 yr'],
           ].map(([l, s, d], i) => (
             <div key={l} style={{ display: 'grid', gridTemplateColumns: '8px 1fr auto', gap: 12, alignItems: 'center',
@@ -176,7 +176,7 @@ function ProductTease() { return null; }
 function HowItWorks({ C }) {
   const steps = [
     ['01', 'Intake', 'Paste the contractor email or drag in the PDF.'],
-    ['02', 'Check', 'Deterministic evaluation against BR25 or Bbl.'],
+    ['02', 'Check', 'Checked against fire, insulation, carbon, and durability requirements.'],
     ['03', 'Verdict', 'Pass, conditional, or fail — with the value measured.'],
     ['04', 'File', 'Signed PDF into the project record.'],
   ];
@@ -219,7 +219,7 @@ function CtaBand({ C, onNavigate }) {
             fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.02,
             color: C.text, margin: '0 0 64px', textWrap: 'balance',
           }}>
-            Evaluate your next substitution.
+            Check your next substitution.
           </h2>
         </FadeUp>
         <FadeUp delay={0.08}>

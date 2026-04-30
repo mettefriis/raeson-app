@@ -9,6 +9,8 @@ The LLM is used upstream (to parse queries) and downstream
 (to generate narratives). This module is pure logic.
 """
 
+import math
+
 from sqlalchemy.orm import Session
 from api.models.database import (
     CodeRequirement, Product, FireClassRank, MaterialIncompatibility,
@@ -185,8 +187,16 @@ class ComplianceEngine:
                 code_reference="BR25 § 297 / EN 15978" if br25_limit else "EN 15978",
             )
 
-        delta = prop_co2 - spec_co2
-        pct = (delta / spec_co2 * 100) if spec_co2 > 0 else 0
+        # B4 replacement cycles over the 50yr reference period
+        spec_life = specified.service_life_years or REFERENCE_PERIOD_YEARS
+        prop_life = proposed.service_life_years or REFERENCE_PERIOD_YEARS
+        spec_rep = math.ceil(REFERENCE_PERIOD_YEARS / spec_life)
+        prop_rep = math.ceil(REFERENCE_PERIOD_YEARS / prop_life)
+        spec_co2_50 = spec_co2 * spec_rep
+        prop_co2_50 = prop_co2 * prop_rep
+
+        delta = prop_co2_50 - spec_co2_50
+        pct = (delta / spec_co2_50 * 100) if spec_co2_50 > 0 else 0
 
         # Build BR25 context note
         br25_note = ""
@@ -198,38 +208,49 @@ class ComplianceEngine:
                 f"Source: bygningsreglementet.dk § 297."
             )
 
+        # B4 note shown when replacement cycles are relevant
+        b4_note = ""
+        if spec_rep > 1 or prop_rep > 1:
+            b4_note = (
+                f" 50yr lifecycle: specified {spec_co2_50:.1f} ({spec_rep}× installation)"
+                f" vs proposed {prop_co2_50:.1f} {unit_label} ({prop_rep}× installation, B4)."
+            )
+
         if delta <= 0:
             verdict = RiskVerdict.PASS
             delta_str = (
                 f"Carbon reduced by {abs(delta):.1f} {unit_label} "
-                f"({abs(pct):.0f}% lower than specified, A1–A3).{br25_note}"
+                f"({abs(pct):.0f}% lower, A1–A3 + B4 over {REFERENCE_PERIOD_YEARS}yr).{b4_note}{br25_note}"
             )
         elif pct < 20:
             verdict = RiskVerdict.CONDITIONAL
             delta_str = (
-                f"Carbon +{delta:.1f} {unit_label} (+{pct:.0f}%, A1–A3) — "
-                f"marginal increase; review against project LCA budget.{br25_note}"
+                f"Carbon +{delta:.1f} {unit_label} (+{pct:.0f}%, A1–A3 + B4 over {REFERENCE_PERIOD_YEARS}yr) — "
+                f"marginal increase; review against project carbon budget.{b4_note}{br25_note}"
             )
         else:
             verdict = RiskVerdict.FAIL
             delta_str = (
-                f"Carbon +{delta:.1f} {unit_label} (+{pct:.0f}%, A1–A3) — "
-                f"significant increase; likely to affect project LCA budget.{br25_note}"
+                f"Carbon +{delta:.1f} {unit_label} (+{pct:.0f}%, A1–A3 + B4 over {REFERENCE_PERIOD_YEARS}yr) — "
+                f"significant increase; likely to affect project carbon budget.{b4_note}{br25_note}"
             )
 
         src_specified = f" (source: {specified.epd_source})" if specified.epd_source else ""
         src_proposed = f" (source: {proposed.epd_source})" if proposed.epd_source else ""
 
+        spec_rep_note = f" · {spec_rep}× over 50yr" if spec_rep > 1 else ""
+        prop_rep_note = f" · {prop_rep}× over 50yr" if prop_rep > 1 else ""
+
         return DimensionResult(
             dimension="carbon",
             verdict=verdict,
             requirement=(
-                "Embodied carbon (A1–A3, per declared unit) — substitution should not "
-                "significantly increase LCA impact"
+                "Embodied carbon (A1–A3 + B4, 50yr reference) — substitution should not "
+                "significantly increase lifecycle carbon impact"
                 + (f". BR25 building limit: {br25_limit} kg CO₂e/m²/yr" if br25_limit else "")
             ),
-            specified_value=f"{spec_co2:.1f} {spec_unit}{src_specified}",
-            proposed_value=f"{prop_co2:.1f} {unit_label}{src_proposed}",
+            specified_value=f"{spec_co2:.1f} {spec_unit}{spec_rep_note}{src_specified}",
+            proposed_value=f"{prop_co2:.1f} {unit_label}{prop_rep_note}{src_proposed}",
             delta=delta_str,
             code_reference="BR25 § 297 / EN 15978" if br25_limit else "NMD / EN 15978",
         )
