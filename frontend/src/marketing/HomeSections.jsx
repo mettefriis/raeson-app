@@ -261,7 +261,7 @@ function MinimalHome({ C, onNavigate }) {
   return (
     <main>
 
-      {/* ── Video hero — full viewport ── */}
+      {/* ── Video hero — full viewport, headline centred ── */}
       <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#E8E0D0' }}>
         <video autoPlay muted loop playsInline style={{
           position: 'absolute', inset: 0,
@@ -272,31 +272,30 @@ function MinimalHome({ C, onNavigate }) {
         </video>
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(240, 232, 218, 0.52)' }} />
 
-        {/* Headline top, nothing else — KAAN */}
         <div style={{
           position: 'relative', zIndex: 1,
-          height: '100%', display: 'flex', flexDirection: 'column',
+          height: '100%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '0 64px', boxSizing: 'border-box',
+          textAlign: 'center',
         }}>
-          <div style={{ paddingTop: 180 }}>
-            <FadeUp>
-              <h1 style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(56px, 8vw, 128px)',
-                fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.95,
-                color: C.text, margin: 0, maxWidth: 900,
-              }}>
-                Substitution decisions, defended.
-              </h1>
-            </FadeUp>
-          </div>
+          <FadeUp>
+            <h1 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(64px, 10vw, 160px)',
+              fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.92,
+              color: C.text, margin: 0,
+            }}>
+              Substitution<br />decisions,<br />defended.
+            </h1>
+          </FadeUp>
         </div>
       </div>
 
       {/* ── Body copy — journal style ── */}
-      <Section C={C} style={{ paddingTop: 120, paddingBottom: 160 }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '140px 32px 160px' }}>
         <FadeUp><SectionLabel C={C}>Overview</SectionLabel></FadeUp>
-        <div style={{ maxWidth: 680, marginTop: 40 }}>
+        <div style={{ maxWidth: 680, marginTop: 48 }}>
           <FadeUp delay={0.05}>
             <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
               Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
@@ -330,7 +329,7 @@ function MinimalHome({ C, onNavigate }) {
             </button>
           </FadeUp>
         </div>
-      </Section>
+      </div>
 
     </main>
   );
