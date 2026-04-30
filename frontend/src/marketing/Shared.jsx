@@ -118,12 +118,30 @@ function RaesonMark({ size = 18, color = 'currentColor', style }) {
 }
 
 // ── Grain overlay ─────────────────────────────────────────────────────────
-function Grain() { return null; }
+function Grain({ enabled = true, opacity, isDark = false }) {
+  if (!enabled) return null;
+  const op = opacity ?? (isDark ? 0.14 : 0.28);
+  return (
+    <>
+      <div aria-hidden style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: -1,
+        backgroundImage: GRAIN_URL, backgroundSize: '280px 280px',
+        opacity: op, mixBlendMode: isDark ? 'overlay' : 'multiply',
+      }} />
+      <div aria-hidden style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: -1,
+        background: isDark
+          ? 'radial-gradient(120% 90% at 50% 10%, rgba(255,255,255,0.04), transparent 55%), radial-gradient(120% 90% at 50% 110%, rgba(0,0,0,0.25), transparent 55%)'
+          : 'radial-gradient(120% 90% at 50% 0%, rgba(255,248,230,0.35), transparent 60%), radial-gradient(120% 90% at 50% 100%, rgba(20,20,20,0.05), transparent 60%)',
+        mixBlendMode: 'multiply',
+      }} />
+    </>
+  );
+}
 
 // ── Nav ───────────────────────────────────────────────────────────────────
 function Nav({ C, current = 'home', onNavigate, hideWordmark = false }) {
   const links = [
-    { label: 'Demo', key: 'demo' },
     { label: 'Platform', key: 'platform' },
     { label: 'Pricing', key: 'pricing' },
     { label: 'About', key: 'about' },
@@ -190,7 +208,7 @@ function Nav({ C, current = 'home', onNavigate, hideWordmark = false }) {
           onMouseOver={e => e.currentTarget.style.color = C.text}
           onMouseOut={e => e.currentTarget.style.color = C.dim}
         >Contact</button>
-        <button onClick={() => onNavigate && onNavigate('app')} style={{
+        <button onClick={() => onNavigate && onNavigate('demo')} style={{
           fontSize: 13, fontWeight: 500, color: C.bg,
           background: C.text, border: 'none', cursor: 'pointer', fontFamily: 'inherit',
           padding: '9px 16px',

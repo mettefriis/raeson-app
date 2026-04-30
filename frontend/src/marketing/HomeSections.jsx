@@ -219,7 +219,7 @@ function CtaBand({ C, onNavigate }) {
             fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.02,
             color: C.text, margin: '0 0 64px', textWrap: 'balance',
           }}>
-            Check your next substitution.
+            Evaluate your next substitution.
           </h2>
         </FadeUp>
         <FadeUp delay={0.08}>
