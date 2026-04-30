@@ -329,16 +329,6 @@ function MinimalHome({ C, onNavigate }) {
         </FadeUp>
       </div>
 
-      <div style={{ borderTop: `1px solid ${C.border}`, padding: '120px 0 160px', textAlign: 'left', maxWidth: 640, margin: '0 auto' }}>
-        <FadeUp>
-          <span style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 'clamp(80px, 14vw, 200px)',
-            fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1,
-            color: C.border, userSelect: 'none',
-          }}>ræson</span>
-        </FadeUp>
-      </div>
     </main>
   );
 }
