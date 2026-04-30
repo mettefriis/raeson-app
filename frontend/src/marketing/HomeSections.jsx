@@ -1,7 +1,7 @@
 // ─── Homepage — minimal, ElevenLabs-inspired ──────────────────────────────
 import React, { useRef } from 'react';
 import { motion } from 'motion/react';
-import { EASE, FadeUp, Section, SectionLabel } from './Shared.jsx';
+import { EASE, FadeUp, Section, SectionLabel, GRAIN_URL } from './Shared.jsx';
 
 const EASE_H = [0.16, 1, 0.3, 1];
 
@@ -261,30 +261,45 @@ function MinimalHome({ C, onNavigate }) {
   return (
     <main>
 
-      {/* ── Video hero — full viewport, headline centred ── */}
-      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#E8E0D0' }}>
+      {/* ── Video hero — full viewport, B&W + grain ── */}
+      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#1c1b18' }}>
         <video autoPlay muted loop playsInline style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
           objectFit: 'cover', objectPosition: 'center',
+          filter: 'grayscale(1) contrast(1.08)',
         }}>
           <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4" />
         </video>
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(240, 232, 218, 0.52)' }} />
+
+        {/* Dark tint */}
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(12, 10, 8, 0.38)' }} />
+
+        {/* Grain */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: GRAIN_URL,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '200px 200px',
+          opacity: 0.55,
+          mixBlendMode: 'overlay',
+          pointerEvents: 'none',
+        }} />
 
         <div style={{
           position: 'relative', zIndex: 1,
-          height: '100%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          height: '100%', display: 'flex', flexDirection: 'column',
+          justifyContent: 'flex-start',
           padding: '0 64px', boxSizing: 'border-box',
-          textAlign: 'center',
+          textAlign: 'center', alignItems: 'center',
+          paddingTop: '22vh',
         }}>
           <FadeUp>
             <h1 style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(64px, 10vw, 160px)',
-              fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.92,
-              color: C.text, margin: 0,
+              fontSize: 'clamp(52px, 8vw, 120px)',
+              fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.95,
+              color: '#f5f1ea', margin: 0,
             }}>
               Substitution decisions,<br />defended.
             </h1>
