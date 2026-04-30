@@ -256,96 +256,66 @@ function Positioning({ C }) {
 
 function Practices() { return null; }
 
-// ── Minimal home — full-screen video hero + journal-style copy below ─────
+// ── Minimal home — journal pacing ────────────────────────────────────────
 function MinimalHome({ C, onNavigate }) {
   return (
     <main>
+      <div style={{ paddingTop: 140 }}>
 
-      {/* ── Video hero — full viewport, B&W + grain ── */}
-      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#1c1b18' }}>
-        <video autoPlay muted loop playsInline style={{
-          position: 'absolute', inset: 0,
-          width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: 'center',
-          filter: 'grayscale(1) contrast(1.08)',
-        }}>
-          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4" />
-        </video>
-
-        {/* Dark tint */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(12, 10, 8, 0.38)' }} />
-
-        {/* Grain */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: GRAIN_URL,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '200px 200px',
-          opacity: 0.55,
-          mixBlendMode: 'overlay',
-          pointerEvents: 'none',
-        }} />
-
-        <div style={{
-          position: 'relative', zIndex: 1,
-          height: '100%', display: 'flex', flexDirection: 'column',
-          justifyContent: 'flex-start',
-          padding: '0 64px', boxSizing: 'border-box',
-          textAlign: 'center', alignItems: 'center',
-          paddingTop: '22vh',
-        }}>
+        <Section C={C} style={{ paddingBottom: 80 }}>
           <FadeUp>
+            <SectionLabel C={C}>ræson</SectionLabel>
+          </FadeUp>
+          <FadeUp delay={0.05}>
             <h1 style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(52px, 8vw, 120px)',
+              fontSize: 'clamp(56px, 8vw, 130px)',
               fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.95,
-              color: '#f5f1ea', margin: 0,
+              color: C.text, margin: '20px 0 0', maxWidth: 1000,
             }}>
-              Substitution decisions,<br />defended.
+              Substitution decisions,<br /><em style={{ fontStyle: 'italic' }}>defended.</em>
             </h1>
           </FadeUp>
-        </div>
-      </div>
+        </Section>
 
-      {/* ── Body copy — journal style ── */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '140px 32px 160px' }}>
-        <FadeUp><SectionLabel C={C}>Overview</SectionLabel></FadeUp>
-        <div style={{ maxWidth: 680, marginTop: 48 }}>
-          <FadeUp delay={0.05}>
-            <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
-              Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
-            </p>
-          </FadeUp>
-          <FadeUp delay={0.09}>
-            <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
-              LCA tools measure decisions you've already made. Ræson works one step earlier, at the moment of substitution: researching alternatives, cross-referencing performance and impact data, and returning a structured rationale your team reviews and signs off. Sources cited. Assembly intact.
-            </p>
-          </FadeUp>
-          <FadeUp delay={0.12}>
-            <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 48px', textWrap: 'pretty' }}>
-              It reads from your BIM and LCA stack. You keep working the way you work.
-            </p>
-          </FadeUp>
-          <FadeUp delay={0.15}>
-            <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.55, margin: '0 0 36px' }}>
-              Launching June 2026 with a small group of Dutch and Nordic practices.
-            </p>
-          </FadeUp>
-          <FadeUp delay={0.18}>
-            <button
-              onClick={() => onNavigate && onNavigate('contact')}
-              style={{
-                padding: '14px 28px', background: C.text, color: C.bg,
-                border: 'none', fontFamily: 'var(--font-sans)', fontSize: 15,
-                fontWeight: 400, letterSpacing: '-0.01em', cursor: 'pointer',
-              }}
-            >
-              Request access
-            </button>
-          </FadeUp>
-        </div>
-      </div>
+        <Section C={C} style={{ paddingTop: 0, paddingBottom: 160 }}>
+          <div style={{ maxWidth: 680 }}>
+            <FadeUp>
+              <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
+                Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.04}>
+              <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
+                LCA tools measure decisions you've already made. Ræson works one step earlier, at the moment of substitution: researching alternatives, cross-referencing performance and impact data, and returning a structured rationale your team reviews and signs off. Sources cited. Assembly intact.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.07}>
+              <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 48px', textWrap: 'pretty' }}>
+                It reads from your BIM and LCA stack. You keep working the way you work.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.1}>
+              <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.55, margin: '0 0 36px' }}>
+                Launching June 2026 with a small group of Dutch and Nordic practices.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.13}>
+              <button
+                onClick={() => onNavigate && onNavigate('contact')}
+                style={{
+                  padding: '14px 28px', background: C.text, color: C.bg,
+                  border: 'none', fontFamily: 'var(--font-sans)', fontSize: 15,
+                  fontWeight: 400, letterSpacing: '-0.01em', cursor: 'pointer',
+                }}
+              >
+                Request access
+              </button>
+            </FadeUp>
+          </div>
+        </Section>
 
+      </div>
     </main>
   );
 }
