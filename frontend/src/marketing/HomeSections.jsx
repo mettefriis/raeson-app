@@ -1,7 +1,7 @@
 // ─── Homepage — minimal, ElevenLabs-inspired ──────────────────────────────
 import React, { useRef } from 'react';
 import { motion } from 'motion/react';
-import { EASE, FadeUp } from './Shared.jsx';
+import { EASE, FadeUp, Section, SectionLabel } from './Shared.jsx';
 
 const EASE_H = [0.16, 1, 0.3, 1];
 
@@ -256,93 +256,68 @@ function Positioning({ C }) {
 
 function Practices() { return null; }
 
-// ── Minimal home — KAAN split: headline top, copy bottom, space between ──
-// Drop frontend/public/hero.mp4 to activate the video background.
+// ── Minimal home — full-screen video hero + journal-style copy below ─────
 function MinimalHome({ C, onNavigate }) {
   return (
-    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', background: C.bg }}>
+    <main>
 
-      <video autoPlay muted loop playsInline style={{
-        position: 'absolute', inset: 0,
-        width: '100%', height: '100%',
-        objectFit: 'cover', objectPosition: 'center',
-        display: 'block',
-      }}>
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(242, 236, 224, 0.58)' }} />
+      {/* ── Video hero — full viewport ── */}
+      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#E8E0D0' }}>
+        <video autoPlay muted loop playsInline style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%',
+          objectFit: 'cover', objectPosition: 'center',
+        }}>
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4" />
+        </video>
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(240, 232, 218, 0.52)' }} />
 
-      <div style={{
-        position: 'relative', zIndex: 1,
-        minHeight: '100vh',
-        display: 'flex', flexDirection: 'column',
-        padding: '0 64px',
-        boxSizing: 'border-box',
-      }}>
-
-        {/* Headline — top */}
-        <div style={{ maxWidth: 680, paddingTop: 180 }}>
-          <FadeUp>
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(38px, 4.8vw, 68px)',
-              fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 1.06,
-              color: C.text, margin: 0,
-            }}>
-              Substitution decisions, defended.
-            </h1>
-          </FadeUp>
+        {/* Headline top, nothing else — KAAN */}
+        <div style={{
+          position: 'relative', zIndex: 1,
+          height: '100%', display: 'flex', flexDirection: 'column',
+          padding: '0 64px', boxSizing: 'border-box',
+        }}>
+          <div style={{ paddingTop: 180 }}>
+            <FadeUp>
+              <h1 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(56px, 8vw, 128px)',
+                fontWeight: 300, letterSpacing: '-0.05em', lineHeight: 0.95,
+                color: C.text, margin: 0, maxWidth: 900,
+              }}>
+                Substitution decisions, defended.
+              </h1>
+            </FadeUp>
+          </div>
         </div>
+      </div>
 
-        {/* Spacer — creates the KAAN breathing room */}
-        <div style={{ flex: 1 }} />
-
-        {/* Body copy — bottom */}
-        <div style={{ maxWidth: 520, paddingBottom: 100 }}>
-          <FadeUp delay={0.1}>
-            <p style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(16px, 1.2vw, 18px)',
-              fontWeight: 400, color: C.dim, lineHeight: 1.7,
-              margin: '0 0 20px', textWrap: 'pretty',
-            }}>
+      {/* ── Body copy — journal style ── */}
+      <Section C={C} style={{ paddingTop: 120, paddingBottom: 160 }}>
+        <FadeUp><SectionLabel C={C}>Overview</SectionLabel></FadeUp>
+        <div style={{ maxWidth: 680, marginTop: 40 }}>
+          <FadeUp delay={0.05}>
+            <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
               Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
             </p>
           </FadeUp>
-
-          <FadeUp delay={0.14}>
-            <p style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(16px, 1.2vw, 18px)',
-              fontWeight: 400, color: C.dim, lineHeight: 1.7,
-              margin: '0 0 20px', textWrap: 'pretty',
-            }}>
+          <FadeUp delay={0.09}>
+            <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 20px', textWrap: 'pretty' }}>
               LCA tools measure decisions you've already made. Ræson works one step earlier, at the moment of substitution: researching alternatives, cross-referencing performance and impact data, and returning a structured rationale your team reviews and signs off. Sources cited. Assembly intact.
             </p>
           </FadeUp>
-
-          <FadeUp delay={0.17}>
-            <p style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(16px, 1.2vw, 18px)',
-              fontWeight: 400, color: C.dim, lineHeight: 1.7,
-              margin: '0 0 48px', textWrap: 'pretty',
-            }}>
+          <FadeUp delay={0.12}>
+            <p style={{ fontSize: 17, color: C.dim, lineHeight: 1.7, margin: '0 0 48px', textWrap: 'pretty' }}>
               It reads from your BIM and LCA stack. You keep working the way you work.
             </p>
           </FadeUp>
-
-          <FadeUp delay={0.2}>
-            <p style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 13, color: C.muted, lineHeight: 1.55,
-              margin: '0 0 32px',
-            }}>
+          <FadeUp delay={0.15}>
+            <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.55, margin: '0 0 36px' }}>
               Launching June 2026 with a small group of Dutch and Nordic practices.
             </p>
           </FadeUp>
-
-          <FadeUp delay={0.23}>
+          <FadeUp delay={0.18}>
             <button
               onClick={() => onNavigate && onNavigate('contact')}
               style={{
@@ -355,8 +330,8 @@ function MinimalHome({ C, onNavigate }) {
             </button>
           </FadeUp>
         </div>
+      </Section>
 
-      </div>
     </main>
   );
 }
