@@ -256,91 +256,97 @@ function Positioning({ C }) {
 
 function Practices() { return null; }
 
-// ── Minimal home — full-screen video background, single column copy ──────
+// ── Minimal home — KAAN split: headline top, copy bottom, space between ──
+// Drop frontend/public/hero.mp4 to activate the video background.
 function MinimalHome({ C, onNavigate }) {
   return (
-    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', background: '#F0EAE0' }}>
+    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', background: C.bg }}>
 
-      {/* Background video — drop /public/hero.mp4 to activate */}
-      <video
-        autoPlay muted loop playsInline
-        style={{
-          position: 'absolute', inset: 0,
-          width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: 'center',
-        }}
-      >
+      <video autoPlay muted loop playsInline style={{
+        position: 'absolute', inset: 0,
+        width: '100%', height: '100%',
+        objectFit: 'cover', objectPosition: 'center',
+        display: 'block',
+      }}>
         <source src="/hero.mp4" type="video/mp4" />
       </video>
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(242, 236, 224, 0.58)' }} />
 
-      {/* Warm overlay — keeps text readable while video shows through */}
       <div style={{
-        position: 'absolute', inset: 0,
-        background: 'rgba(242, 236, 224, 0.58)',
-      }} />
+        position: 'relative', zIndex: 1,
+        minHeight: '100vh',
+        display: 'flex', flexDirection: 'column',
+        padding: '0 64px',
+        boxSizing: 'border-box',
+      }}>
 
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 1, padding: '0 48px' }}>
-        <div style={{ maxWidth: 640, margin: '0 auto', paddingTop: 200, paddingBottom: 240 }}>
+        {/* Headline — top */}
+        <div style={{ maxWidth: 680, paddingTop: 180 }}>
           <FadeUp>
             <h1 style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(36px, 4.5vw, 64px)',
-              fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 1.08,
-              color: '#111110', margin: '0 0 48px',
+              fontSize: 'clamp(38px, 4.8vw, 68px)',
+              fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 1.06,
+              color: C.text, margin: 0,
             }}>
               Substitution decisions, defended.
             </h1>
           </FadeUp>
+        </div>
 
-          <FadeUp delay={0.06}>
+        {/* Spacer — creates the KAAN breathing room */}
+        <div style={{ flex: 1 }} />
+
+        {/* Body copy — bottom */}
+        <div style={{ maxWidth: 520, paddingBottom: 100 }}>
+          <FadeUp delay={0.1}>
             <p style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(17px, 1.35vw, 19px)',
-              fontWeight: 400, color: '#3a3a38', lineHeight: 1.65,
-              margin: '0 0 24px', textWrap: 'pretty',
+              fontSize: 'clamp(16px, 1.2vw, 18px)',
+              fontWeight: 400, color: C.dim, lineHeight: 1.7,
+              margin: '0 0 20px', textWrap: 'pretty',
             }}>
               Ræson helps architecture practices choose lower-carbon, healthier materials — and produce the rationale to defend the choice.
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.1}>
+          <FadeUp delay={0.14}>
             <p style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(17px, 1.35vw, 19px)',
-              fontWeight: 400, color: '#3a3a38', lineHeight: 1.65,
-              margin: '0 0 32px', textWrap: 'pretty',
+              fontSize: 'clamp(16px, 1.2vw, 18px)',
+              fontWeight: 400, color: C.dim, lineHeight: 1.7,
+              margin: '0 0 20px', textWrap: 'pretty',
             }}>
               LCA tools measure decisions you've already made. Ræson works one step earlier, at the moment of substitution: researching alternatives, cross-referencing performance and impact data, and returning a structured rationale your team reviews and signs off. Sources cited. Assembly intact.
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.13}>
+          <FadeUp delay={0.17}>
             <p style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(17px, 1.35vw, 19px)',
-              fontWeight: 400, color: '#3a3a38', lineHeight: 1.65,
+              fontSize: 'clamp(16px, 1.2vw, 18px)',
+              fontWeight: 400, color: C.dim, lineHeight: 1.7,
               margin: '0 0 48px', textWrap: 'pretty',
             }}>
               It reads from your BIM and LCA stack. You keep working the way you work.
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.16}>
+          <FadeUp delay={0.2}>
             <p style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 14, color: '#6b6b69', lineHeight: 1.55,
-              margin: '0 0 40px',
+              fontSize: 13, color: C.muted, lineHeight: 1.55,
+              margin: '0 0 32px',
             }}>
               Launching June 2026 with a small group of Dutch and Nordic practices.
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.19}>
+          <FadeUp delay={0.23}>
             <button
               onClick={() => onNavigate && onNavigate('contact')}
               style={{
-                padding: '14px 28px', background: '#111110', color: '#f7f7f5',
+                padding: '14px 28px', background: C.text, color: C.bg,
                 border: 'none', fontFamily: 'var(--font-sans)', fontSize: 15,
                 fontWeight: 400, letterSpacing: '-0.01em', cursor: 'pointer',
               }}
@@ -349,6 +355,7 @@ function MinimalHome({ C, onNavigate }) {
             </button>
           </FadeUp>
         </div>
+
       </div>
     </main>
   );
